@@ -18,22 +18,22 @@ const options = {
 
 
 // The main class
-exports = function Constructor(customOptions) {
+module.exports = function Constructor(customOptions) {
 	// Merge options into default options
 	Object.assign(options, customOptions);
 	
 	
 	// Determine app information
-	options.app = exports.utils.retrieveAppInformation(require.main.filename);
+	options.app = module.exports.utils.retrieveAppInformation(require.main.filename);
 	
 	
 	// Verbose output
-	exports.utils.verboseLog(`Set app name to: ${options.app.name}`);
-	exports.utils.verboseLog(`Set app version to: ${options.app.version}`);
+	module.exports.utils.verboseLog(`Set app name to: ${options.app.name}`);
+	module.exports.utils.verboseLog(`Set app version to: ${options.app.version}`);
 	
 	
 	// Organize the arguments
-	const categorizedArguments = exports.utils.organizeArguments();
+	const categorizedArguments = module.exports.utils.organizeArguments();
 	
 	
 	// Handle --version
@@ -53,7 +53,7 @@ exports = function Constructor(customOptions) {
 		
 		
 		// Verbose output
-		exports.utils.verboseLog('Skipping further processing...');
+		module.exports.utils.verboseLog('Skipping further processing...');
 		
 		
 		// Stop processing
@@ -64,14 +64,15 @@ exports = function Constructor(customOptions) {
 	// Handle --help
 	if (options.arguments.length === 0 || options.arguments.includes('-h') || options.arguments.includes('--help')) {
 		// Get commands one level deep
-		let commands = exports.utils.files.getAllDirectories(path.dirname(require.main.filename));
+		const dirname = path.dirname(require.main.filename); // TODO: Recombine with below
+		let commands = module.exports.utils.files.getAllDirectories(dirname);
 		commands = commands.map(file => file.replace(`${path.dirname(require.main.filename)}/`, ''));
 		commands = commands.map(file => file.replace(/\.js$/, ''));
 		commands = commands.map(file => file.replace(/\//g, ' '));
 		
 		
 		// Verbose output
-		exports.utils.verboseLog(`Found commands: ${commands.join(' | ')}`);
+		module.exports.utils.verboseLog(`Found commands: ${commands.join(' | ')}`);
 		
 		
 		// Process commands further
@@ -87,7 +88,7 @@ exports = function Constructor(customOptions) {
 		
 		
 		// Verbose output
-		exports.utils.verboseLog(`Processable: ${commands.join(' | ')}`);
+		module.exports.utils.verboseLog(`Processable: ${commands.join(' | ')}`);
 		
 		
 		// Extra spacing
@@ -97,7 +98,7 @@ exports = function Constructor(customOptions) {
 		// Loop over each command
 		commands.forEach((command, index) => {
 			// Get merged spec for this command
-			const mergedSpec = exports.utils.getMergedSpecForCommand(command);
+			const mergedSpec = module.exports.utils.getMergedSpecForCommand(command);
 			
 			
 			// Handle entry point
@@ -173,7 +174,7 @@ exports = function Constructor(customOptions) {
 		
 		
 		// Verbose output
-		exports.utils.verboseLog('Skipping further processing...');
+		module.exports.utils.verboseLog('Skipping further processing...');
 		
 		
 		// Stop processing
@@ -192,7 +193,7 @@ exports = function Constructor(customOptions) {
 		
 		
 		// Get the files we care about
-		const commandFiles = exports.utils.files.getFiles(currentPathPrefix);
+		const commandFiles = module.exports.utils.files.getFiles(currentPathPrefix);
 		
 		
 		// Get the command path
@@ -220,7 +221,7 @@ exports = function Constructor(customOptions) {
 		
 		
 		// Verbose output
-		exports.utils.verboseLog(`Executing: ${paths[0]}\n`);
+		module.exports.utils.verboseLog(`Executing: ${paths[0]}\n`);
 		
 		
 		// Spawn child
@@ -231,7 +232,7 @@ exports = function Constructor(customOptions) {
 		child.on('exit', (code) => {
 			// Handle an issue
 			if (code !== 0) {
-				exports.utils.printFatalError(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
+				module.exports.utils.printFatalError(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
 			}
 			
 			
@@ -244,7 +245,7 @@ exports = function Constructor(customOptions) {
 		
 		// Handle error
 		child.on('error', (error) => {
-			exports.utils.printFatalError(error.toString().replace(/^Error: /i, ''));
+			module.exports.utils.printFatalError(error.toString().replace(/^Error: /i, ''));
 		});
 		
 		
@@ -263,7 +264,7 @@ exports = function Constructor(customOptions) {
 
 
 // Utils functions
-exports.utils = {
+module.exports.utils = {
 	// Enable test mode
 	enableTestMode() {
 		options.verbose = true;
@@ -300,7 +301,7 @@ exports.utils = {
 		// Handle if a package.json file exists
 		if (fs.existsSync(pathToPackageFile)) {
 			// Verbose output
-			exports.utils.verboseLog(`Found package.json at: ${pathToPackageFile}`);
+			module.exports.utils.verboseLog(`Found package.json at: ${pathToPackageFile}`);
 			
 			
 			// Get package
@@ -311,7 +312,7 @@ exports.utils = {
 			app.name = app.name || packageInfo.name;
 			app.version = app.version || packageInfo.version;
 		} else {
-			exports.utils.verboseLog(`Could not find package.json at: ${pathToPackageFile}`);
+			module.exports.utils.verboseLog(`Could not find package.json at: ${pathToPackageFile}`);
 		}
 		
 		
@@ -346,16 +347,16 @@ exports.utils = {
 			
 			
 			// Get the files we care about
-			const commandFiles = exports.utils.files.getFiles(currentPathPrefix);
+			const commandFiles = module.exports.utils.files.getFiles(currentPathPrefix);
 			
 			
 			// Error if not exactly one .js and one .json file
 			if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
-				exports.utils.printFatalError(`There should be exactly one .js file in: ${currentPathPrefix}`);
+				module.exports.utils.printFatalError(`There should be exactly one .js file in: ${currentPathPrefix}`);
 			}
 			
 			if (commandFiles.filter(path => path.match(/\.json$/)).length !== 1) {
-				exports.utils.printFatalError(`There should be exactly one .json file in: ${currentPathPrefix}`);
+				module.exports.utils.printFatalError(`There should be exactly one .json file in: ${currentPathPrefix}`);
 			}
 			
 			
@@ -414,13 +415,13 @@ exports.utils = {
 		
 		options.arguments.forEach((argument) => {
 			// Verbose output
-			exports.utils.verboseLog(`Inspecting argument: ${argument}`);
+			module.exports.utils.verboseLog(`Inspecting argument: ${argument}`);
 			
 			
 			// Skip option values
 			if (nextIsOptionValue) {
 				// Verbose output
-				exports.utils.verboseLog(`...Is value for previous option (${previousOption})`);
+				module.exports.utils.verboseLog(`...Is value for previous option (${previousOption})`);
 				
 				
 				// Store and continue
@@ -433,7 +434,7 @@ exports.utils = {
 			// Skip options/flags
 			if (argument[0] === '-') {
 				// Get merged spec for this command
-				const mergedSpec = exports.utils.getMergedSpecForCommand(organized.command);
+				const mergedSpec = module.exports.utils.getMergedSpecForCommand(organized.command);
 				
 				
 				// Check if this is an option
@@ -441,7 +442,7 @@ exports.utils = {
 					Object.entries(mergedSpec.options).forEach(([option, details]) => {
 						if (argument === `--${option.trim().toLowerCase()}`) {
 							// Verbose output
-							exports.utils.verboseLog('...Is an option');
+							module.exports.utils.verboseLog('...Is an option');
 							
 							
 							// Store details
@@ -450,7 +451,7 @@ exports.utils = {
 							organized.options.push(argument);
 						} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 							// Verbose output
-							exports.utils.verboseLog('...Is an option');
+							module.exports.utils.verboseLog('...Is an option');
 							
 							
 							// Store details
@@ -469,7 +470,7 @@ exports.utils = {
 					
 					
 					// Verbose output
-					exports.utils.verboseLog('...Is a flag');
+					module.exports.utils.verboseLog('...Is a flag');
 				}
 				
 				
@@ -479,7 +480,7 @@ exports.utils = {
 			
 			
 			// Get the files we care about
-			const commandFiles = exports.utils.files.getFiles(`${currentPathPrefix}/${argument}`);
+			const commandFiles = module.exports.utils.files.getFiles(`${currentPathPrefix}/${argument}`);
 			
 			
 			// Get the command path
@@ -489,7 +490,7 @@ exports.utils = {
 			// Check if that file exists
 			if (!chainBroken && fs.existsSync(commandPath)) {
 				// Verbose output
-				exports.utils.verboseLog('...Is a command');
+				module.exports.utils.verboseLog('...Is a command');
 				
 				
 				// Add to currents
@@ -497,7 +498,7 @@ exports.utils = {
 				organized.command += ` ${argument}`;
 			} else {
 				// Verbose output
-				exports.utils.verboseLog('...Is a data value');
+				module.exports.utils.verboseLog('...Is a data value');
 				
 				
 				// Store details
@@ -534,7 +535,7 @@ exports.utils = {
 			
 			const allItems = fs.readdirSync(directory).map(name => path.join(directory, name));
 			
-			return allItems.filter(exports.utils.files.isFile);
+			return allItems.filter(module.exports.utils.files.isFile);
 		},
 		
 		
@@ -546,7 +547,7 @@ exports.utils = {
 			
 			const allItems = fs.readdirSync(directory).map(name => path.join(directory, name));
 			
-			return allItems.filter(exports.utils.files.isDirectory);
+			return allItems.filter(module.exports.utils.files.isDirectory);
 		},
 		
 		
@@ -559,8 +560,8 @@ exports.utils = {
 			return fs.readdirSync(directory).reduce((files, file) => {
 				const name = path.join(directory, file);
 				
-				if (exports.utils.files.isDirectory(name)) {
-					return [...files, name, ...exports.utils.files.getAllDirectories(name)];
+				if (module.exports.utils.files.isDirectory(name)) {
+					return [...files, name, ...module.exports.utils.files.getAllDirectories(name)];
 				}
 				
 				return [...files];

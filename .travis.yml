@@ -14,11 +14,11 @@ jobs:
       script: npm run lint
     - stage: tests
       if: type = pull_request OR env(TRAVIS_TAG) IS present
-      name: Latest Node.js version
+      name: Run tests (Node.js Current)
       node_js: node
     - stage: tests
       if: type = pull_request OR env(TRAVIS_TAG) IS present
-      name: LTS Node.js version
+      name: Run tests (Node.js LTS)
       node_js: lts/*
     - stage: publish
       if: type = push AND env(TRAVIS_TAG) IS present

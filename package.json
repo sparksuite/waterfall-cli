@@ -1,8 +1,11 @@
 {
   "name": "cli-framer",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A framework for building CLIs in JavaScript",
   "main": "index.js",
+  "files": [
+    "index.js"
+  ],
   "scripts": {
     "test": "mocha"
   },

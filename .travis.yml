@@ -16,7 +16,7 @@ jobs:
       node_js: lts/*
     - stage: publish
       if: type = push
-      name: Publish to npm
+      name: echo "Publish to npm"
       node_js: lts/*
       script: Publishing to npm...
       deploy:

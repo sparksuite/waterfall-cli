@@ -7,7 +7,7 @@ branches:
     - master
 jobs:
   include:
-    - stage: checks
+    - stage: tests
       name: Lint code
       node_js: lts/*
       script: npm run lint

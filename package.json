@@ -1,6 +1,6 @@
 {
   "name": "cli-framer",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "A framework for building CLIs in JavaScript",
   "main": "index.js",
   "files": [
@@ -8,7 +8,6 @@
   ],
   "scripts": {
     "lint": "eslint .",
-    "pretest": "npm run lint",
     "test": "mocha"
   },
   "repository": {

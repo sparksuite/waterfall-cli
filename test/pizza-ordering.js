@@ -1,55 +1,53 @@
+/* eslint-env mocha */
+/* eslint no-control-regex: "off" */
+
+
 // Dependencies
 const assert = require('assert');
-const colors = require('colors');
+require('colors');
 const { spawn } = require('child_process');
 
 
 // Initialize
-let entryFile = __dirname+'/pizza-ordering/cli/entry.js';
+const entryFile = `${__dirname}/pizza-ordering/cli/entry.js`;
 
 
-// Tests
-describe('Pizza ordering', function() {
-	describe('Built-in abilities', function() {
-		it('Displays version', function(done) {
-			runTest('--version', [
-				'example: 1.2.3',
-			], undefined, done);
-		});
-	});
-});
+// Remove ANSI formatting
+function removeFormatting(text) {
+	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
+}
 
 
 // Test runner
-function runTest(arguments, stdoutIncludes, stderrIncludes, done) {
+function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 	// Initialize
 	let stdout = '';
 	let stderr = '';
 	
 	
 	// Spawn
-	const child = spawn('node', [entryFile, ...arguments.split(' ')]);
+	const child = spawn('node', [entryFile, ...customArguments.split(' ')]);
 	
 	
 	// Listeners
 	child.on('exit', (code) => {
 		// Handle an issue
 		if (code !== 0) {
-			throw new Error('Exit code '+code);
+			throw new Error(`Exit code ${code}`);
 		}
 		
 		
 		// Loop over includes
 		if (typeof stdoutIncludes === 'object') {
-			for (let text of stdoutIncludes) {
+			stdoutIncludes.forEach((text) => {
 				assert.equal(removeFormatting(stdout).includes(text), true);
-			}
+			});
 		}
 		
 		if (typeof stderrIncludes === 'object') {
-			for (let text of stderrIncludes) {
+			stderrIncludes.forEach((text) => {
 				assert.equal(removeFormatting(stderr).includes(text), true);
-			}
+			});
 		}
 		
 		
@@ -71,7 +69,13 @@ function runTest(arguments, stdoutIncludes, stderrIncludes, done) {
 }
 
 
-// Remove ANSI formatting
-function removeFormatting(text) {
-	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
-}
+// Tests
+describe('Pizza ordering', () => {
+	describe('Built-in abilities', () => {
+		it('Displays version', (done) => {
+			runTest('--version', [
+				'example: 1.2.3',
+			], undefined, done);
+		});
+	});
+});

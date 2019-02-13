@@ -1,3 +1,6 @@
+/* eslint-env mocha */
+
+
 // Dependencies
 const assert = require('assert');
 const cliFramer = require('../index.js');
@@ -8,10 +11,10 @@ const cliFramer = require('../index.js');
 
 
 // Tests
-describe('Utils', function() {
-	describe('#retrieveAppInformation()', function() {
-		it('should retrieve app info', function() {
-			assert.deepEqual(cliFramer.utils.retrieveAppInformation(__dirname+'/pizza-ordering/cli/entry.js'), {
+describe('Utils', () => {
+	describe('#retrieveAppInformation()', () => {
+		it('should retrieve app info', () => {
+			assert.deepEqual(cliFramer.utils.retrieveAppInformation(`${__dirname}/pizza-ordering/cli/entry.js`), {
 				name: 'example',
 				version: '1.2.3',
 			});

@@ -1,0 +1,15 @@
+{
+    "description": "List something",
+    "data": {
+        "allowed": true,
+        "values": ["toppings", "crusts"],
+        "min": 1,
+        "max": 1
+    },
+    "flags": {
+        "vegetarian": {
+            "shorthand": "v",
+            "description": "Only list vegetarian choices"
+        }
+    }
+}

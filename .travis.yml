@@ -8,20 +8,23 @@ branches:
 jobs:
   include:
     - stage: tests
+      if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: Lint code
       node_js: lts/*
       script: npm run lint
     - stage: tests
+      if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: Latest Node.js version
       node_js: node
     - stage: tests
+      if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: LTS Node.js version
       node_js: lts/*
     - stage: publish
-      if: type = push
-      name: echo "Publish to npm"
+      if: type = push AND env(TRAVIS_TAG) IS present
+      name: Publish to npm
       node_js: lts/*
-      script: Publishing to npm...
+      script: echo "Publishing to npm..."
       deploy:
         provider: npm
         email: wes@sparksuite.com

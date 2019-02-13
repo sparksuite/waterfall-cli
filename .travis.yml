@@ -1,17 +1,21 @@
 language: node_js
+branches:
+  only:
+    - master
 jobs:
   include:
-    - stage: test
+    - stage: checks
       name: Lint code
       node_js: lts/*
       script: npm run lint
-    - stage: test
-      name: Latest Node.js
+    - stage: tests
+      name: Latest Node.js version
       node_js: node
-    - stage: test
-      name: LTS Node.js
+    - stage: tests
+      name: LTS Node.js version
       node_js: lts/*
     - stage: publish
+      if: type = push
       name: Publish to npm
       node_js: lts/*
       script: Publishing to npm...

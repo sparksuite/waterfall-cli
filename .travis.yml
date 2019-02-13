@@ -7,16 +7,16 @@ branches:
     - master
 jobs:
   include:
-    - stage: tests
+    - stage: test
       if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: Lint code
       node_js: lts/*
       script: npm run lint
-    - stage: tests
+    - stage: test
       if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: Run tests (Node.js Current)
       node_js: node
-    - stage: tests
+    - stage: test
       if: type = pull_request OR env(TRAVIS_TAG) IS present
       name: Run tests (Node.js LTS)
       node_js: lts/*

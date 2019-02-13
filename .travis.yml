@@ -4,7 +4,8 @@ node_js:
 - lts/*
 jobs:
   include:
-    - stage: Publish release
+    - stage: publish release
+      name: "Publish"
       node_js: lts/*
       deploy:
         provider: npm

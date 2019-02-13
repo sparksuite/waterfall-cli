@@ -5,6 +5,7 @@ git:
 branches:
   only:
     - master
+    - /^v\d+\.\d+(\.\d+)?(-\S*)?$/ # Allow vX.X.X tags
 jobs:
   include:
     - stage: test

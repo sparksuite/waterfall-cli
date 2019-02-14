@@ -1,4 +1,4 @@
 // Initiate Cascade CLI
-require('../../../index.js')({
+require('../../../../src/index.js')({
 	verbose: true,
 });

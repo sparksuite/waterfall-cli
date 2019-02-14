@@ -2,13 +2,13 @@
   "name": "cascade-cli",
   "version": "0.1.0",
   "description": "Effortlessly create CLIs powered by Node.js",
-  "main": "index.js",
+  "main": "src/index.js",
   "files": [
-    "index.js"
+    "/src"
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha"
+    "test": "nyc --reporter=html --reporter=text mocha"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",
     "eslint-plugin-import": "^2.16.0",
-    "mocha": "^5.2.0"
+    "mocha": "^5.2.0",
+    "nyc": "^13.3.0"
   }
 }

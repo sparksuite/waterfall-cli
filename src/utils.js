@@ -80,7 +80,16 @@ module.exports = function Constructor(currentSettings) {
 			const mergedSpec = {
 				description: null,
 				data: {},
-				flags: {},
+				flags: {
+					version: {
+						shorthand: 'v',
+						description: 'Show version',
+					},
+					help: {
+						shorthand: 'h',
+						description: 'Show help',
+					},
+				},
 				options: {},
 			};
 			
@@ -162,7 +171,7 @@ module.exports = function Constructor(currentSettings) {
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 			
-			settings.arguments.forEach((argument) => {
+			settings.arguments.forEach((argument, index) => {
 				// Verbose output
 				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
 				
@@ -180,12 +189,12 @@ module.exports = function Constructor(currentSettings) {
 				}
 				
 				
+				// Get merged spec for this command
+				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
+				
+				
 				// Skip options/flags
 				if (argument[0] === '-') {
-					// Get merged spec for this command
-					const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
-					
-					
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
@@ -197,7 +206,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `--${option.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
-								organized.options.push(argument);
+								organized.options.push(option);
 							} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 								// Verbose output
 								module.exports(settings).verboseLog('...Is an option');
@@ -206,7 +215,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `-${details.shorthand.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
-								organized.options.push(argument);
+								organized.options.push(option);
 							}
 						});
 					}
@@ -214,12 +223,38 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Handle flags
 					if (nextIsOptionValue === false) {
-						// Push flag
-						organized.flags.push(argument);
+						// Initialize
+						let matchedFlag = false;
 						
 						
-						// Verbose output
-						module.exports(settings).verboseLog('...Is a flag');
+						// Check if this is a valid flag
+						if (typeof mergedSpec.flags === 'object') {
+							Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+								if (argument === `--${flag.trim().toLowerCase()}`) {
+									// Verbose output
+									module.exports(settings).verboseLog('...Is a flag');
+									
+									
+									// Store details
+									matchedFlag = true;
+									organized.flags.push(flag);
+								} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
+									// Verbose output
+									module.exports(settings).verboseLog('...Is a flag');
+									
+									
+									// Store details
+									matchedFlag = true;
+									organized.flags.push(flag);
+								}
+							});
+						}
+						
+						
+						// Handle no match
+						if (!matchedFlag) {
+							throw new Error(`Unrecognized argument: ${argument}`);
+						}
 					}
 					
 					
@@ -247,7 +282,13 @@ module.exports = function Constructor(currentSettings) {
 					organized.command += ` ${argument}`;
 				} else {
 					// Verbose output
-					module.exports(settings).verboseLog('...Is a data value');
+					module.exports(settings).verboseLog('...Is data');
+					
+					
+					// Check if data is allowed
+					if (!mergedSpec.data || !mergedSpec.data.allowed) {
+						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${settings.arguments.slice(index).join(' ')}`);
+					}
 					
 					
 					// Store details

@@ -83,6 +83,10 @@ describe('Utils', () => {
 				data: undefined,
 				description: undefined,
 				flags: {
+					help: {
+						shorthand: 'h',
+						description: 'Show help',
+					},
 					'non-cascading': {
 						description: 'Just used for testing',
 					},
@@ -90,6 +94,10 @@ describe('Utils', () => {
 						cascades: true,
 						description: 'Disable interactivity, rely on default values instead',
 						shorthand: 'q',
+					},
+					version: {
+						shorthand: 'v',
+						description: 'Show version',
 					},
 				},
 				options: {
@@ -114,6 +122,10 @@ describe('Utils', () => {
 				},
 				description: 'List something',
 				flags: {
+					help: {
+						shorthand: 'h',
+						description: 'Show help',
+					},
 					quiet: {
 						cascades: true,
 						description: 'Disable interactivity, rely on default values instead',
@@ -122,6 +134,10 @@ describe('Utils', () => {
 					vegetarian: {
 						description: 'Only list vegetarian choices',
 						shorthand: 'v',
+					},
+					version: {
+						shorthand: 'v',
+						description: 'Show version',
 					},
 				},
 				options: {
@@ -253,7 +269,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--vegetarian'],
+				flags: ['vegetarian'],
 				options: [],
 				values: [],
 				data: null,
@@ -268,7 +284,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--quiet'],
+				flags: ['quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -283,7 +299,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['-q'],
+				flags: ['quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -298,7 +314,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--vegetarian', '--quiet'],
+				flags: ['vegetarian', 'quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -313,7 +329,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--quiet', '--vegetarian'],
+				flags: ['quiet', 'vegetarian'],
 				options: [],
 				values: [],
 				data: null,
@@ -329,7 +345,7 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
-				options: ['--delivery-zip-code'],
+				options: ['delivery-zip-code'],
 				values: ['55555'],
 				data: null,
 				command: 'list',
@@ -344,11 +360,33 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
-				options: ['-z'],
+				options: ['delivery-zip-code'],
 				values: ['55555'],
 				data: null,
 				command: 'list',
 			});
+		});
+		
+		it('complains about unrecognized flag', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about non-permitted data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'abc', '123'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
 		});
 	});
 	

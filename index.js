@@ -206,7 +206,7 @@ module.exports = function Constructor(customOptions) {
 		
 		
 		// Push onto array, if needed
-		if (index === (commandPieces.length - 1) || spec.executeOnPassthrough === true) {
+		if (index === (commandPieces.length - 1) || spec.executeOnCascade === true) {
 			executionPaths.push(commandPath);
 		}
 	});
@@ -368,7 +368,7 @@ module.exports.utils = {
 			// Build onto spec
 			if (typeof spec.flags === 'object') {
 				Object.entries(spec.flags).forEach(([flag, details]) => {
-					if (index === (pieces.length - 1) || details.carriesDown === true) {
+					if (index === (pieces.length - 1) || details.cascades === true) {
 						mergedSpec.flags[flag] = details;
 					}
 				});
@@ -376,7 +376,7 @@ module.exports.utils = {
 			
 			if (typeof spec.options === 'object') {
 				Object.entries(spec.options).forEach(([option, details]) => {
-					if (index === (pieces.length - 1) || details.carriesDown === true) {
+					if (index === (pieces.length - 1) || details.cascades === true) {
 						mergedSpec.options[option] = details;
 					}
 				});

@@ -1,14 +1,14 @@
 {
     "flags": {
         "quiet": {
-            "carriesDown": true,
+            "cascades": true,
             "shorthand": "q",
             "description": "Disable interactivity, rely on default values instead"
         }
     },
     "options": {
         "delivery-zip-code": {
-            "carriesDown": true,
+            "cascades": true,
             "description": "The delivery ZIP code, for context"
         }
     }

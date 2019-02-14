@@ -369,9 +369,19 @@ describe('Utils', () => {
 		
 		it('complains about unrecognized flag', () => {
 			const settings = Object.assign({}, defaultSettings, {
-				verbose: true,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about non-permitted data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'abc', '123'],
 			});
 			
 			assert.throws(() => {

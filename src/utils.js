@@ -171,7 +171,7 @@ module.exports = function Constructor(currentSettings) {
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 			
-			settings.arguments.forEach((argument) => {
+			settings.arguments.forEach((argument, index) => {
 				// Verbose output
 				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
 				
@@ -189,12 +189,12 @@ module.exports = function Constructor(currentSettings) {
 				}
 				
 				
+				// Get merged spec for this command
+				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
+				
+				
 				// Skip options/flags
 				if (argument[0] === '-') {
-					// Get merged spec for this command
-					const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
-					
-					
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
@@ -282,7 +282,13 @@ module.exports = function Constructor(currentSettings) {
 					organized.command += ` ${argument}`;
 				} else {
 					// Verbose output
-					module.exports(settings).verboseLog('...Is a data value');
+					module.exports(settings).verboseLog('...Is data');
+					
+					
+					// Check if data is allowed
+					if (!mergedSpec.data || !mergedSpec.data.allowed) {
+						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${settings.arguments.slice(index).join(' ')}`);
+					}
 					
 					
 					// Store details

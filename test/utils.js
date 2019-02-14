@@ -253,7 +253,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--vegetarian'],
+				flags: ['vegetarian'],
 				options: [],
 				values: [],
 				data: null,
@@ -268,7 +268,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--quiet'],
+				flags: ['quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -283,7 +283,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['-q'],
+				flags: ['quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -298,7 +298,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--vegetarian', '--quiet'],
+				flags: ['vegetarian', 'quiet'],
 				options: [],
 				values: [],
 				data: null,
@@ -313,7 +313,7 @@ describe('Utils', () => {
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: ['--quiet', '--vegetarian'],
+				flags: ['quiet', 'vegetarian'],
 				options: [],
 				values: [],
 				data: null,
@@ -329,7 +329,7 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
-				options: ['--delivery-zip-code'],
+				options: ['delivery-zip-code'],
 				values: ['55555'],
 				data: null,
 				command: 'list',
@@ -344,7 +344,7 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
-				options: ['-z'],
+				options: ['delivery-zip-code'],
 				values: ['55555'],
 				data: null,
 				command: 'list',

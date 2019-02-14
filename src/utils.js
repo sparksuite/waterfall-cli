@@ -197,7 +197,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `--${option.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
-								organized.options.push(argument);
+								organized.options.push(option);
 							} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 								// Verbose output
 								module.exports(settings).verboseLog('...Is an option');
@@ -206,7 +206,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `-${details.shorthand.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
-								organized.options.push(argument);
+								organized.options.push(option);
 							}
 						});
 					}

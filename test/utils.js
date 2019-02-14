@@ -96,6 +96,7 @@ describe('Utils', () => {
 					'delivery-zip-code': {
 						cascades: true,
 						description: 'The delivery ZIP code, for context',
+						shorthand: 'z',
 					},
 				},
 			});
@@ -127,6 +128,7 @@ describe('Utils', () => {
 					'delivery-zip-code': {
 						cascades: true,
 						description: 'The delivery ZIP code, for context',
+						shorthand: 'z',
 					},
 				},
 			});

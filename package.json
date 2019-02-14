@@ -1,5 +1,5 @@
 {
-  "name": "cascade-cli",
+  "name": "waterfall-cli",
   "version": "0.0.0",
   "description": "Effortlessly create CLIs powered by Node.js",
   "main": "src/index.js",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/sparksuite/cascade-cli.git"
+    "url": "git+https://github.com/sparksuite/waterfall-cli.git"
   },
   "keywords": [
     "cli",
@@ -21,9 +21,9 @@
   "author": "Sparksuite",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sparksuite/cascade-cli/issues"
+    "url": "https://github.com/sparksuite/waterfall-cli/issues"
   },
-  "homepage": "https://github.com/sparksuite/cascade-cli",
+  "homepage": "https://github.com/sparksuite/waterfall-cli",
   "dependencies": {
     "colors": "^1.3.3"
   },

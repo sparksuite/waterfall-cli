@@ -1,4 +1,4 @@
-// Initiate Cascade CLI
+// Initiate Waterfall CLI
 require('../../../../src/index.js')({
 	verbose: true,
 });

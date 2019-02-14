@@ -80,7 +80,16 @@ module.exports = function Constructor(currentSettings) {
 			const mergedSpec = {
 				description: null,
 				data: {},
-				flags: {},
+				flags: {
+					version: {
+						shorthand: 'v',
+			            description: 'Show version',
+					},
+					help: {
+						shorthand: 'h',
+			            description: 'Show help',
+					},
+				},
 				options: {},
 			};
 			
@@ -214,12 +223,38 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Handle flags
 					if (nextIsOptionValue === false) {
-						// Push flag
-						organized.flags.push(argument);
+						// Initialize
+						let matchedFlag = false;
 						
 						
-						// Verbose output
-						module.exports(settings).verboseLog('...Is a flag');
+						// Check if this is a valid flag
+						if (typeof mergedSpec.flags === 'object') {
+							Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+								if (argument === `--${flag.trim().toLowerCase()}`) {
+									// Verbose output
+									module.exports(settings).verboseLog('...Is a flag');
+									
+									
+									// Store details
+									matchedFlag = true;
+									organized.flags.push(flag);
+								} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
+									// Verbose output
+									module.exports(settings).verboseLog('...Is a flag');
+									
+									
+									// Store details
+									matchedFlag = true;
+									organized.flags.push(flag);
+								}
+							});
+						}
+						
+						
+						// Handle no match
+						if (!matchedFlag) {
+							throw new Error(`Unrecognized argument: ${argument}`);
+						}
 					}
 					
 					

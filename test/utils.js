@@ -83,6 +83,10 @@ describe('Utils', () => {
 				data: undefined,
 				description: undefined,
 				flags: {
+					help: {
+						shorthand: 'h',
+			            description: 'Show help',
+					},
 					'non-cascading': {
 						description: 'Just used for testing',
 					},
@@ -90,6 +94,10 @@ describe('Utils', () => {
 						cascades: true,
 						description: 'Disable interactivity, rely on default values instead',
 						shorthand: 'q',
+					},
+					version: {
+						shorthand: 'v',
+			            description: 'Show version',
 					},
 				},
 				options: {
@@ -114,6 +122,10 @@ describe('Utils', () => {
 				},
 				description: 'List something',
 				flags: {
+					help: {
+						shorthand: 'h',
+			            description: 'Show help',
+					},
 					quiet: {
 						cascades: true,
 						description: 'Disable interactivity, rely on default values instead',
@@ -122,6 +134,10 @@ describe('Utils', () => {
 					vegetarian: {
 						description: 'Only list vegetarian choices',
 						shorthand: 'v',
+					},
+					version: {
+						shorthand: 'v',
+			            description: 'Show version',
 					},
 				},
 				options: {
@@ -349,6 +365,18 @@ describe('Utils', () => {
 				data: null,
 				command: 'list',
 			});
+		});
+		
+		it('complains about unrecognized flag', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				verbose: true,
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
 		});
 	});
 	

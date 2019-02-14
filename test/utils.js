@@ -85,7 +85,7 @@ describe('Utils', () => {
 				flags: {
 					help: {
 						shorthand: 'h',
-			            description: 'Show help',
+						description: 'Show help',
 					},
 					'non-cascading': {
 						description: 'Just used for testing',
@@ -97,7 +97,7 @@ describe('Utils', () => {
 					},
 					version: {
 						shorthand: 'v',
-			            description: 'Show version',
+						description: 'Show version',
 					},
 				},
 				options: {
@@ -124,7 +124,7 @@ describe('Utils', () => {
 				flags: {
 					help: {
 						shorthand: 'h',
-			            description: 'Show help',
+						description: 'Show help',
 					},
 					quiet: {
 						cascades: true,
@@ -137,7 +137,7 @@ describe('Utils', () => {
 					},
 					version: {
 						shorthand: 'v',
-			            description: 'Show version',
+						description: 'Show version',
 					},
 				},
 				options: {

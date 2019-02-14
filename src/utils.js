@@ -83,11 +83,11 @@ module.exports = function Constructor(currentSettings) {
 				flags: {
 					version: {
 						shorthand: 'v',
-			            description: 'Show version',
+						description: 'Show version',
 					},
 					help: {
 						shorthand: 'h',
-			            description: 'Show help',
+						description: 'Show help',
 					},
 				},
 				options: {},

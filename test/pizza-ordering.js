@@ -3,13 +3,17 @@
 
 
 // Dependencies
-const assert = require('assert');
 require('colors');
+const assert = require('assert');
 const { spawn } = require('child_process');
 
 
+// Set environment variable
+process.env.TEST_MODE = 'true';
+
+
 // Initialize
-const entryFile = `${__dirname}/pizza-ordering/cli/entry.js`;
+const entryFile = `${__dirname}/programs/pizza-ordering/cli/entry.js`;
 
 
 // Remove ANSI formatting
@@ -74,7 +78,7 @@ describe('Pizza ordering', () => {
 	describe('Built-in abilities', () => {
 		it('Displays version', (done) => {
 			runTest('--version', [
-				'example: 1.2.3',
+				'pizza-ordering: 1.2.3',
 			], undefined, done);
 		});
 	});

@@ -159,7 +159,7 @@ module.exports = function Constructor(currentSettings) {
 				flags: [],
 				options: [],
 				values: [],
-				data: '',
+				data: null,
 				command: '',
 			};
 			
@@ -299,7 +299,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Check if that file exists
-				if (!chainBroken && fs.existsSync(commandPath)) {
+				if (!chainBroken && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>\.]/g, '') !== '') {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is a command');
 					
@@ -307,13 +307,13 @@ module.exports = function Constructor(currentSettings) {
 					// Add to currents
 					currentPathPrefix += `/${argument}`;
 					organized.command += ` ${argument}`;
-				} else {
+				} else if (!chainBroken) {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is data');
 					
 					
 					// Form full data
-					const fullData = settings.arguments.slice(index).join(' ');
+					let fullData = settings.arguments.slice(index).join(' ');
 					
 					
 					// Check if data is allowed
@@ -329,21 +329,40 @@ module.exports = function Constructor(currentSettings) {
 						}
 					}
 					
+					if (mergedSpec.data.type) {
+						if (mergedSpec.data.type === 'integer') {
+							if (fullData.match(/^[0-9]+$/) !== null) {
+								fullData = parseInt(fullData);
+							} else {
+								throw new Error(`The command "${organized.command.trim()}" expects an integer\nProvided: ${fullData}`);
+							}
+						} else if (mergedSpec.data.type === 'float') {
+							if (fullData.match(/^[0-9]*[\.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
+								fullData = parseFloat(fullData);
+							} else {
+								throw new Error(`The command "${organized.command.trim()}" expects a float\nProvided: ${fullData}`);
+							}
+						} else {
+							throw new Error(`Unrecognized "type": ${mergedSpec.data.type}`);
+						}
+					}
+					
 					
 					// Store details
 					chainBroken = true;
-					organized.data += ` ${argument}`;
+					organized.data = fullData;
 				}
 			});
 			
 			
-			// Clean up components
-			organized.command = organized.command.trim();
-			organized.data = organized.data.trim();
-			
-			if (organized.data === '') {
-				organized.data = null;
+			// Error if we're missing an expected value
+			if (nextIsOptionValue === true) {
+				throw new Error(`No value provided for ${previousOption}, which is an option, not a flag`);
 			}
+			
+			
+			// Trim command
+			organized.command = organized.command.trim();
 			
 			
 			// Return

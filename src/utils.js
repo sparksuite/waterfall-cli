@@ -155,7 +155,7 @@ module.exports = function Constructor(currentSettings) {
 		// Organize arguments into categories
 		organizeArguments() {
 			// Initialize
-			const organized = {
+			const organizedArguments = {
 				flags: [],
 				options: [],
 				values: [],
@@ -216,13 +216,13 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Store and continue
 					nextIsOptionValue = false;
-					organized.values.push(value);
+					organizedArguments.values.push(value);
 					return;
 				}
 				
 				
 				// Get merged spec for this command
-				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
+				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organizedArguments.command);
 				
 				
 				// Skip options/flags
@@ -246,7 +246,7 @@ module.exports = function Constructor(currentSettings) {
 								nextIsOptionValue = true;
 								nextValueAccepts = details.accepts;
 								nextValueType = details.type;
-								organized.options.push(option);
+								organizedArguments.options.push(option);
 							}
 						});
 					}
@@ -268,7 +268,7 @@ module.exports = function Constructor(currentSettings) {
 									
 									// Store details
 									matchedFlag = true;
-									organized.flags.push(flag);
+									organizedArguments.flags.push(flag);
 								} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 									// Verbose output
 									module.exports(settings).verboseLog('...Is a flag');
@@ -276,7 +276,7 @@ module.exports = function Constructor(currentSettings) {
 									
 									// Store details
 									matchedFlag = true;
-									organized.flags.push(flag);
+									organizedArguments.flags.push(flag);
 								}
 							});
 						}
@@ -310,7 +310,7 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Add to currents
 					currentPathPrefix += `/${argument}`;
-					organized.command += ` ${argument}`;
+					organizedArguments.command += ` ${argument}`;
 				} else if (!chainBroken) {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is data');
@@ -322,14 +322,14 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.allowed) {
-						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${fullData}`);
+						throw new Error(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
 					}
 					
 					
 					// Validate data, if necessary
 					if (mergedSpec.data.accepts) {
 						if (!mergedSpec.data.accepts.includes(fullData)) {
-							throw new Error(`Unrecognized data for "${organized.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
+							throw new Error(`Unrecognized data for "${organizedArguments.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
 						}
 					}
 					
@@ -338,13 +338,13 @@ module.exports = function Constructor(currentSettings) {
 							if (fullData.match(/^[0-9]+$/) !== null) {
 								fullData = parseInt(fullData, 10);
 							} else {
-								throw new Error(`The command "${organized.command.trim()}" expects integer data\nProvided: ${fullData}`);
+								throw new Error(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${fullData}`);
 							}
 						} else if (mergedSpec.data.type === 'float') {
 							if (fullData.match(/^[0-9]*[.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
 								fullData = parseFloat(fullData);
 							} else {
-								throw new Error(`The command "${organized.command.trim()}" expects float data\nProvided: ${fullData}`);
+								throw new Error(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${fullData}`);
 							}
 						} else {
 							throw new Error(`Unrecognized "type": ${mergedSpec.data.type}`);
@@ -354,7 +354,7 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Store details
 					chainBroken = true;
-					organized.data = fullData;
+					organizedArguments.data = fullData;
 				}
 			});
 			
@@ -366,11 +366,54 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Trim command
-			organized.command = organized.command.trim();
+			organizedArguments.command = organizedArguments.command.trim();
 			
 			
 			// Return
-			return organized;
+			return organizedArguments;
+		},
+		
+		
+		// Construct a full input array
+		constructInputArray(organizedArguments) {
+			// Initialize
+			const inputArray = {};
+			
+			
+			// Get merged spec for this command
+			const mergedSpec = module.exports(settings).getMergedSpecForCommand(organizedArguments.command);
+			
+			
+			// Loop over each component
+			Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+				inputArray[module.exports(settings).convertDashesToCamelCase(flag)] = organizedArguments.flags.includes(flag);
+			});
+			
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				inputArray[module.exports(settings).convertDashesToCamelCase(option)] = organizedArguments.values[organizedArguments.options.indexOf(option)];
+				
+				if (details.required && !organizedArguments.options.includes(option)) {
+					throw new Error(`The --${option} option is required`);
+				}
+			});
+			
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				inputArray.data = organizedArguments.data;
+				
+				if (details.required && inputArray.data === null) {
+					throw new Error(`Data is required`);
+				}
+			});
+			
+			
+			// Return
+			return inputArray;
+		},
+		
+		
+		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
+		convertDashesToCamelCase(string) {
+			return string.replace(/-(.)/g, g => g[1].toUpperCase());
 		},
 		
 		

@@ -724,6 +724,63 @@ describe('Utils', () => {
 		});
 	});
 	
+	describe('#constructInputArray()', () => {
+		it('handles combination of input', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.deepEqual(utils(settings).constructInputArray(organizedArguments), {
+				data: 'toppings',
+				help: false,
+				limit: undefined,
+				maxPrice: undefined,
+				sort: 'popularity',
+				vegetarian: true,
+				version: false,
+			});
+		});
+		
+		it('complains about missing required option', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'toppings'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.throws(() => {
+				utils(settings).constructInputArray(organizedArguments);
+			}, Error);
+		});
+		
+		it('complains about missing required data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--sort', 'popularity'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.throws(() => {
+				utils(settings).constructInputArray(organizedArguments);
+			}, Error);
+		});
+	});
+	
+	describe('#convertDashesToCamelCase()', () => {
+		it('normal string', () => {
+			assert.equal(utils({}).convertDashesToCamelCase('aaa-aaa-aaa'), 'aaaAaaAaa');
+		});
+		
+		it('with numbers', () => {
+			assert.equal(utils({}).convertDashesToCamelCase('aaa-123-aaa'), 'aaa123Aaa');
+		});
+	});
+	
 	describe('#files', () => {
 		it('detects directory is directory', () => {
 			assert.equal(utils({}).files.isDirectory(`${__dirname}/file-tree/directory1`), true);

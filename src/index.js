@@ -34,7 +34,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Organize the arguments
-	const categorizedArguments = utils(settings).organizeArguments();
+	const organizedArguments = utils(settings).organizeArguments();
 	
 	
 	// Handle --version
@@ -82,8 +82,8 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Filter out any unnecessary commands
-		commands = commands.filter(command => command.match(new RegExp(`^${categorizedArguments.command}`)));
-		const commandLevel = (categorizedArguments.command.match(/ /g) || []).length;
+		commands = commands.filter(command => command.match(new RegExp(`^${organizedArguments.command}`)));
+		const commandLevel = (organizedArguments.command.match(/ /g) || []).length;
 		commands = commands.filter(command => (command.match(/ /g) || []).length <= (commandLevel + 1));
 		
 		
@@ -164,7 +164,7 @@ module.exports = function Constructor(customSettings) {
 				}
 			} else {
 				// List the command
-				console.log(`  ${command.replace(new RegExp(`^${categorizedArguments.command}`), '')}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
+				console.log(`  ${command.replace(new RegExp(`^${organizedArguments.command}`), '')}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
 			}
 		});
 		
@@ -185,7 +185,7 @@ module.exports = function Constructor(customSettings) {
 	// Form execution paths
 	const executionPaths = [];
 	let currentPathPrefix = path.dirname(settings.mainFilename);
-	const commandPieces = categorizedArguments.command.trim().split(' ');
+	const commandPieces = organizedArguments.command.trim().split(' ');
 	
 	commandPieces.forEach((command, index) => {
 		// Update current path prefix

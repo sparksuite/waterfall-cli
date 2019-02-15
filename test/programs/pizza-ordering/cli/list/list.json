@@ -2,7 +2,7 @@
     "description": "List something",
     "data": {
         "allowed": true,
-        "values": ["toppings", "crusts"]
+        "accepts": ["toppings", "crusts"]
     },
     "flags": {
         "vegetarian": {
@@ -21,7 +21,7 @@
         },
         "sort": {
             "description": "How to sort the list",
-            "values": ["popularity", "alphabetical"],
+            "accepts": ["popularity", "alphabetical"],
             "required": true
         }
     }

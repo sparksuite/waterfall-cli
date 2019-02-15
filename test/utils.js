@@ -118,7 +118,7 @@ describe('Utils', () => {
 			assert.deepEqual(utils(settings).getMergedSpecForCommand('. list'), {
 				data: {
 					allowed: true,
-					values: ['toppings', 'crusts'],
+					accepts: ['toppings', 'crusts'],
 				},
 				description: 'List something',
 				flags: {
@@ -156,7 +156,7 @@ describe('Utils', () => {
 					},
 					sort: {
 						description: 'How to sort the list',
-						values: ['popularity', 'alphabetical'],
+						accepts: ['popularity', 'alphabetical'],
 						required: true,
 					},
 				},

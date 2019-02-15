@@ -166,7 +166,7 @@ module.exports = function Constructor(currentSettings) {
 			let previousOption = null;
 			let nextIsOptionValue = false;
 			let nextValueType = null;
-			let nextValidValues = null;
+			let nextValueAccepts = null;
 			let chainBroken = false;
 			
 			
@@ -184,25 +184,29 @@ module.exports = function Constructor(currentSettings) {
 					module.exports(settings).verboseLog(`...Is value for previous option (${previousOption})`);
 					
 					
+					// Initialize
+					let value = argument;
+					
+					
 					// Validate value, if necessary
-					if (nextValidValues) {
-						if (!nextValidValues.includes(argument)) {
-							throw new Error(`Unrecognized value for ${previousOption}: ${argument}\nValid values: ${nextValidValues.join(', ')}`);
+					if (nextValueAccepts) {
+						if (!nextValueAccepts.includes(value)) {
+							throw new Error(`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${nextValueAccepts.join(', ')}`);
 						}
 					}
 					
 					if (nextValueType) {
 						if (nextValueType === 'integer') {
-							if (argument.match(/^[0-9]+$/) !== null) {
-								argument = parseInt(argument);
+							if (value.match(/^[0-9]+$/) !== null) {
+								value = parseInt(value, 10);
 							} else {
-								throw new Error(`The option ${previousOption} expects an integer\nProvided: ${argument}`);
+								throw new Error(`The option ${previousOption} expects an integer\nProvided: ${value}`);
 							}
 						} else if (nextValueType === 'float') {
-							if (argument.match(/^[0-9]*[\.]*[0-9]*$/) !== null && argument !== '.' && argument !== '') {
-								argument = parseFloat(argument);
+							if (value.match(/^[0-9]*[.]*[0-9]*$/) !== null && value !== '.' && value !== '') {
+								value = parseFloat(value);
 							} else {
-								throw new Error(`The option ${previousOption} expects a float\nProvided: ${argument}`);
+								throw new Error(`The option ${previousOption} expects a float\nProvided: ${value}`);
 							}
 						} else {
 							throw new Error(`Unrecognized "type": ${nextValueType}`);
@@ -212,7 +216,7 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Store and continue
 					nextIsOptionValue = false;
-					organized.values.push(argument);
+					organized.values.push(value);
 					return;
 				}
 				
@@ -240,7 +244,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = argument;
 								nextIsOptionValue = true;
-								nextValidValues = details.values;
+								nextValueAccepts = details.accepts;
 								nextValueType = details.type;
 								organized.options.push(option);
 							}
@@ -299,7 +303,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Check if that file exists
-				if (!chainBroken && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>\.]/g, '') !== '') {
+				if (!chainBroken && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>.]/g, '') !== '') {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is a command');
 					
@@ -322,25 +326,25 @@ module.exports = function Constructor(currentSettings) {
 					}
 					
 					
-					// Validate value, if necessary
-					if (mergedSpec.data.values) {
-						if (!mergedSpec.data.values.includes(fullData)) {
-							throw new Error(`Unrecognized data for "${organized.command.trim()}": ${fullData}\nValid values: ${mergedSpec.data.values.join(', ')}`);
+					// Validate data, if necessary
+					if (mergedSpec.data.accepts) {
+						if (!mergedSpec.data.accepts.includes(fullData)) {
+							throw new Error(`Unrecognized data for "${organized.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
 						}
 					}
 					
 					if (mergedSpec.data.type) {
 						if (mergedSpec.data.type === 'integer') {
 							if (fullData.match(/^[0-9]+$/) !== null) {
-								fullData = parseInt(fullData);
+								fullData = parseInt(fullData, 10);
 							} else {
-								throw new Error(`The command "${organized.command.trim()}" expects an integer\nProvided: ${fullData}`);
+								throw new Error(`The command "${organized.command.trim()}" expects integer data\nProvided: ${fullData}`);
 							}
 						} else if (mergedSpec.data.type === 'float') {
-							if (fullData.match(/^[0-9]*[\.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
+							if (fullData.match(/^[0-9]*[.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
 								fullData = parseFloat(fullData);
 							} else {
-								throw new Error(`The command "${organized.command.trim()}" expects a float\nProvided: ${fullData}`);
+								throw new Error(`The command "${organized.command.trim()}" expects float data\nProvided: ${fullData}`);
 							}
 						} else {
 							throw new Error(`Unrecognized "type": ${mergedSpec.data.type}`);

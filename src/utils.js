@@ -207,23 +207,19 @@ module.exports = function Constructor(currentSettings) {
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
-							if (argument === `--${option.trim().toLowerCase()}`) {
+							// Check for a match
+							const matchesFullOption = (argument === `--${option.trim().toLowerCase()}`);
+							const matchesShorthandOption = (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`);
+							
+							
+							// Handle a match
+							if (matchesFullOption || matchesShorthandOption) {
 								// Verbose output
 								module.exports(settings).verboseLog('...Is an option');
 								
 								
 								// Store details
-								previousOption = `--${option.trim().toLowerCase()}`;
-								nextIsOptionValue = true;
-								nextValidValues = details.values;
-								organized.options.push(option);
-							} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
-								// Verbose output
-								module.exports(settings).verboseLog('...Is an option');
-								
-								
-								// Store details
-								previousOption = `-${details.shorthand.trim().toLowerCase()}`;
+								previousOption = argument;
 								nextIsOptionValue = true;
 								nextValidValues = details.values;
 								organized.options.push(option);

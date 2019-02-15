@@ -147,13 +147,13 @@ describe('Utils', () => {
 						shorthand: 'z',
 					},
 					limit: {
-			            description: 'How many items to list',
-			            type: 'integer'
-			        },
-			        'max-price': {
-			            description: 'The maximum price of the items to list',
-			            type: 'float'
-			        },
+						description: 'How many items to list',
+						type: 'integer',
+					},
+					'max-price': {
+						description: 'The maximum price of the items to list',
+						type: 'float',
+					},
 					sort: {
 						description: 'How to sort the list',
 						values: ['popularity', 'alphabetical'],

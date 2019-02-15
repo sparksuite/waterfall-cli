@@ -73,13 +73,13 @@ describe('Utils', () => {
 		});
 	});
 	
-	describe('#getMergedSpecForCommand()', () => {
+	describe('#getMergedSpec()', () => {
 		it('gets top-level spec', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpecForCommand('.'), {
+			assert.deepEqual(utils(settings).getMergedSpec('.'), {
 				data: undefined,
 				description: undefined,
 				flags: {
@@ -115,7 +115,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpecForCommand('. list'), {
+			assert.deepEqual(utils(settings).getMergedSpec('. list'), {
 				data: {
 					allowed: true,
 					accepts: ['toppings', 'crusts'],
@@ -170,7 +170,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpecForCommand('. multiple-js');
+				utils(settings).getMergedSpec('. multiple-js');
 			}, Error);
 		});
 		
@@ -180,7 +180,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpecForCommand('. multiple-json');
+				utils(settings).getMergedSpec('. multiple-json');
 			}, Error);
 		});
 	});

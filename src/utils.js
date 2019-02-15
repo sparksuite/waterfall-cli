@@ -71,7 +71,7 @@ module.exports = function Constructor(currentSettings) {
 		
 		
 		// Get specs for a command
-		getMergedSpecForCommand(command) {
+		getMergedSpec(command) {
 			// Break into pieces, with entry point
 			const pieces = command.split(' ');
 			
@@ -222,7 +222,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Get merged spec for this command
-				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organizedArguments.command);
+				const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
 				
 				
 				// Skip options/flags
@@ -381,29 +381,32 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Get merged spec for this command
-			const mergedSpec = module.exports(settings).getMergedSpecForCommand(organizedArguments.command);
+			const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
 			
 			
-			// Loop over each component
-			Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
-				inputArray[module.exports(settings).convertDashesToCamelCase(flag)] = organizedArguments.flags.includes(flag);
+			// Loop over each component and store
+			Object.entries(mergedSpec.flags).forEach(([flag]) => {
+				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(flag);
+				inputArray[camelCaseKey] = organizedArguments.flags.includes(flag);
 			});
 			
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				inputArray[module.exports(settings).convertDashesToCamelCase(option)] = organizedArguments.values[organizedArguments.options.indexOf(option)];
+				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(option);
+				const optionIndex = organizedArguments.options.indexOf(option);
+				inputArray[camelCaseKey] = organizedArguments.values[optionIndex];
 				
 				if (details.required && !organizedArguments.options.includes(option)) {
 					throw new Error(`The --${option} option is required`);
 				}
 			});
 			
-			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				inputArray.data = organizedArguments.data;
-				
-				if (details.required && inputArray.data === null) {
-					throw new Error(`Data is required`);
-				}
-			});
+			
+			// Store data
+			inputArray.data = organizedArguments.data;
+			
+			if (mergedSpec.data && mergedSpec.data.required && !organizedArguments.data) {
+				throw new Error('Data is required');
+			}
 			
 			
 			// Return

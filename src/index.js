@@ -98,7 +98,7 @@ module.exports = function Constructor(customSettings) {
 		// Loop over each command
 		commands.forEach((command, index) => {
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpecForCommand(command);
+			const mergedSpec = utils(settings).getMergedSpec(command);
 			
 			
 			// Handle entry point

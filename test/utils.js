@@ -46,6 +46,18 @@ describe('Utils', () => {
 				'~!@#$%^&*()-=_+',
 			]);
 		});
+		
+		it('handles dangling equals sign', () => {
+			assert.deepEqual(utils({}).processArguments([
+				'/path/to/node',
+				'/path/to/entry.js',
+				'command',
+				'--option=',
+			]), [
+				'command',
+				'--option',
+			]);
+		});
 	});
 	
 	describe('#retrieveAppInformation()', () => {
@@ -533,7 +545,7 @@ describe('Utils', () => {
 		it('complains about missing option value', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['list', '--limit'],
+				arguments: ['list', '--delivery-zip-code'],
 			});
 			
 			assert.throws(() => {

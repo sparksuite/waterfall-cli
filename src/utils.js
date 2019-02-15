@@ -26,7 +26,9 @@ module.exports = function Constructor(currentSettings) {
 			argv.forEach((argument) => {
 				if (argument.substr(0, 2) === '--') {
 					argument.split('=').forEach((piece) => {
-						processedArguments.push(piece);
+						if (piece !== '') {
+							processedArguments.push(piece);
+						}
 					});
 				} else {
 					processedArguments.push(argument);

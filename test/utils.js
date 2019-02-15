@@ -350,6 +350,75 @@ describe('Utils', () => {
 			});
 		});
 		
+		it('handles integer option', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', '10'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['limit'],
+				values: [10],
+				data: null,
+				command: 'list',
+			});
+		});
+		
+		it('handles float option', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.4'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123.4],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '.123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [0.123],
+				data: null,
+				command: 'list',
+			});
+		});
+		
 		it('handles cascading option', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -402,7 +471,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 		
-		it('complains about invalid option value', () => {
+		it('complains about option value not in "values"', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--sort', 'fake'],
@@ -413,10 +482,68 @@ describe('Utils', () => {
 			}, Error);
 		});
 		
-		it('complains about invalid data', () => {
+		it('complains about data not in "values"', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about option value not being integer', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', '123.4'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about option value not being float', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.4.5'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '.'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', ''],
 			});
 			
 			assert.throws(() => {

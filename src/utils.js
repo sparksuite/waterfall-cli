@@ -165,6 +165,7 @@ module.exports = function Constructor(currentSettings) {
 			
 			let previousOption = null;
 			let nextIsOptionValue = false;
+			let nextValueType = null;
 			let nextValidValues = null;
 			let chainBroken = false;
 			
@@ -187,6 +188,24 @@ module.exports = function Constructor(currentSettings) {
 					if (nextValidValues) {
 						if (!nextValidValues.includes(argument)) {
 							throw new Error(`Unrecognized value for ${previousOption}: ${argument}\nValid values: ${nextValidValues.join(', ')}`);
+						}
+					}
+					
+					if (nextValueType) {
+						if (nextValueType === 'integer') {
+							if (argument.match(/^[0-9]+$/) !== null) {
+								argument = parseInt(argument);
+							} else {
+								throw new Error(`The option ${previousOption} expects an integer\nProvided: ${argument}`);
+							}
+						} else if (nextValueType === 'float') {
+							if (argument.match(/^[0-9]*[\.]*[0-9]*$/) !== null && argument !== '.' && argument !== '') {
+								argument = parseFloat(argument);
+							} else {
+								throw new Error(`The option ${previousOption} expects a float\nProvided: ${argument}`);
+							}
+						} else {
+							throw new Error(`Unrecognized "type": ${nextValueType}`);
 						}
 					}
 					
@@ -222,6 +241,7 @@ module.exports = function Constructor(currentSettings) {
 								previousOption = argument;
 								nextIsOptionValue = true;
 								nextValidValues = details.values;
+								nextValueType = details.type;
 								organized.options.push(option);
 							}
 						});

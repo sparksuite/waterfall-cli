@@ -146,6 +146,10 @@ describe('Utils', () => {
 						description: 'The delivery ZIP code, for context',
 						shorthand: 'z',
 					},
+					sort: {
+						description: 'How to sort the list',
+						values: ['popularity', 'alphabetical'],
+					},
 				},
 			});
 		});
@@ -220,22 +224,22 @@ describe('Utils', () => {
 		it('handles simple command with longer data', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['list', 'toppings', 'crusts'],
+				arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
 				options: [],
 				values: [],
-				data: 'toppings crusts',
-				command: 'list',
+				data: 'pizza1 pizza2',
+				command: 'order dine-in',
 			});
 		});
 		
 		it('handles data with special characters', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['list', '~!@#$%^&*()-=_+'],
+				arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
@@ -243,7 +247,7 @@ describe('Utils', () => {
 				options: [],
 				values: [],
 				data: '~!@#$%^&*()-=_+',
-				command: 'list',
+				command: 'order dine-in',
 			});
 		});
 		
@@ -382,6 +386,28 @@ describe('Utils', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'abc', '123'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about invalid option value', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--sort', 'fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about invalid data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'fake'],
 			});
 			
 			assert.throws(() => {

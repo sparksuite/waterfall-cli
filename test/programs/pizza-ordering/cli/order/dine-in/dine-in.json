@@ -1,3 +1,6 @@
 {
-    "description": "Order a pizza, dine-in"
+    "description": "Order a pizza, dine-in",
+    "data": {
+        "allowed": true
+    }
 }

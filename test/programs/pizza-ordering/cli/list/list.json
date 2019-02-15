@@ -9,5 +9,11 @@
             "shorthand": "v",
             "description": "Only list vegetarian choices"
         }
+    },
+    "options": {
+        "sort": {
+            "description": "How to sort the list",
+            "values": ["popularity", "alphabetical"]
+        }
     }
 }

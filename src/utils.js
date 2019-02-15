@@ -165,6 +165,7 @@ module.exports = function Constructor(currentSettings) {
 			
 			let previousOption = null;
 			let nextIsOptionValue = false;
+			let nextValidValues = null;
 			let chainBroken = false;
 			
 			
@@ -180,6 +181,14 @@ module.exports = function Constructor(currentSettings) {
 				if (nextIsOptionValue) {
 					// Verbose output
 					module.exports(settings).verboseLog(`...Is value for previous option (${previousOption})`);
+					
+					
+					// Validate value, if necessary
+					if (nextValidValues) {
+						if (!nextValidValues.includes(argument)) {
+							throw new Error(`Unrecognized value for ${previousOption}: ${argument}\nValid values: ${nextValidValues.join(', ')}`);
+						}
+					}
 					
 					
 					// Store and continue
@@ -206,6 +215,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `--${option.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
+								nextValidValues = details.values;
 								organized.options.push(option);
 							} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 								// Verbose output
@@ -215,6 +225,7 @@ module.exports = function Constructor(currentSettings) {
 								// Store details
 								previousOption = `-${details.shorthand.trim().toLowerCase()}`;
 								nextIsOptionValue = true;
+								nextValidValues = details.values;
 								organized.options.push(option);
 							}
 						});
@@ -285,9 +296,21 @@ module.exports = function Constructor(currentSettings) {
 					module.exports(settings).verboseLog('...Is data');
 					
 					
+					// Form full data
+					const fullData = settings.arguments.slice(index).join(' ');
+					
+					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.allowed) {
-						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${settings.arguments.slice(index).join(' ')}`);
+						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${fullData}`);
+					}
+					
+					
+					// Validate value, if necessary
+					if (mergedSpec.data.values) {
+						if (!mergedSpec.data.values.includes(fullData)) {
+							throw new Error(`Unrecognized data for "${organized.command.trim()}": ${fullData}\nValid values: ${mergedSpec.data.values.join(', ')}`);
+						}
 					}
 					
 					

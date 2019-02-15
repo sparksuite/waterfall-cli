@@ -1,3 +1,13 @@
 {
-    "description": "Order a pizza, to-go"
+    "description": "Order a pizza, to-go",
+    "data": {
+        "allowed": true,
+        "type": "fake"
+    },
+    "options": {
+        "test": {
+            "description": "Just used for testing",
+            "type": "fake"
+        }
+    }
 }

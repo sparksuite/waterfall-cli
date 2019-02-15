@@ -26,7 +26,9 @@ module.exports = function Constructor(currentSettings) {
 			argv.forEach((argument) => {
 				if (argument.substr(0, 2) === '--') {
 					argument.split('=').forEach((piece) => {
-						processedArguments.push(piece);
+						if (piece !== '') {
+							processedArguments.push(piece);
+						}
 					});
 				} else {
 					processedArguments.push(argument);
@@ -71,7 +73,7 @@ module.exports = function Constructor(currentSettings) {
 		
 		
 		// Get specs for a command
-		getMergedSpecForCommand(command) {
+		getMergedSpec(command) {
 			// Break into pieces, with entry point
 			const pieces = command.split(' ');
 			
@@ -155,16 +157,18 @@ module.exports = function Constructor(currentSettings) {
 		// Organize arguments into categories
 		organizeArguments() {
 			// Initialize
-			const organized = {
+			const organizedArguments = {
 				flags: [],
 				options: [],
 				values: [],
-				data: '',
+				data: null,
 				command: '',
 			};
 			
 			let previousOption = null;
 			let nextIsOptionValue = false;
+			let nextValueType = null;
+			let nextValueAccepts = null;
 			let chainBroken = false;
 			
 			
@@ -182,15 +186,45 @@ module.exports = function Constructor(currentSettings) {
 					module.exports(settings).verboseLog(`...Is value for previous option (${previousOption})`);
 					
 					
+					// Initialize
+					let value = argument;
+					
+					
+					// Validate value, if necessary
+					if (nextValueAccepts) {
+						if (!nextValueAccepts.includes(value)) {
+							throw new Error(`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${nextValueAccepts.join(', ')}`);
+						}
+					}
+					
+					if (nextValueType) {
+						if (nextValueType === 'integer') {
+							if (value.match(/^[0-9]+$/) !== null) {
+								value = parseInt(value, 10);
+							} else {
+								throw new Error(`The option ${previousOption} expects an integer\nProvided: ${value}`);
+							}
+						} else if (nextValueType === 'float') {
+							if (value.match(/^[0-9]*[.]*[0-9]*$/) !== null && value !== '.' && value !== '') {
+								value = parseFloat(value);
+							} else {
+								throw new Error(`The option ${previousOption} expects a float\nProvided: ${value}`);
+							}
+						} else {
+							throw new Error(`Unrecognized "type": ${nextValueType}`);
+						}
+					}
+					
+					
 					// Store and continue
 					nextIsOptionValue = false;
-					organized.values.push(argument);
+					organizedArguments.values.push(value);
 					return;
 				}
 				
 				
 				// Get merged spec for this command
-				const mergedSpec = module.exports(settings).getMergedSpecForCommand(organized.command);
+				const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
 				
 				
 				// Skip options/flags
@@ -198,24 +232,23 @@ module.exports = function Constructor(currentSettings) {
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
-							if (argument === `--${option.trim().toLowerCase()}`) {
+							// Check for a match
+							const matchesFullOption = (argument === `--${option.trim().toLowerCase()}`);
+							const matchesShorthandOption = (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`);
+							
+							
+							// Handle a match
+							if (matchesFullOption || matchesShorthandOption) {
 								// Verbose output
 								module.exports(settings).verboseLog('...Is an option');
 								
 								
 								// Store details
-								previousOption = `--${option.trim().toLowerCase()}`;
+								previousOption = argument;
 								nextIsOptionValue = true;
-								organized.options.push(option);
-							} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
-								// Verbose output
-								module.exports(settings).verboseLog('...Is an option');
-								
-								
-								// Store details
-								previousOption = `-${details.shorthand.trim().toLowerCase()}`;
-								nextIsOptionValue = true;
-								organized.options.push(option);
+								nextValueAccepts = details.accepts;
+								nextValueType = details.type;
+								organizedArguments.options.push(option);
 							}
 						});
 					}
@@ -237,7 +270,7 @@ module.exports = function Constructor(currentSettings) {
 									
 									// Store details
 									matchedFlag = true;
-									organized.flags.push(flag);
+									organizedArguments.flags.push(flag);
 								} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 									// Verbose output
 									module.exports(settings).verboseLog('...Is a flag');
@@ -245,7 +278,7 @@ module.exports = function Constructor(currentSettings) {
 									
 									// Store details
 									matchedFlag = true;
-									organized.flags.push(flag);
+									organizedArguments.flags.push(flag);
 								}
 							});
 						}
@@ -272,43 +305,120 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Check if that file exists
-				if (!chainBroken && fs.existsSync(commandPath)) {
+				if (!chainBroken && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>.]/g, '') !== '') {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is a command');
 					
 					
 					// Add to currents
 					currentPathPrefix += `/${argument}`;
-					organized.command += ` ${argument}`;
-				} else {
+					organizedArguments.command += ` ${argument}`;
+				} else if (!chainBroken) {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is data');
 					
 					
+					// Form full data
+					let fullData = settings.arguments.slice(index).join(' ');
+					
+					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.allowed) {
-						throw new Error(`The command "${organized.command.trim()}" does not allow data\nYou provided: ${settings.arguments.slice(index).join(' ')}`);
+						throw new Error(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
+					}
+					
+					
+					// Validate data, if necessary
+					if (mergedSpec.data.accepts) {
+						if (!mergedSpec.data.accepts.includes(fullData)) {
+							throw new Error(`Unrecognized data for "${organizedArguments.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
+						}
+					}
+					
+					if (mergedSpec.data.type) {
+						if (mergedSpec.data.type === 'integer') {
+							if (fullData.match(/^[0-9]+$/) !== null) {
+								fullData = parseInt(fullData, 10);
+							} else {
+								throw new Error(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${fullData}`);
+							}
+						} else if (mergedSpec.data.type === 'float') {
+							if (fullData.match(/^[0-9]*[.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
+								fullData = parseFloat(fullData);
+							} else {
+								throw new Error(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${fullData}`);
+							}
+						} else {
+							throw new Error(`Unrecognized "type": ${mergedSpec.data.type}`);
+						}
 					}
 					
 					
 					// Store details
 					chainBroken = true;
-					organized.data += ` ${argument}`;
+					organizedArguments.data = fullData;
 				}
 			});
 			
 			
-			// Clean up components
-			organized.command = organized.command.trim();
-			organized.data = organized.data.trim();
+			// Error if we're missing an expected value
+			if (nextIsOptionValue === true) {
+				throw new Error(`No value provided for ${previousOption}, which is an option, not a flag`);
+			}
 			
-			if (organized.data === '') {
-				organized.data = null;
+			
+			// Trim command
+			organizedArguments.command = organizedArguments.command.trim();
+			
+			
+			// Return
+			return organizedArguments;
+		},
+		
+		
+		// Construct a full input array
+		constructInputArray(organizedArguments) {
+			// Initialize
+			const inputArray = {};
+			
+			
+			// Get merged spec for this command
+			const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
+			
+			
+			// Loop over each component and store
+			Object.entries(mergedSpec.flags).forEach(([flag]) => {
+				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(flag);
+				inputArray[camelCaseKey] = organizedArguments.flags.includes(flag);
+			});
+			
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(option);
+				const optionIndex = organizedArguments.options.indexOf(option);
+				inputArray[camelCaseKey] = organizedArguments.values[optionIndex];
+				
+				if (details.required && !organizedArguments.options.includes(option)) {
+					throw new Error(`The --${option} option is required`);
+				}
+			});
+			
+			
+			// Store data
+			inputArray.data = organizedArguments.data;
+			
+			if (mergedSpec.data && mergedSpec.data.required && !organizedArguments.data) {
+				throw new Error('Data is required');
 			}
 			
 			
 			// Return
-			return organized;
+			return inputArray;
+		},
+		
+		
+		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
+		convertDashesToCamelCase(string) {
+			return string.replace(/-(.)/g, g => g[1].toUpperCase());
 		},
 		
 		

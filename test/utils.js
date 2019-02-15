@@ -46,6 +46,18 @@ describe('Utils', () => {
 				'~!@#$%^&*()-=_+',
 			]);
 		});
+		
+		it('handles dangling equals sign', () => {
+			assert.deepEqual(utils({}).processArguments([
+				'/path/to/node',
+				'/path/to/entry.js',
+				'command',
+				'--option=',
+			]), [
+				'command',
+				'--option',
+			]);
+		});
 	});
 	
 	describe('#retrieveAppInformation()', () => {
@@ -73,13 +85,13 @@ describe('Utils', () => {
 		});
 	});
 	
-	describe('#getMergedSpecForCommand()', () => {
+	describe('#getMergedSpec()', () => {
 		it('gets top-level spec', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpecForCommand('.'), {
+			assert.deepEqual(utils(settings).getMergedSpec('.'), {
 				data: undefined,
 				description: undefined,
 				flags: {
@@ -115,10 +127,11 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpecForCommand('. list'), {
+			assert.deepEqual(utils(settings).getMergedSpec('. list'), {
 				data: {
 					allowed: true,
-					values: ['toppings', 'crusts'],
+					accepts: ['toppings', 'crusts'],
+					required: true,
 				},
 				description: 'List something',
 				flags: {
@@ -146,6 +159,19 @@ describe('Utils', () => {
 						description: 'The delivery ZIP code, for context',
 						shorthand: 'z',
 					},
+					limit: {
+						description: 'How many items to list',
+						type: 'integer',
+					},
+					'max-price': {
+						description: 'The maximum price of the items to list',
+						type: 'float',
+					},
+					sort: {
+						description: 'How to sort the list',
+						accepts: ['popularity', 'alphabetical'],
+						required: true,
+					},
 				},
 			});
 		});
@@ -156,7 +182,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpecForCommand('. multiple-js');
+				utils(settings).getMergedSpec('. multiple-js');
 			}, Error);
 		});
 		
@@ -166,7 +192,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpecForCommand('. multiple-json');
+				utils(settings).getMergedSpec('. multiple-json');
 			}, Error);
 		});
 	});
@@ -220,22 +246,22 @@ describe('Utils', () => {
 		it('handles simple command with longer data', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['list', 'toppings', 'crusts'],
+				arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
 				options: [],
 				values: [],
-				data: 'toppings crusts',
-				command: 'list',
+				data: 'pizza1 pizza2',
+				command: 'order dine-in',
 			});
 		});
 		
 		it('handles data with special characters', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['list', '~!@#$%^&*()-=_+'],
+				arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
@@ -243,7 +269,76 @@ describe('Utils', () => {
 				options: [],
 				values: [],
 				data: '~!@#$%^&*()-=_+',
-				command: 'list',
+				command: 'order dine-in',
+			});
+		});
+		
+		it('handles integer data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'integer-data', '10'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 10,
+				command: 'order integer-data',
+			});
+		});
+		
+		it('handles float data', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '123.4'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 123.4,
+				command: 'order float-data',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '123.'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 123,
+				command: 'order float-data',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 123,
+				command: 'order float-data',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '.123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 0.123,
+				command: 'order float-data',
 			});
 		});
 		
@@ -337,6 +432,75 @@ describe('Utils', () => {
 			});
 		});
 		
+		it('handles integer option', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', '10'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['limit'],
+				values: [10],
+				data: null,
+				command: 'list',
+			});
+		});
+		
+		it('handles float option', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.4'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123.4],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [123],
+				data: null,
+				command: 'list',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '.123'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: ['max-price'],
+				values: [0.123],
+				data: null,
+				command: 'list',
+			});
+		});
+		
 		it('handles cascading option', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -367,6 +531,50 @@ describe('Utils', () => {
 			});
 		});
 		
+		it('treats bad command as data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '.'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about missing option value', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--delivery-zip-code'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about unrecognized option value type', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'to-go', '--test', 'test'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about unrecognized data type', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'to-go', 'test'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
 		it('complains about unrecognized flag', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -387,6 +595,201 @@ describe('Utils', () => {
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
+		});
+		
+		it('complains about option value not in "values"', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--sort', 'fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about data not in "values"', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'fake'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about option value not being integer', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', '123.4'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--limit', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about option value not being float', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '123.4.5'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', '.'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--max-price', ''],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about data not being integer', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'integer-data', '123.4'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'integer-data', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+		
+		it('complains about data not being float', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', 'abc'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '123.4.5'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', '.'],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'float-data', ''],
+			});
+			
+			assert.throws(() => {
+				utils(settings).organizeArguments();
+			}, Error);
+		});
+	});
+	
+	describe('#constructInputArray()', () => {
+		it('handles combination of input', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.deepEqual(utils(settings).constructInputArray(organizedArguments), {
+				data: 'toppings',
+				help: false,
+				limit: undefined,
+				maxPrice: undefined,
+				sort: 'popularity',
+				vegetarian: true,
+				version: false,
+			});
+		});
+		
+		it('complains about missing required option', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'toppings'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.throws(() => {
+				utils(settings).constructInputArray(organizedArguments);
+			}, Error);
+		});
+		
+		it('complains about missing required data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', '--sort', 'popularity'],
+			});
+			
+			const organizedArguments = utils(settings).organizeArguments();
+			
+			assert.throws(() => {
+				utils(settings).constructInputArray(organizedArguments);
+			}, Error);
+		});
+	});
+	
+	describe('#convertDashesToCamelCase()', () => {
+		it('normal string', () => {
+			assert.equal(utils({}).convertDashesToCamelCase('aaa-aaa-aaa'), 'aaaAaaAaa');
+		});
+		
+		it('with numbers', () => {
+			assert.equal(utils({}).convertDashesToCamelCase('aaa-123-aaa'), 'aaa123Aaa');
 		});
 	});
 	

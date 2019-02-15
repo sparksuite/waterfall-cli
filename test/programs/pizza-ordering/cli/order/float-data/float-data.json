@@ -1,0 +1,7 @@
+{
+    "description": "Just used for testing",
+    "data": {
+        "allowed": true,
+        "type": "float"
+    }
+}

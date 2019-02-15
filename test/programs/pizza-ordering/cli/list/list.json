@@ -2,12 +2,28 @@
     "description": "List something",
     "data": {
         "allowed": true,
-        "values": ["toppings", "crusts"]
+        "accepts": ["toppings", "crusts"],
+        "required": true
     },
     "flags": {
         "vegetarian": {
             "shorthand": "v",
             "description": "Only list vegetarian choices"
+        }
+    },
+    "options": {
+        "limit": {
+            "description": "How many items to list",
+            "type": "integer"
+        },
+        "max-price": {
+            "description": "The maximum price of the items to list",
+            "type": "float"
+        },
+        "sort": {
+            "description": "How to sort the list",
+            "accepts": ["popularity", "alphabetical"],
+            "required": true
         }
     }
 }

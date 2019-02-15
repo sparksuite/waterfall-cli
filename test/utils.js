@@ -119,6 +119,7 @@ describe('Utils', () => {
 				data: {
 					allowed: true,
 					accepts: ['toppings', 'crusts'],
+					required: true,
 				},
 				description: 'List something',
 				flags: {

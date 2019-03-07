@@ -17,7 +17,7 @@ process.on('uncaughtException', (error) => {
 });
 
 
-// The main class
+// The constructor, for use at the entry point
 module.exports = function Constructor(customSettings) {
 	// Merge custom settings into default settings
 	const settings = Object.assign({}, defaultSettings);
@@ -64,27 +64,33 @@ module.exports = function Constructor(customSettings) {
 	
 	// Handle --help
 	if (settings.arguments.length === 0 || settings.arguments.includes('-h') || settings.arguments.includes('--help')) {
-		// Get commands one level deep
+		// Get all commands in program
 		let commands = utils(settings).files.getAllDirectories(path.dirname(settings.mainFilename));
 		commands = commands.map(file => file.replace(`${path.dirname(settings.mainFilename)}/`, ''));
 		commands = commands.map(file => file.replace(/\.js$/, ''));
-		commands = commands.map(file => file.replace(/\//g, '. '));
+		commands = commands.map(file => file.replace(/\//, ' '));
 		
 		
 		// Verbose output
 		utils(settings).verboseLog(`Found commands: ${commands.join(' | ')}`);
 		
 		
-		// Process commands further
-		commands = commands.map(file => `. ${file}`);
+		// Add leading space to commands
+		commands = commands.map(command => ` ${command}`);
+		const preppedCommand = ` ${organizedArguments.command}`.replace(/^ $/g, '');
+		
+		
+		// Filter out any unnecessary commands, which are...
+		commands = commands.filter(command => command.substring(0, preppedCommand.length) === `${preppedCommand}`); // Not related to current command
+		commands = commands.filter(command => (command.match(/ /g) || []).length === ((preppedCommand.match(/ /g) || []).length + 1)); // Not a direct sub-command of the current command
+		
+		
+		// Strip current command off front
+		commands = commands.map(command => command.substring(preppedCommand.length + 1));
+		
+		
+		// Sort commands
 		commands.sort();
-		commands.unshift('.');
-		
-		
-		// Filter out any unnecessary commands
-		commands = commands.filter(command => command.match(new RegExp(`^${organizedArguments.command}`)));
-		const commandLevel = (organizedArguments.command.match(/ /g) || []).length;
-		commands = commands.filter(command => (command.match(/ /g) || []).length <= (commandLevel + 1));
 		
 		
 		// Verbose output
@@ -95,77 +101,89 @@ module.exports = function Constructor(customSettings) {
 		console.log('');
 		
 		
-		// Loop over each command
-		commands.forEach((command, index) => {
-			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(command);
+		// Get merged spec for this command
+		const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
+		
+		
+		// Determine if there are flags
+		let hasFlags = false;
+		
+		if (Object.entries(mergedSpec.flags).length) {
+			hasFlags = true;
+		}
+		
+		
+		// Determine if there are options
+		let hasOptions = false;
+		
+		if (Object.entries(mergedSpec.options).length) {
+			hasOptions = true;
+		}
+		
+		
+		// Determine if it accepts data
+		let acceptsData = false;
+		
+		if (mergedSpec.data && mergedSpec.data.allowed) {
+			acceptsData = true;
+		}
+		
+		
+		// Determine if there are commands
+		let hasCommands = false;
+		
+		if (commands.length) {
+			hasCommands = true;
+		}
+		
+		
+		// Form and output usage line
+		let usageLine = `${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
+		usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;
+		usageLine += `${(hasFlags ? ' [flags]' : '').gray}`;
+		usageLine += `${(hasOptions ? ' [options]' : '').gray}`;
+		usageLine += `${(acceptsData ? ' [data]' : '').gray}`;
+		
+		console.log(usageLine);
+		
+		
+		// Handle flags
+		if (hasFlags) {
+			// Header
+			console.log('\nFLAGS:');
 			
 			
-			// Handle entry point
-			if (index === 0) {
-				// Determine if there are flags
-				let hasFlags = false;
-				
-				if (Object.entries(mergedSpec.flags).length) {
-					hasFlags = true;
-				}
-				
-				
-				// Determine if there are options
-				let hasOptions = false;
-				
-				if (Object.entries(mergedSpec.options).length) {
-					hasOptions = true;
-				}
-				
-				
-				// Determine if there are commands
-				let hasCommands = false;
-				
-				if (index < (commands.length - 1)) {
-					hasCommands = true;
-				}
-				
-				
-				// Output usage line
-				console.log(`${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${command}${(hasCommands ? ' [commands]' : '').gray}${(hasFlags ? ' [flags]' : '').gray}${(hasOptions ? ' [options]' : '').gray}`);
-				
-				
-				// Handle flags
-				if (hasFlags) {
-					// Header
-					console.log('\nFLAGS:');
-					
-					
-					// List flags
-					Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
-						console.log(`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
-					});
-				}
-				
-				
-				// Handle options
-				if (hasOptions) {
-					// Header
-					console.log('\nOPTIONS:');
-					
-					
-					// List options
-					Object.entries(mergedSpec.options).forEach(([option, details]) => {
-						console.log(`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
-					});
-				}
-				
-				
-				// Add line for commands
-				if (hasCommands) {
-					// Header
-					console.log('\nCOMMANDS:');
-				}
-			} else {
-				// List the command
-				console.log(`  ${command.replace(new RegExp(`^${organizedArguments.command}`), '')}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
-			}
+			// List flags
+			Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+				console.log(`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+			});
+		}
+		
+		
+		// Handle options
+		if (hasOptions) {
+			// Header
+			console.log('\nOPTIONS:');
+			
+			
+			// List options
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				console.log(`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+			});
+		}
+		
+		
+		// Add line for commands
+		if (hasCommands) {
+			// Header
+			console.log('\nCOMMANDS:');
+		}
+		
+		
+		// Loop over and list each command
+		commands.forEach((command) => {
+			const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
+			console.log(`  ${command}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
 		});
 		
 		
@@ -212,6 +230,14 @@ module.exports = function Constructor(customSettings) {
 	});
 	
 	
+	// Construct the input object
+	const inputObject = utils(settings).constructInputObject(organizedArguments);
+	
+	
+	// Verbose output
+	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
+	
+	
 	// Execute each path sequentially, starting with the first
 	const executePath = (paths) => {
 		// Stop if none
@@ -225,7 +251,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Spawn child
-		const child = spawn('node', [paths[0]]);
+		const child = spawn('node', [paths[0], JSON.stringify(inputObject)]);
 		
 		
 		// Wait for exit
@@ -260,4 +286,10 @@ module.exports = function Constructor(customSettings) {
 	};
 	
 	executePath(executionPaths);
+};
+
+
+// The function used to kick off commands
+module.exports.command = function command() {
+	return JSON.parse(process.argv[2]);
 };

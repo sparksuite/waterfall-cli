@@ -736,7 +736,7 @@ describe('Utils', () => {
 		});
 	});
 	
-	describe('#constructInputArray()', () => {
+	describe('#constructInputObject()', () => {
 		it('handles combination of input', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -745,7 +745,7 @@ describe('Utils', () => {
 			
 			const organizedArguments = utils(settings).organizeArguments();
 			
-			assert.deepEqual(utils(settings).constructInputArray(organizedArguments), {
+			assert.deepEqual(utils(settings).constructInputObject(organizedArguments), {
 				data: 'toppings',
 				help: false,
 				limit: undefined,
@@ -765,7 +765,7 @@ describe('Utils', () => {
 			const organizedArguments = utils(settings).organizeArguments();
 			
 			assert.throws(() => {
-				utils(settings).constructInputArray(organizedArguments);
+				utils(settings).constructInputObject(organizedArguments);
 			}, Error);
 		});
 		
@@ -778,7 +778,7 @@ describe('Utils', () => {
 			const organizedArguments = utils(settings).organizeArguments();
 			
 			assert.throws(() => {
-				utils(settings).constructInputArray(organizedArguments);
+				utils(settings).constructInputObject(organizedArguments);
 			}, Error);
 		});
 	});

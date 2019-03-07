@@ -230,6 +230,14 @@ module.exports = function Constructor(customSettings) {
 	});
 	
 	
+	// Construct the input object
+	const inputObject = utils(settings).constructInputObject(organizedArguments);
+	
+	
+	// Verbose output
+	utils(settings).verboseLog('Constructed input: '+JSON.stringify(inputObject));
+	
+	
 	// Execute each path sequentially, starting with the first
 	const executePath = (paths) => {
 		// Stop if none
@@ -243,7 +251,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Spawn child
-		const child = spawn('node', [paths[0]]);
+		const child = spawn('node', [paths[0], JSON.stringify(inputObject)]);
 		
 		
 		// Wait for exit

@@ -75,7 +75,7 @@ module.exports = function Constructor(currentSettings) {
 		// Get specs for a command
 		getMergedSpec(command) {
 			// Break into pieces, with entry point
-			const pieces = command.split(' ');
+			const pieces = `. ${command}`.trim().split(' ');
 			
 			
 			// Initialize

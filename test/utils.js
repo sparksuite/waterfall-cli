@@ -195,6 +195,16 @@ describe('Utils', () => {
 				utils(settings).getMergedSpec('. multiple-json');
 			}, Error);
 		});
+		
+		it('complains about bad JSON', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
+			});
+			
+			assert.throws(() => {
+				utils(settings).getMergedSpec('. bad json');
+			}, Error);
+		});
 	});
 	
 	describe('#organizeArguments()', () => {

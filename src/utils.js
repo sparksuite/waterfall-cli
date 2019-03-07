@@ -122,7 +122,13 @@ module.exports = function Constructor(currentSettings) {
 				
 				// Get spec
 				const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
-				const spec = JSON.parse(fs.readFileSync(specFilePath));
+				let spec = {};
+				
+				try {
+					spec = JSON.parse(fs.readFileSync(specFilePath));
+				} catch (error) {
+					throw new Error(`This file has bad JSON: ${specFilePath}`);
+				}
 				
 				
 				// Build onto spec

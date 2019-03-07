@@ -138,7 +138,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Form and output usage line
-		let usageLine = `${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${(organizedArguments.command ? ' '+organizedArguments.command : '')}`;
+		let usageLine = `${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
 		usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;
 		usageLine += `${(hasFlags ? ' [flags]' : '').gray}`;
 		usageLine += `${(hasOptions ? ' [options]' : '').gray}`;
@@ -181,7 +181,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Loop over and list each command
-		commands.forEach((command, index) => {
+		commands.forEach((command) => {
 			const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
 			console.log(`  ${command}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
 		});
@@ -235,7 +235,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Verbose output
-	utils(settings).verboseLog('Constructed input: '+JSON.stringify(inputObject));
+	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 	
 	
 	// Execute each path sequentially, starting with the first
@@ -290,6 +290,6 @@ module.exports = function Constructor(customSettings) {
 
 
 // The function used to kick off commands
-module.exports.command = function () {
+module.exports.command = function command() {
 	return JSON.parse(process.argv[2]);
-}
+};

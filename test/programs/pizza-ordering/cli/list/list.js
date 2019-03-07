@@ -1,2 +1,4 @@
 // Parse command input
-let input = require('../../../../../src/index.js').command();
+const input = require('../../../../../src/index.js').command();
+
+console.log(input);

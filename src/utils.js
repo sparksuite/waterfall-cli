@@ -376,10 +376,10 @@ module.exports = function Constructor(currentSettings) {
 		},
 		
 		
-		// Construct a full input array
-		constructInputArray(organizedArguments) {
+		// Construct a full input object
+		constructInputObject(organizedArguments) {
 			// Initialize
-			const inputArray = {};
+			const inputObject = {};
 			
 			
 			// Get merged spec for this command
@@ -389,13 +389,13 @@ module.exports = function Constructor(currentSettings) {
 			// Loop over each component and store
 			Object.entries(mergedSpec.flags).forEach(([flag]) => {
 				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(flag);
-				inputArray[camelCaseKey] = organizedArguments.flags.includes(flag);
+				inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
 			});
 			
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
 				const camelCaseKey = module.exports(settings).convertDashesToCamelCase(option);
 				const optionIndex = organizedArguments.options.indexOf(option);
-				inputArray[camelCaseKey] = organizedArguments.values[optionIndex];
+				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
 				
 				if (details.required && !organizedArguments.options.includes(option)) {
 					throw new Error(`The --${option} option is required`);
@@ -404,7 +404,7 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Store data
-			inputArray.data = organizedArguments.data;
+			inputObject.data = organizedArguments.data;
 			
 			if (mergedSpec.data && mergedSpec.data.required && !organizedArguments.data) {
 				throw new Error('Data is required');
@@ -412,7 +412,7 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Return
-			return inputArray;
+			return inputObject;
 		},
 		
 		

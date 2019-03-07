@@ -17,7 +17,7 @@ process.on('uncaughtException', (error) => {
 });
 
 
-// The main class
+// The constructor, for use at the entry point
 module.exports = function Constructor(customSettings) {
 	// Merge custom settings into default settings
 	const settings = Object.assign({}, defaultSettings);

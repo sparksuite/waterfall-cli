@@ -287,3 +287,9 @@ module.exports = function Constructor(customSettings) {
 	
 	executePath(executionPaths);
 };
+
+
+// The function used to kick off commands
+module.exports.command = function () {
+	return JSON.parse(process.argv[2]);
+}

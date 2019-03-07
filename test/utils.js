@@ -91,7 +91,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpec('.'), {
+			assert.deepEqual(utils(settings).getMergedSpec(''), {
 				data: undefined,
 				description: undefined,
 				flags: {
@@ -127,7 +127,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			});
 			
-			assert.deepEqual(utils(settings).getMergedSpec('. list'), {
+			assert.deepEqual(utils(settings).getMergedSpec('list'), {
 				data: {
 					allowed: true,
 					accepts: ['toppings', 'crusts'],
@@ -182,7 +182,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpec('. multiple-js');
+				utils(settings).getMergedSpec('multiple-js');
 			}, Error);
 		});
 		
@@ -192,7 +192,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpec('. multiple-json');
+				utils(settings).getMergedSpec('multiple-json');
 			}, Error);
 		});
 		
@@ -202,7 +202,7 @@ describe('Utils', () => {
 			});
 			
 			assert.throws(() => {
-				utils(settings).getMergedSpec('. bad json');
+				utils(settings).getMergedSpec('bad json');
 			}, Error);
 		});
 	});
@@ -757,9 +757,11 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).constructInputObject(organizedArguments), {
 				data: 'toppings',
+				deliveryZipCode: '55555',
 				help: false,
 				limit: undefined,
 				maxPrice: undefined,
+				quiet: true,
 				sort: 'popularity',
 				vegetarian: true,
 				version: false,

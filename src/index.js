@@ -341,7 +341,9 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Spawn child
-		const child = spawn('node', [paths[0], JSON.stringify(inputObject)]);
+		const child = spawn('node', [paths[0], JSON.stringify(inputObject)], {
+			stdio: 'inherit',
+		});
 		
 		
 		// Wait for exit
@@ -362,16 +364,6 @@ module.exports = function Constructor(customSettings) {
 		// Handle error
 		child.on('error', (error) => {
 			throw new Error(error.toString().replace(/^Error: /i, ''));
-		});
-		
-		
-		// Handle stdio
-		child.stdout.on('data', (data) => {
-			process.stdout.write(data.toString());
-		});
-		
-		child.stderr.on('data', (data) => {
-			process.stderr.write(data.toString().red);
 		});
 	};
 	

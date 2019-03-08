@@ -12,9 +12,9 @@ const utils = require('./utils.js');
 // Handle exceptions
 process.on('uncaughtException', (error) => {
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
-	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
+	console.error((`> ${error.stack.replace(/^COMMAND ERROR: /, '').split('\n').join('\n> ')}\n`).red);
 	
-	process.exit(255);
+	process.exit(error.stack.match(/COMMAND ERROR: /) ? 255 : 1);
 });
 
 
@@ -408,5 +408,5 @@ module.exports.command = function command() {
 
 // A helper function provided to commands to keep error messages consistent
 module.exports.error = function error(message) {
-	throw new ErrorWithoutStack(message);
+	throw new ErrorWithoutStack('COMMAND ERROR: '+message);
 };

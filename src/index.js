@@ -203,7 +203,7 @@ module.exports = function Constructor(customSettings) {
 				}
 				
 				if (details.required) {
-					fullDescription += ` (required)`.gray.italic;
+					fullDescription += ' (required)'.gray.italic;
 				}
 				
 				if (details.type) {
@@ -253,7 +253,7 @@ module.exports = function Constructor(customSettings) {
 			}
 			
 			if (mergedSpec.data.required) {
-				fullDescription += ` (required)`.gray.italic;
+				fullDescription += ' (required)'.gray.italic;
 			}
 			
 			if (mergedSpec.data.type) {
@@ -266,7 +266,7 @@ module.exports = function Constructor(customSettings) {
 			
 			
 			// Print
-			console.log('  '+fullDescription);
+			console.log(`  ${fullDescription}`);
 		}
 		
 		

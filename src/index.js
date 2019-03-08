@@ -139,6 +139,12 @@ module.exports = function Constructor(customSettings) {
 		}
 		
 		
+		// Output description
+		if (mergedSpec.description) {
+			console.log(`${'Description:'.bold} ${mergedSpec.description}`);
+		}
+		
+		
 		// Form and output usage line
 		let usageLine = `${'Usage:'.bold} ${settings.usageCommand}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
 		usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;

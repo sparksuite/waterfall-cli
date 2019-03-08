@@ -12,6 +12,10 @@ module.exports = {
 	arguments: utils({}).processArguments(process.argv),
 	mainFilename: require.main.filename,
 	packageFilePath: '../package.json',
+	spacing: {
+		before: 1,
+		after: 1,
+	},
 	usageCommand: `node ${path.basename(require.main.filename)}`,
 	verbose: false,
 };

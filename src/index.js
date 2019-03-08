@@ -195,7 +195,28 @@ module.exports = function Constructor(customSettings) {
 			
 			// List options
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, `${details.description ? `${details.description}` : ''}`]);
+				// Form full description
+				let fullDescription = '';
+				
+				if (details.description) {
+					fullDescription += details.description;
+				}
+				
+				if (details.required) {
+					fullDescription += ` (required)`.gray.italic;
+				}
+				
+				if (details.type) {
+					fullDescription += ` (${details.type})`.gray.italic;
+				}
+				
+				if (details.accepts) {
+					fullDescription += ` (accepts: ${details.accepts.join(', ')})`.gray.italic;
+				}
+				
+				
+				// Add to table
+				table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, fullDescription]);
 			});
 		}
 		

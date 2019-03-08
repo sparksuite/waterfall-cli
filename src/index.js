@@ -328,6 +328,12 @@ module.exports = function Constructor(customSettings) {
 	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 	
 	
+	// Add spacing before
+	for (let i = 0; i < settings.spacing.before; i++) {
+		console.log();
+	}
+	
+	
 	// Execute each path sequentially, starting with the first
 	const executePath = (paths) => {
 		// Stop if none
@@ -357,6 +363,11 @@ module.exports = function Constructor(customSettings) {
 			// Run next path, if one exists
 			if (paths[1]) {
 				executePath(paths.slice(1));
+			} else {
+				// Add spacing after
+				for (let i = 0; i < settings.spacing.after; i++) {
+					console.log();
+				}
 			}
 		});
 		

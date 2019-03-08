@@ -11,11 +11,10 @@ const utils = require('./utils.js');
 
 // Handle exceptions
 process.on('uncaughtException', (error) => {
-	console.error();
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
-	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
+	console.error((`> ${error.stack.replace(/^COMMAND ERROR: /, '').split('\n').join('\n> ')}\n`).red);
 	
-	process.exit(1);
+	process.exit(error.stack.match(/COMMAND ERROR: /) ? 255 : 1);
 });
 
 
@@ -24,6 +23,12 @@ module.exports = function Constructor(customSettings) {
 	// Merge custom settings into default settings
 	const settings = Object.assign({}, defaultSettings);
 	Object.assign(settings, customSettings);
+	
+	
+	// Add spacing before
+	for (let i = 0; i < settings.spacing.before; i += 1) {
+		console.log();
+	}
 	
 	
 	// Determine app information
@@ -37,12 +42,6 @@ module.exports = function Constructor(customSettings) {
 	
 	// Organize the arguments
 	const organizedArguments = utils(settings).organizeArguments();
-	
-	
-	// Add spacing before
-	for (let i = 0; i < settings.spacing.before; i += 1) {
-		console.log();
-	}
 	
 	
 	// Handle --version
@@ -367,6 +366,12 @@ module.exports = function Constructor(customSettings) {
 			}
 			
 			
+			// Handle if error message already happened
+			if (code === 255) {
+				process.exit(1);
+			}
+			
+			
 			// Handle an issue
 			if (code !== 0) {
 				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
@@ -398,4 +403,10 @@ module.exports = function Constructor(customSettings) {
 // The function used to kick off commands
 module.exports.command = function command() {
 	return JSON.parse(process.argv[2]);
+};
+
+
+// A helper function provided to commands to keep error messages consistent
+module.exports.error = function error(message) {
+	throw new ErrorWithoutStack(`COMMAND ERROR: ${message}`);
 };

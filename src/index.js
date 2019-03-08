@@ -3,6 +3,7 @@ require('colors');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const Table = require('cli-table');
 const defaultSettings = require('./default-settings.js');
 const utils = require('./utils.js');
 
@@ -138,7 +139,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Form and output usage line
-		let usageLine = `${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
+		let usageLine = `${'Usage:'.bold} ${settings.usageCommand}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
 		usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;
 		usageLine += `${(hasFlags ? ' [flags]' : '').gray}`;
 		usageLine += `${(hasOptions ? ' [options]' : '').gray}`;
@@ -147,44 +148,126 @@ module.exports = function Constructor(customSettings) {
 		console.log(usageLine);
 		
 		
+		// Initialize table
+		const table = new Table({
+			chars: {
+				top: '',
+				'top-mid': '',
+				'top-left': '',
+				'top-right': '',
+				bottom: '',
+				'bottom-mid': '',
+				'bottom-left': '',
+				'bottom-right': '',
+				left: '',
+				'left-mid': '',
+				mid: '',
+				'mid-mid': '',
+				right: '',
+				'right-mid': '',
+				middle: '    ',
+			},
+			style: {
+				'padding-left': 0,
+				'padding-right': 0,
+			},
+		});
+		
+		
 		// Handle flags
 		if (hasFlags) {
-			// Header
-			console.log('\nFLAGS:');
+			// Add header
+			table.push(['\nFLAGS:']);
 			
 			
 			// List flags
 			Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
-				console.log(`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+				table.push([`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}`, `${details.description ? `${details.description}` : ''}`]);
 			});
 		}
 		
 		
 		// Handle options
 		if (hasOptions) {
-			// Header
-			console.log('\nOPTIONS:');
+			// Add header
+			table.push(['\nOPTIONS:']);
 			
 			
 			// List options
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				console.log(`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+				// Form full description
+				let fullDescription = '';
+				
+				if (details.description) {
+					fullDescription += details.description;
+				}
+				
+				if (details.required) {
+					fullDescription += ' (required)'.gray.italic;
+				}
+				
+				if (details.type) {
+					fullDescription += ` (${details.type})`.gray.italic;
+				}
+				
+				if (details.accepts) {
+					fullDescription += ` (accepts: ${details.accepts.join(', ')})`.gray.italic;
+				}
+				
+				
+				// Add to table
+				table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, fullDescription]);
 			});
 		}
 		
 		
 		// Add line for commands
 		if (hasCommands) {
-			// Header
-			console.log('\nCOMMANDS:');
+			// Add header
+			table.push(['\nCOMMANDS:']);
 		}
 		
 		
-		// Loop over and list each command
+		// Loop over and push each command
 		commands.forEach((command) => {
 			const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
-			console.log(`  ${command}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
+			table.push([`  ${command}`, mergedSpec.description ? mergedSpec.description : '']);
 		});
+		
+		
+		// Print table
+		console.log(table.toString());
+		
+		
+		// Handle data
+		if (acceptsData) {
+			// Print header
+			console.log('\nDATA:');
+			
+			
+			// Form full description
+			let fullDescription = '';
+			
+			if (mergedSpec.data.description) {
+				fullDescription += mergedSpec.data.description;
+			}
+			
+			if (mergedSpec.data.required) {
+				fullDescription += ' (required)'.gray.italic;
+			}
+			
+			if (mergedSpec.data.type) {
+				fullDescription += ` (${mergedSpec.data.type})`.gray.italic;
+			}
+			
+			if (mergedSpec.data.accepts) {
+				fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`.gray.italic;
+			}
+			
+			
+			// Print
+			console.log(`  ${fullDescription}`);
+		}
 		
 		
 		// Extra spacing

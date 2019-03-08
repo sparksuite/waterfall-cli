@@ -130,6 +130,7 @@ describe('Utils', () => {
 			assert.deepEqual(utils(settings).getMergedSpec('list'), {
 				data: {
 					allowed: true,
+					description: 'What you want to list',
 					accepts: ['toppings', 'crusts'],
 					required: true,
 				},

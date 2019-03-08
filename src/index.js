@@ -239,6 +239,37 @@ module.exports = function Constructor(customSettings) {
 		console.log(table.toString());
 		
 		
+		// Handle data
+		if (acceptsData) {
+			// Print header
+			console.log('\nDATA:');
+			
+			
+			// Form full description
+			let fullDescription = '';
+			
+			if (mergedSpec.data.description) {
+				fullDescription += mergedSpec.data.description;
+			}
+			
+			if (mergedSpec.data.required) {
+				fullDescription += ` (required)`.gray.italic;
+			}
+			
+			if (mergedSpec.data.type) {
+				fullDescription += ` (${mergedSpec.data.type})`.gray.italic;
+			}
+			
+			if (mergedSpec.data.accepts) {
+				fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`.gray.italic;
+			}
+			
+			
+			// Print
+			console.log('  '+fullDescription);
+		}
+		
+		
 		// Extra spacing
 		console.log('');
 		

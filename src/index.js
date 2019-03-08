@@ -12,7 +12,7 @@ const utils = require('./utils.js');
 process.on('uncaughtException', (error) => {
 	console.error();
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
-	console.error((`> ${error.message.split('\n').join('\n> ')}\n`).red);
+	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
 	
 	process.exit(1);
 });

@@ -1,7 +1,7 @@
 {
     "description": "Just used for testing",
     "data": {
-        "allowed": true,
+        "description": "Ignore",
         "type": "integer"
     }
 }

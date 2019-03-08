@@ -139,7 +139,7 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Form and output usage line
-		let usageLine = `${'Usage:'.bold} node ${path.basename(settings.mainFilename)}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
+		let usageLine = `${'Usage:'.bold} ${settings.usageCommand}${(organizedArguments.command ? ` ${organizedArguments.command}` : '')}`;
 		usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;
 		usageLine += `${(hasFlags ? ' [flags]' : '').gray}`;
 		usageLine += `${(hasOptions ? ' [options]' : '').gray}`;

@@ -1,6 +1,7 @@
 // Dependencies
 const fs = require('fs');
 const path = require('path');
+const ErrorWithoutStack = require('./error-without-stack.js');
 
 
 // Helpful utility functions
@@ -112,11 +113,11 @@ module.exports = function Constructor(currentSettings) {
 				
 				// Error if not exactly one .js and one .json file
 				if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
-					throw new Error(`There should be exactly one .js file in: ${currentPathPrefix}`);
+					throw new ErrorWithoutStack(`There should be exactly one .js file in: ${currentPathPrefix}`);
 				}
 				
 				if (commandFiles.filter(path => path.match(/\.json$/)).length !== 1) {
-					throw new Error(`There should be exactly one .json file in: ${currentPathPrefix}`);
+					throw new ErrorWithoutStack(`There should be exactly one .json file in: ${currentPathPrefix}`);
 				}
 				
 				
@@ -127,7 +128,7 @@ module.exports = function Constructor(currentSettings) {
 				try {
 					spec = JSON.parse(fs.readFileSync(specFilePath));
 				} catch (error) {
-					throw new Error(`This file has bad JSON: ${specFilePath}`);
+					throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
 				}
 				
 				
@@ -199,7 +200,7 @@ module.exports = function Constructor(currentSettings) {
 					// Validate value, if necessary
 					if (nextValueAccepts) {
 						if (!nextValueAccepts.includes(value)) {
-							throw new Error(`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${nextValueAccepts.join(', ')}`);
+							throw new ErrorWithoutStack(`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${nextValueAccepts.join(', ')}`);
 						}
 					}
 					
@@ -208,16 +209,16 @@ module.exports = function Constructor(currentSettings) {
 							if (value.match(/^[0-9]+$/) !== null) {
 								value = parseInt(value, 10);
 							} else {
-								throw new Error(`The option ${previousOption} expects an integer\nProvided: ${value}`);
+								throw new ErrorWithoutStack(`The option ${previousOption} expects an integer\nProvided: ${value}`);
 							}
 						} else if (nextValueType === 'float') {
 							if (value.match(/^[0-9]*[.]*[0-9]*$/) !== null && value !== '.' && value !== '') {
 								value = parseFloat(value);
 							} else {
-								throw new Error(`The option ${previousOption} expects a float\nProvided: ${value}`);
+								throw new ErrorWithoutStack(`The option ${previousOption} expects a float\nProvided: ${value}`);
 							}
 						} else {
-							throw new Error(`Unrecognized "type": ${nextValueType}`);
+							throw new ErrorWithoutStack(`Unrecognized "type": ${nextValueType}`);
 						}
 					}
 					
@@ -292,7 +293,7 @@ module.exports = function Constructor(currentSettings) {
 						
 						// Handle no match
 						if (!matchedFlag) {
-							throw new Error(`Unrecognized argument: ${argument}`);
+							throw new ErrorWithoutStack(`Unrecognized argument: ${argument}`);
 						}
 					}
 					
@@ -330,14 +331,14 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.allowed) {
-						throw new Error(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
+						throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
 					}
 					
 					
 					// Validate data, if necessary
 					if (mergedSpec.data.accepts) {
 						if (!mergedSpec.data.accepts.includes(fullData)) {
-							throw new Error(`Unrecognized data for "${organizedArguments.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
+							throw new ErrorWithoutStack(`Unrecognized data for "${organizedArguments.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
 						}
 					}
 					
@@ -346,16 +347,16 @@ module.exports = function Constructor(currentSettings) {
 							if (fullData.match(/^[0-9]+$/) !== null) {
 								fullData = parseInt(fullData, 10);
 							} else {
-								throw new Error(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${fullData}`);
+								throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${fullData}`);
 							}
 						} else if (mergedSpec.data.type === 'float') {
 							if (fullData.match(/^[0-9]*[.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
 								fullData = parseFloat(fullData);
 							} else {
-								throw new Error(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${fullData}`);
+								throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${fullData}`);
 							}
 						} else {
-							throw new Error(`Unrecognized "type": ${mergedSpec.data.type}`);
+							throw new ErrorWithoutStack(`Unrecognized "type": ${mergedSpec.data.type}`);
 						}
 					}
 					
@@ -369,7 +370,7 @@ module.exports = function Constructor(currentSettings) {
 			
 			// Error if we're missing an expected value
 			if (nextIsOptionValue === true) {
-				throw new Error(`No value provided for ${previousOption}, which is an option, not a flag`);
+				throw new ErrorWithoutStack(`No value provided for ${previousOption}, which is an option, not a flag`);
 			}
 			
 			
@@ -404,7 +405,7 @@ module.exports = function Constructor(currentSettings) {
 				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
 				
 				if (details.required && !organizedArguments.options.includes(option)) {
-					throw new Error(`The --${option} option is required`);
+					throw new ErrorWithoutStack(`The --${option} option is required`);
 				}
 			});
 			
@@ -413,7 +414,7 @@ module.exports = function Constructor(currentSettings) {
 			inputObject.data = organizedArguments.data;
 			
 			if (mergedSpec.data && mergedSpec.data.required && !organizedArguments.data) {
-				throw new Error('Data is required');
+				throw new ErrorWithoutStack('Data is required');
 			}
 			
 			

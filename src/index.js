@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const Table = require('cli-table');
 const defaultSettings = require('./default-settings.js');
+const ErrorWithoutStack = require('./error-without-stack.js');
 const utils = require('./utils.js');
 
 
@@ -12,8 +13,8 @@ const utils = require('./utils.js');
 process.on('uncaughtException', (error) => {
 	console.error();
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
-	console.error((`> ${error.message.split('\n').join('\n> ')}\n`).red);
-
+	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
+	
 	process.exit(1);
 });
 
@@ -308,7 +309,7 @@ module.exports = function Constructor(customSettings) {
 		try {
 			spec = JSON.parse(fs.readFileSync(specFilePath));
 		} catch (error) {
-			throw new Error(`This file has bad JSON: ${specFilePath}`);
+			throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
 		}
 		
 		
@@ -347,7 +348,7 @@ module.exports = function Constructor(customSettings) {
 		child.on('exit', (code) => {
 			// Handle an issue
 			if (code !== 0) {
-				utils(settings).printFatalError(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
+				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
 			}
 			
 			
@@ -360,7 +361,7 @@ module.exports = function Constructor(customSettings) {
 		
 		// Handle error
 		child.on('error', (error) => {
-			utils(settings).printFatalError(error.toString().replace(/^Error: /i, ''));
+			throw new Error(error.toString().replace(/^Error: /i, ''));
 		});
 		
 		

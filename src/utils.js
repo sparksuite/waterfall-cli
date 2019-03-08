@@ -1,5 +1,6 @@
 // Dependencies
 const fs = require('fs');
+const Fuse = require('fuse.js');
 const path = require('path');
 const ErrorWithoutStack = require('./error-without-stack.js');
 
@@ -331,7 +332,50 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.description) {
-						throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
+						// Get all commands in program
+						let commands = module.exports(settings).files.getAllDirectories(path.dirname(settings.mainFilename));
+						commands = commands.map(file => file.replace(`${path.dirname(settings.mainFilename)}/`, ''));
+						commands = commands.map(file => file.replace(/\.js$/, ''));
+						commands = commands.map(file => file.replace(/\//, ' '));
+						
+						
+						// Search for the best match
+						const fuse = new Fuse(commands, {
+							shouldSort: true,
+							threshold: 0.4,
+							tokenize: true,
+							matchAllTokens: true,
+							maxPatternLength: 32,
+							minMatchCharLength: 1,
+						});
+						
+						let results = fuse.search(`${organizedArguments.command} ${fullData}`.trim());
+						let bestMatch = null;
+						
+						if (results.length) {
+							bestMatch = commands[results[0]];
+						}
+						
+						
+						// Determine command
+						let command = `${settings.usageCommand}${organizedArguments.command}`;
+						
+						
+						// Form error message
+						let errorMessage = `You provided ${fullData.bold} to ${command.bold}\n`;
+						
+						if (bestMatch) {
+							errorMessage += 'If you were trying to pass in data, this command does not accept data\n';
+							errorMessage += `If you were trying to use a command, did you mean ${settings.usageCommand.bold} ${bestMatch.bold}?\n`;
+						} else {
+							errorMessage += 'However, this command does not accept data\n';
+						}
+						
+						errorMessage += `For more guidance, see: ${command} --help`;
+						
+						
+						// Throw error
+						throw new ErrorWithoutStack(errorMessage);
 					}
 					
 					

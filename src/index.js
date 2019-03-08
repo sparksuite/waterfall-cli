@@ -360,6 +360,13 @@ module.exports = function Constructor(customSettings) {
 		
 		// Wait for exit
 		child.on('exit', (code) => {
+			// Handle a SIGKILL
+			if (code === null) {
+				console.log(); // Ensure it goes to the next line
+				process.exit();
+			}
+			
+			
 			// Handle an issue
 			if (code !== 0) {
 				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);

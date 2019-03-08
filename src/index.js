@@ -408,5 +408,5 @@ module.exports.command = function command() {
 
 // A helper function provided to commands to keep error messages consistent
 module.exports.error = function error(message) {
-	throw new ErrorWithoutStack('COMMAND ERROR: '+message);
+	throw new ErrorWithoutStack(`COMMAND ERROR: ${message}`);
 };

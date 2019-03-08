@@ -15,7 +15,7 @@ process.on('uncaughtException', (error) => {
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
 	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
 	
-	process.exit(1);
+	process.exit(255);
 });
 
 
@@ -367,6 +367,12 @@ module.exports = function Constructor(customSettings) {
 			}
 			
 			
+			// Handle if error message already happened
+			if (code === 255) {
+				process.exit(1);
+			}
+			
+			
 			// Handle an issue
 			if (code !== 0) {
 				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
@@ -398,4 +404,10 @@ module.exports = function Constructor(customSettings) {
 // The function used to kick off commands
 module.exports.command = function command() {
 	return JSON.parse(process.argv[2]);
+};
+
+
+// A helper function provided to commands to keep error messages consistent
+module.exports.error = function error(message) {
+	throw new ErrorWithoutStack(message);
 };

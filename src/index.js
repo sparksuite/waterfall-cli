@@ -11,7 +11,6 @@ const utils = require('./utils.js');
 
 // Handle exceptions
 process.on('uncaughtException', (error) => {
-	console.error();
 	console.error(`${' ERROR '.inverse.red.bold}\n`);
 	console.error((`> ${error.stack.split('\n').join('\n> ')}\n`).red);
 	
@@ -26,6 +25,12 @@ module.exports = function Constructor(customSettings) {
 	Object.assign(settings, customSettings);
 	
 	
+	// Add spacing before
+	for (let i = 0; i < settings.spacing.before; i += 1) {
+		console.log();
+	}
+	
+	
 	// Determine app information
 	settings.app = utils(settings).retrieveAppInformation();
 	
@@ -37,12 +42,6 @@ module.exports = function Constructor(customSettings) {
 	
 	// Organize the arguments
 	const organizedArguments = utils(settings).organizeArguments();
-	
-	
-	// Add spacing before
-	for (let i = 0; i < settings.spacing.before; i += 1) {
-		console.log();
-	}
 	
 	
 	// Handle --version

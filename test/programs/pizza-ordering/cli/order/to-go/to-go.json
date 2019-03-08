@@ -1,7 +1,7 @@
 {
     "description": "Order a pizza, to-go",
     "data": {
-        "allowed": true,
+        "description": "What type of pizza to order",
         "type": "fake"
     },
     "options": {

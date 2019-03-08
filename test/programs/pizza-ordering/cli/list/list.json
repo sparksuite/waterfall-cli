@@ -2,7 +2,6 @@
     "description": "List something",
     "data": {
         "description": "What you want to list",
-        "allowed": true,
         "accepts": ["toppings", "crusts"],
         "required": true
     },

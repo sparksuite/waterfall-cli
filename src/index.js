@@ -126,7 +126,7 @@ module.exports = function Constructor(customSettings) {
 		// Determine if it accepts data
 		let acceptsData = false;
 		
-		if (mergedSpec.data && mergedSpec.data.allowed) {
+		if (mergedSpec.data && mergedSpec.data.description) {
 			acceptsData = true;
 		}
 		

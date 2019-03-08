@@ -330,7 +330,7 @@ module.exports = function Constructor(currentSettings) {
 					
 					
 					// Check if data is allowed
-					if (!mergedSpec.data || !mergedSpec.data.allowed) {
+					if (!mergedSpec.data || !mergedSpec.data.description) {
 						throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" does not allow data\nYou provided: ${fullData}`);
 					}
 					

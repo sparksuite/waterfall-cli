@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const Table = require('cli-table');
 const defaultSettings = require('./default-settings.js');
+const ErrorWithoutStack = require('./error-without-stack.js');
 const utils = require('./utils.js');
 
 
@@ -308,7 +309,7 @@ module.exports = function Constructor(customSettings) {
 		try {
 			spec = JSON.parse(fs.readFileSync(specFilePath));
 		} catch (error) {
-			throw new Error(`This file has bad JSON: ${specFilePath}`);
+			throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
 		}
 		
 		

@@ -329,7 +329,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Add spacing before
-	for (let i = 0; i < settings.spacing.before; i++) {
+	for (let i = 0; i < settings.spacing.before; i += 1) {
 		console.log();
 	}
 	
@@ -365,7 +365,7 @@ module.exports = function Constructor(customSettings) {
 				executePath(paths.slice(1));
 			} else {
 				// Add spacing after
-				for (let i = 0; i < settings.spacing.after; i++) {
+				for (let i = 0; i < settings.spacing.after; i += 1) {
 					console.log();
 				}
 			}

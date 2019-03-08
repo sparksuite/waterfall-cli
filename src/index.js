@@ -39,12 +39,14 @@ module.exports = function Constructor(customSettings) {
 	const organizedArguments = utils(settings).organizeArguments();
 	
 	
+	// Add spacing before
+	for (let i = 0; i < settings.spacing.before; i += 1) {
+		console.log();
+	}
+	
+	
 	// Handle --version
 	if (settings.arguments.includes('-v') || settings.arguments.includes('--version')) {
-		// Extra spacing
-		console.log('');
-		
-		
 		// Print name, if we have one
 		if (settings.app.name) {
 			process.stdout.write((`${settings.app.name}: `).bold);
@@ -52,7 +54,13 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Print version
-		console.log(`${settings.app.version}\n`);
+		console.log(`${settings.app.version}`);
+		
+		
+		// Add spacing after
+		for (let i = 0; i < settings.spacing.after; i += 1) {
+			console.log();
+		}
 		
 		
 		// Verbose output
@@ -97,10 +105,6 @@ module.exports = function Constructor(customSettings) {
 		
 		// Verbose output
 		utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
-		
-		
-		// Extra spacing
-		console.log('');
 		
 		
 		// Get merged spec for this command
@@ -277,8 +281,10 @@ module.exports = function Constructor(customSettings) {
 		}
 		
 		
-		// Extra spacing
-		console.log('');
+		// Add spacing after
+		for (let i = 0; i < settings.spacing.after; i += 1) {
+			console.log();
+		}
 		
 		
 		// Verbose output
@@ -332,12 +338,6 @@ module.exports = function Constructor(customSettings) {
 	
 	// Verbose output
 	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
-	
-	
-	// Add spacing before
-	for (let i = 0; i < settings.spacing.before; i += 1) {
-		console.log();
-	}
 	
 	
 	// Execute each path sequentially, starting with the first

@@ -333,8 +333,9 @@ module.exports = function Constructor(currentSettings) {
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.description) {
 						// Get all commands in program
-						let commands = module.exports(settings).files.getAllDirectories(path.dirname(settings.mainFilename));
-						commands = commands.map(file => file.replace(`${path.dirname(settings.mainFilename)}/`, ''));
+						const mainDir = path.dirname(settings.mainFilename);
+						let commands = module.exports(settings).files.getAllDirectories(mainDir);
+						commands = commands.map(file => file.replace(`${mainDir}/`, ''));
 						commands = commands.map(file => file.replace(/\.js$/, ''));
 						commands = commands.map(file => file.replace(/\//, ' '));
 						
@@ -349,7 +350,7 @@ module.exports = function Constructor(currentSettings) {
 							minMatchCharLength: 1,
 						});
 						
-						let results = fuse.search(`${organizedArguments.command} ${fullData}`.trim());
+						const results = fuse.search(`${organizedArguments.command} ${fullData}`.trim());
 						let bestMatch = null;
 						
 						if (results.length) {
@@ -358,7 +359,7 @@ module.exports = function Constructor(currentSettings) {
 						
 						
 						// Determine command
-						let command = `${settings.usageCommand}${organizedArguments.command}`;
+						const command = `${settings.usageCommand}${organizedArguments.command}`;
 						
 						
 						// Form error message

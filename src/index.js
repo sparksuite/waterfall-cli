@@ -348,7 +348,7 @@ module.exports = function Constructor(customSettings) {
 		child.on('exit', (code) => {
 			// Handle an issue
 			if (code !== 0) {
-				utils(settings).printFatalError(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
+				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
 			}
 			
 			
@@ -361,7 +361,7 @@ module.exports = function Constructor(customSettings) {
 		
 		// Handle error
 		child.on('error', (error) => {
-			utils(settings).printFatalError(error.toString().replace(/^Error: /i, ''));
+			throw new Error(error.toString().replace(/^Error: /i, ''));
 		});
 		
 		

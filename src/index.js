@@ -3,6 +3,7 @@ require('colors');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
+const Table = require('cli-table');
 const defaultSettings = require('./default-settings.js');
 const utils = require('./utils.js');
 
@@ -147,44 +148,74 @@ module.exports = function Constructor(customSettings) {
 		console.log(usageLine);
 		
 		
+		// Initialize table
+		const table = new Table({
+			chars: {
+				top: '',
+				'top-mid': '',
+				'top-left': '',
+				'top-right': '',
+				bottom: '',
+				'bottom-mid': '',
+				'bottom-left': '',
+				'bottom-right': '',
+				left: '',
+				'left-mid': '',
+				mid: '',
+				'mid-mid': '',
+				right: '',
+				'right-mid': '',
+				middle: '    ',
+			},
+			style: {
+				'padding-left': 0,
+				'padding-right': 0,
+			},
+		});
+		
+		
 		// Handle flags
 		if (hasFlags) {
-			// Header
-			console.log('\nFLAGS:');
+			// Add header
+			table.push(['\nFLAGS:']);
 			
 			
 			// List flags
 			Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
-				console.log(`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+				table.push([`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}`, `${details.description ? `${details.description}` : ''}`]);
 			});
 		}
 		
 		
 		// Handle options
 		if (hasOptions) {
-			// Header
-			console.log('\nOPTIONS:');
+			// Add header
+			table.push(['\nOPTIONS:']);
 			
 			
 			// List options
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				console.log(`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}${details.description ? `    ${details.description}` : ''}`);
+				table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, `${details.description ? `${details.description}` : ''}`]);
 			});
 		}
 		
 		
 		// Add line for commands
 		if (hasCommands) {
-			// Header
-			console.log('\nCOMMANDS:');
+			// Add header
+			table.push(['\nCOMMANDS:']);
 		}
 		
 		
-		// Loop over and list each command
+		// Loop over and push each command
 		commands.forEach((command) => {
 			const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
-			console.log(`  ${command}${mergedSpec.description ? `    ${mergedSpec.description}` : ''}`);
+			table.push([`  ${command}`, mergedSpec.description ? mergedSpec.description : '']);
 		});
+		
+		
+		// Print table
+		console.log(table.toString());
 		
 		
 		// Extra spacing

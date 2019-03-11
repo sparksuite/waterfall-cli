@@ -40,10 +40,6 @@ module.exports = function Constructor(customSettings) {
 	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
 	
 	
-	// Organize the arguments
-	const organizedArguments = utils(settings).organizeArguments();
-	
-	
 	// Handle --version
 	if (settings.arguments.includes('-v') || settings.arguments.includes('--version')) {
 		// Output
@@ -72,6 +68,10 @@ module.exports = function Constructor(customSettings) {
 		// Stop processing
 		return;
 	}
+	
+	
+	// Organize the arguments
+	const organizedArguments = utils(settings).organizeArguments();
 	
 	
 	// Form execution paths

@@ -11,6 +11,7 @@ module.exports = {
 	},
 	arguments: utils({}).processArguments(process.argv),
 	mainFilename: require.main.filename,
+	onStart: null,
 	packageFilePath: '../package.json',
 	spacing: {
 		before: 1,

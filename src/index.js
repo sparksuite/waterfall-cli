@@ -118,6 +118,12 @@ module.exports = function Constructor(customSettings) {
 	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 	
 	
+	// Call onStart() function, if any
+	if (typeof settings.onStart === 'function') {
+		settings.onStart(inputObject);
+	}
+	
+	
 	// Execute each path sequentially, starting with the first
 	const executePath = (paths) => {
 		// Stop if none

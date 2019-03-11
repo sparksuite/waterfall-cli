@@ -341,7 +341,6 @@ module.exports = function Constructor(currentSettings) {
 							shouldSort: true,
 							threshold: 0.4,
 							tokenize: true,
-							matchAllTokens: true,
 							maxPatternLength: 32,
 							minMatchCharLength: 1,
 						});

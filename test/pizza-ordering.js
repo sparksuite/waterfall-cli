@@ -8,10 +8,6 @@ const assert = require('assert');
 const { spawn } = require('child_process');
 
 
-// Set environment variable
-process.env.TEST_MODE = 'true';
-
-
 // Initialize
 const entryFile = `${__dirname}/programs/pizza-ordering/cli/entry.js`;
 

@@ -73,11 +73,8 @@ module.exports = function Constructor(customSettings) {
 	
 	// Handle --help
 	if (settings.arguments.length === 0 || settings.arguments.includes('-h') || settings.arguments.includes('--help')) {
-		// Get all commands in program
-		let commands = utils(settings).files.getAllDirectories(path.dirname(settings.mainFilename));
-		commands = commands.map(file => file.replace(`${path.dirname(settings.mainFilename)}/`, ''));
-		commands = commands.map(file => file.replace(/\.js$/, ''));
-		commands = commands.map(file => file.replace(/\//, ' '));
+		// Get all commands in this program
+		let commands = utils(settings).getAllProgramCommands();
 		
 		
 		// Verbose output

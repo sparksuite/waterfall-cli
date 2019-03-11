@@ -332,12 +332,8 @@ module.exports = function Constructor(currentSettings) {
 					
 					// Check if data is allowed
 					if (!mergedSpec.data || !mergedSpec.data.description) {
-						// Get all commands in program
-						const mainDir = path.dirname(settings.mainFilename);
-						let commands = module.exports(settings).files.getAllDirectories(mainDir);
-						commands = commands.map(file => file.replace(`${mainDir}/`, ''));
-						commands = commands.map(file => file.replace(/\.js$/, ''));
-						commands = commands.map(file => file.replace(/\//, ' '));
+						// Get all commands in this program
+						const commands = module.exports(settings).getAllProgramCommands();
 						
 						
 						// Search for the best match
@@ -465,6 +461,24 @@ module.exports = function Constructor(currentSettings) {
 			
 			// Return
 			return inputObject;
+		},
+		
+		
+		// Get all commands in program
+		getAllProgramCommands() {
+			// Get all directories
+			const mainDir = path.dirname(settings.mainFilename);
+			let commands = module.exports(settings).files.getAllDirectories(mainDir);
+			
+			
+			// Process into just commands
+			commands = commands.map(file => file.replace(`${mainDir}/`, ''));
+			commands = commands.map(file => file.replace(/\.js$/, ''));
+			commands = commands.map(file => file.replace(/\//, ' '));
+			
+			
+			// Return
+			return commands;
 		},
 		
 		

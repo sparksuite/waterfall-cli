@@ -458,6 +458,10 @@ module.exports = function Constructor(currentSettings) {
 			}
 			
 			
+			// Store command
+			inputObject.command = organizedArguments.command;
+			
+			
 			// Return
 			return inputObject;
 		},

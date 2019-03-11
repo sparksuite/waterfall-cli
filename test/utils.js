@@ -752,6 +752,7 @@ describe('Utils', () => {
 			const organizedArguments = utils(settings).organizeArguments();
 			
 			assert.deepEqual(utils(settings).constructInputObject(organizedArguments), {
+				command: 'list',
 				data: 'toppings',
 				deliveryZipCode: '55555',
 				help: false,

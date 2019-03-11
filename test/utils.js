@@ -7,10 +7,6 @@ const defaultSettings = require('../src/default-settings.js');
 const utils = require('../src/utils.js');
 
 
-// Set environment variable
-process.env.TEST_MODE = 'true';
-
-
 // Tests
 describe('Utils', () => {
 	describe('#processArguments()', () => {

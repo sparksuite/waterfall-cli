@@ -8,10 +8,6 @@ const defaultSettings = require('../src/default-settings.js');
 const screens = require('../src/screens.js');
 
 
-// Set environment variable
-process.env.TEST_MODE = 'true';
-
-
 // Remove ANSI formatting
 function removeFormatting(text) {
 	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');

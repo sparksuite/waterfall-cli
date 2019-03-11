@@ -795,6 +795,16 @@ describe('Utils', () => {
 		});
 	});
 	
+	describe('#getAllProgramCommands()', () => {
+		it('gets all commands', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			});
+			
+			assert.deepEqual(utils(settings).getAllProgramCommands(), ['list', 'order', 'order dine-in', 'order float-data', 'order integer-data', 'order to-go']);
+		});
+	});
+	
 	describe('#convertDashesToCamelCase()', () => {
 		it('normal string', () => {
 			assert.equal(utils({}).convertDashesToCamelCase('aaa-aaa-aaa'), 'aaaAaaAaa');

@@ -17,7 +17,7 @@ function removeFormatting(text) {
 // Tests
 describe('Screens', () => {
 	describe('#version()', () => {
-		it('full version screen', () => {
+		it('Full version screen', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				app: {
 					name: 'Example program',
@@ -28,7 +28,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).version()).includes('Example program: 1.2.3'), true);
 		});
 		
-		it('missing name', () => {
+		it('Missing name', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				app: {
 					name: undefined,
@@ -42,7 +42,7 @@ describe('Screens', () => {
 	});
 	
 	describe('#help()', () => {
-		it('description line', () => {
+		it('Description line', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -52,7 +52,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('Description: List something'), true);
 		});
 		
-		it('usage line (commands + flags + options)', () => {
+		it('Usage line (commands + flags + options)', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -61,7 +61,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('Usage: node entry.js [commands] [flags] [options]'), true);
 		});
 		
-		it('usage line (flags + options + data)', () => {
+		it('Usage line (flags + options + data)', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -71,7 +71,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('Usage: node entry.js list [flags] [options] [data]'), true);
 		});
 		
-		it('flags - header', () => {
+		it('Flags - header', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -80,7 +80,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('FLAGS:'), true);
 		});
 		
-		it('flags - non-cascading', () => {
+		it('Flags - non-cascading', () => {
 			let settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -97,7 +97,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('--non-cascading'), false);
 		});
 		
-		it('flags - cascading', () => {
+		it('Flags - cascading', () => {
 			let settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -114,7 +114,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('--quiet'), true);
 		});
 		
-		it('flags - shorthand', () => {
+		it('Flags - shorthand', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -123,7 +123,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('--quiet, -q'), true);
 		});
 		
-		it('flags - description', () => {
+		it('Flags - description', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -132,7 +132,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('Disable interactivity, rely on default values instead'), true);
 		});
 		
-		it('options - header', () => {
+		it('Options - header', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -141,7 +141,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('OPTIONS:'), true);
 		});
 		
-		it('options - cascading', () => {
+		it('Options - cascading', () => {
 			let settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -158,7 +158,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('--delivery-zip-code'), true);
 		});
 		
-		it('options - shorthand', () => {
+		it('Options - shorthand', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -167,7 +167,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('--delivery-zip-code, -z'), true);
 		});
 		
-		it('options - description', () => {
+		it('Options - description', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -176,7 +176,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('The delivery ZIP code, for context'), true);
 		});
 		
-		it('options - description (type)', () => {
+		it('Options - description (type)', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -186,7 +186,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('The maximum price of the items to list (float)'), true);
 		});
 		
-		it('options - description (required + accepts)', () => {
+		it('Options - description (required + accepts)', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -196,7 +196,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('How to sort the list (required) (accepts: popularity, alphabetical)'), true);
 		});
 		
-		it('commands - header', () => {
+		it('Commands - header', () => {
 			let settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -213,7 +213,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('COMMANDS:'), false);
 		});
 		
-		it('commands - description', () => {
+		it('Commands - description', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -222,7 +222,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('Order a pizza'), true);
 		});
 		
-		it('data - header', () => {
+		it('Data - header', () => {
 			let settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -239,7 +239,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('DATA:'), false);
 		});
 		
-		it('data - description', () => {
+		it('Data - description', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
@@ -249,7 +249,7 @@ describe('Screens', () => {
 			assert.equal(removeFormatting(screens(settings).help()).includes('What type of pizza to order'), true);
 		});
 		
-		it('data - description (required + accepts)', () => {
+		it('Data - description (required + accepts)', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',

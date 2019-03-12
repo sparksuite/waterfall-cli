@@ -269,29 +269,16 @@ describe('Utils', () => {
 		});
 		
 		it('ignores options in data', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code=12345'],
+				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
 			});
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
 				options: [],
 				values: [],
-				data: 'something --delivery-zip-code=12345',
-				command: 'order dine-in',
-			});
-			
-			settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '12345'],
-			});
-			
-			assert.deepEqual(utils(settings).organizeArguments(), {
-				flags: [],
-				options: [],
-				values: [],
-				data: 'something --delivery-zip-code 12345',
+				data: 'something --delivery-zip-code 55555',
 				command: 'order dine-in',
 			});
 		});

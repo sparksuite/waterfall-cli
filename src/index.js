@@ -44,12 +44,8 @@ module.exports = function Constructor(customSettings) {
 	const organizedArguments = utils(settings).organizeArguments();
 	
 	
-	// Construct the input object
-	const inputObject = utils(settings).constructInputObject(organizedArguments);
-	
-	
 	// Handle --version
-	if (inputObject.version) {
+	if (organizedArguments.flags.includes('version')) {
 		// Output
 		process.stdout.write(screens(settings).version());
 		
@@ -64,7 +60,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Handle --help
-	if (inputObject.help) {
+	if (organizedArguments.flags.includes('help')) {
 		// Output
 		process.stdout.write(screens(settings).help());
 		
@@ -112,6 +108,10 @@ module.exports = function Constructor(customSettings) {
 			executionPaths.push(commandPath);
 		}
 	});
+	
+	
+	// Construct the input object
+	const inputObject = utils(settings).constructInputObject(organizedArguments);
 	
 	
 	// Verbose output

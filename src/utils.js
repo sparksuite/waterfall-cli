@@ -177,19 +177,13 @@ module.exports = function Constructor(currentSettings) {
 			let nextIsOptionValue = false;
 			let nextValueType = null;
 			let nextValueAccepts = null;
-			let chainBroken = false;
+			let reachedData = false;
 			
 			
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 			
 			settings.arguments.forEach((argument, index) => {
-				// Skip if chain has been broken
-				if (chainBroken) {
-					return;
-				}
-				
-				
 				// Verbose output
 				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
 				
@@ -239,6 +233,21 @@ module.exports = function Constructor(currentSettings) {
 				
 				// Get merged spec for this command
 				const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
+				
+				
+				// Handle if we're supposed to ignore anything that looks like flags/options
+				if (reachedData && mergedSpec.data && mergedSpec.data.ignoreFlagsAndOptions === true) {
+					// Verbose output
+					module.exports(settings).verboseLog('...Is data');
+					
+					
+					// Append onto data
+					organizedArguments.data += ' '+argument;
+					
+					
+					// Skip further processing
+					return;
+				}
 				
 				
 				// Skip options/flags
@@ -319,7 +328,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Check if that file exists
-				if (!chainBroken && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>.]/g, '') !== '') {
+				if (!reachedData && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>.]/g, '') !== '') {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is a command');
 					
@@ -327,91 +336,19 @@ module.exports = function Constructor(currentSettings) {
 					// Add to currents
 					currentPathPrefix += `/${argument}`;
 					organizedArguments.command += ` ${argument}`;
-				} else if (!chainBroken) {
+				} else {
 					// Verbose output
 					module.exports(settings).verboseLog('...Is data');
 					
 					
-					// Form full data
-					let fullData = settings.arguments.slice(index).join(' ');
-					
-					
-					// Check if data is allowed
-					if (!mergedSpec.data || !mergedSpec.data.description) {
-						// Get all commands in this program
-						const commands = module.exports(settings).getAllProgramCommands();
-						
-						
-						// Search for the best match
-						const fuse = new Fuse(commands, {
-							shouldSort: true,
-							threshold: 1,
-							tokenize: true,
-							includeScore: true,
-							includeMatches: true,
-							maxPatternLength: 32,
-							minMatchCharLength: 1,
-						});
-						
-						const results = fuse.search(`${organizedArguments.command} ${fullData}`.trim());
-						let bestMatch = null;
-						
-						if (results.length && results[0].score < 0.6) {
-							bestMatch = results[0].matches[0].value;
-						}
-						
-						
-						// Determine command
-						const command = `${settings.usageCommand}${organizedArguments.command}`;
-						
-						
-						// Form error message
-						let errorMessage = `You provided ${fullData.bold} to ${command.bold}\n`;
-						
-						if (bestMatch) {
-							errorMessage += 'If you were trying to pass in data, this command does not accept data\n';
-							errorMessage += `If you were trying to use a command, did you mean ${settings.usageCommand.bold} ${bestMatch.bold}?\n`;
-						} else {
-							errorMessage += 'However, this command does not accept data\n';
-						}
-						
-						errorMessage += `For more guidance, see: ${command} --help`;
-						
-						
-						// Throw error
-						throw new ErrorWithoutStack(errorMessage);
-					}
-					
-					
-					// Validate data, if necessary
-					if (mergedSpec.data.accepts) {
-						if (!mergedSpec.data.accepts.includes(fullData)) {
-							throw new ErrorWithoutStack(`Unrecognized data for "${organizedArguments.command.trim()}": ${fullData}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
-						}
-					}
-					
-					if (mergedSpec.data.type) {
-						if (mergedSpec.data.type === 'integer') {
-							if (fullData.match(/^[0-9]+$/) !== null) {
-								fullData = parseInt(fullData, 10);
-							} else {
-								throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${fullData}`);
-							}
-						} else if (mergedSpec.data.type === 'float') {
-							if (fullData.match(/^[0-9]*[.]*[0-9]*$/) !== null && fullData !== '.' && fullData !== '') {
-								fullData = parseFloat(fullData);
-							} else {
-								throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${fullData}`);
-							}
-						} else {
-							throw new ErrorWithoutStack(`Unrecognized "type": ${mergedSpec.data.type}`);
-						}
-					}
-					
-					
 					// Store details
-					chainBroken = true;
-					organizedArguments.data = fullData;
+					reachedData = true;
+					
+					if (organizedArguments.data === null) {
+						organizedArguments.data = argument;
+					} else {
+						organizedArguments.data += ' '+argument;
+					}
 				}
 			});
 			
@@ -419,6 +356,86 @@ module.exports = function Constructor(currentSettings) {
 			// Error if we're missing an expected value
 			if (nextIsOptionValue === true) {
 				throw new ErrorWithoutStack(`No value provided for ${previousOption}, which is an option, not a flag`);
+			}
+			
+			
+			// Handle if there's any data
+			if (organizedArguments.data !== null) {
+				// Get merged spec for this command
+				const mergedSpec = module.exports(settings).getMergedSpec(organizedArguments.command);
+				
+				
+				// Check if data is allowed
+				if (!mergedSpec.data || !mergedSpec.data.description) {
+					// Get all commands in this program
+					const commands = module.exports(settings).getAllProgramCommands();
+					
+					
+					// Search for the best match
+					const fuse = new Fuse(commands, {
+						shouldSort: true,
+						threshold: 1,
+						tokenize: true,
+						includeScore: true,
+						includeMatches: true,
+						maxPatternLength: 32,
+						minMatchCharLength: 1,
+					});
+					
+					const results = fuse.search(`${organizedArguments.command} ${organizedArguments.data}`.trim());
+					let bestMatch = null;
+					
+					if (results.length && results[0].score < 0.6) {
+						bestMatch = results[0].matches[0].value;
+					}
+					
+					
+					// Determine command
+					const command = `${settings.usageCommand}${organizedArguments.command}`;
+					
+					
+					// Form error message
+					let errorMessage = `You provided ${organizedArguments.data.bold} to ${command.bold}\n`;
+					
+					if (bestMatch) {
+						errorMessage += 'If you were trying to pass in data, this command does not accept data\n';
+						errorMessage += `If you were trying to use a command, did you mean ${settings.usageCommand.bold} ${bestMatch.bold}?\n`;
+					} else {
+						errorMessage += 'However, this command does not accept data\n';
+					}
+					
+					errorMessage += `For more guidance, see: ${command} --help`;
+					
+					
+					// Throw error
+					throw new ErrorWithoutStack(errorMessage);
+				}
+				
+				
+				// Validate data, if necessary
+				if (mergedSpec.data.accepts) {
+					if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
+						throw new ErrorWithoutStack(`Unrecognized data for "${organizedArguments.command.trim()}": ${organizedArguments.data}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`);
+					}
+				}
+				
+				if (mergedSpec.data.type) {
+					if (mergedSpec.data.type === 'integer') {
+						if (organizedArguments.data.match(/^[0-9]+$/) !== null) {
+							organizedArguments.data = parseInt(organizedArguments.data, 10);
+						} else {
+							throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects integer data\nProvided: ${organizedArguments.data}`);
+						}
+					} else if (mergedSpec.data.type === 'float') {
+						if (organizedArguments.data.match(/^[0-9]*[.]*[0-9]*$/) !== null && organizedArguments.data !== '.' && organizedArguments.data !== '') {
+							organizedArguments.data = parseFloat(organizedArguments.data);
+						} else {
+							throw new ErrorWithoutStack(`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${organizedArguments.data}`);
+						}
+					} else {
+						throw new ErrorWithoutStack(`Unrecognized "type": ${mergedSpec.data.type}`);
+					}
+				}
 			}
 			
 			

@@ -268,6 +268,21 @@ describe('Utils', () => {
 			});
 		});
 		
+		it('handles simple command with flag after data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'toppings', '--help'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: ['help'],
+				options: [],
+				values: [],
+				data: 'toppings',
+				command: 'list',
+			});
+		});
+		
 		it('ignores flag in data', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,

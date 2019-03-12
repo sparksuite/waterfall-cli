@@ -40,8 +40,16 @@ module.exports = function Constructor(customSettings) {
 	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
 	
 	
+	// Organize the arguments
+	const organizedArguments = utils(settings).organizeArguments();
+	
+	
+	// Construct the input object
+	const inputObject = utils(settings).constructInputObject(organizedArguments);
+	
+	
 	// Handle --version
-	if (settings.arguments.includes('-v') || settings.arguments.includes('--version')) {
+	if (inputObject.version) {
 		// Output
 		process.stdout.write(screens(settings).version());
 		
@@ -56,7 +64,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Handle --help
-	if (settings.arguments.length === 0 || settings.arguments.includes('-h') || settings.arguments.includes('--help')) {
+	if (inputObject.help) {
 		// Output
 		process.stdout.write(screens(settings).help());
 		
@@ -68,10 +76,6 @@ module.exports = function Constructor(customSettings) {
 		// Stop processing
 		return;
 	}
-	
-	
-	// Organize the arguments
-	const organizedArguments = utils(settings).organizeArguments();
 	
 	
 	// Form execution paths
@@ -108,10 +112,6 @@ module.exports = function Constructor(customSettings) {
 			executionPaths.push(commandPath);
 		}
 	});
-	
-	
-	// Construct the input object
-	const inputObject = utils(settings).constructInputObject(organizedArguments);
 	
 	
 	// Verbose output

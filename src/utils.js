@@ -184,6 +184,12 @@ module.exports = function Constructor(currentSettings) {
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 			
 			settings.arguments.forEach((argument, index) => {
+				// Skip if chain has been broken
+				if (chainBroken) {
+					return;
+				}
+				
+				
 				// Verbose output
 				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
 				

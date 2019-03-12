@@ -264,6 +264,34 @@ describe('Utils', () => {
 			});
 		});
 		
+		it('ignores options in data', () => {
+			let settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code=12345'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'something --delivery-zip-code=12345',
+				command: 'order dine-in',
+			});
+			
+			settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '12345'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'something --delivery-zip-code 12345',
+				command: 'order dine-in',
+			});
+		});
+		
 		it('handles simple command with longer data', () => {
 			const settings = Object.assign({}, defaultSettings, {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,

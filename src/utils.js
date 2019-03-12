@@ -339,8 +339,10 @@ module.exports = function Constructor(currentSettings) {
 						// Search for the best match
 						const fuse = new Fuse(commands, {
 							shouldSort: true,
-							threshold: 0.4,
+							threshold: 1,
 							tokenize: true,
+							includeScore: true,
+							includeMatches: true,
 							maxPatternLength: 32,
 							minMatchCharLength: 1,
 						});
@@ -348,8 +350,8 @@ module.exports = function Constructor(currentSettings) {
 						const results = fuse.search(`${organizedArguments.command} ${fullData}`.trim());
 						let bestMatch = null;
 						
-						if (results.length) {
-							bestMatch = commands[results[0]];
+						if (results.length && results[0].score < 0.6) {
+							bestMatch = results[0].matches[0].value;
 						}
 						
 						

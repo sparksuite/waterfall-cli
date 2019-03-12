@@ -256,7 +256,7 @@ describe('Screens', () => {
 				arguments: ['list'],
 			});
 			
-			assert.equal(removeFormatting(screens(settings).help()).includes('What you want to list (required) (accepts: toppings, crusts)'), true);
+			assert.equal(removeFormatting(screens(settings).help()).includes('What you want to list (required) (accepts: toppings, crusts, two words)'), true);
 		});
 	});
 });

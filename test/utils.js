@@ -130,7 +130,7 @@ describe('Utils', () => {
 			assert.deepEqual(utils(settings).getMergedSpec('list'), {
 				data: {
 					description: 'What you want to list',
-					accepts: ['toppings', 'crusts'],
+					accepts: ['toppings', 'crusts', 'two words'],
 					required: true,
 				},
 				description: 'List something',
@@ -249,6 +249,21 @@ describe('Utils', () => {
 				options: [],
 				values: [],
 				data: 'toppings',
+				command: 'list',
+			});
+		});
+		
+		it('handles simple command with multi-word data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'two', 'words'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'two words',
 				command: 'list',
 			});
 		});

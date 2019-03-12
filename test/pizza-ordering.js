@@ -77,5 +77,23 @@ describe('Pizza ordering', () => {
 				'pizza-ordering: 1.2.3',
 			], undefined, done);
 		});
+		
+		it('Displays version for a command', (done) => {
+			runTest('list --version', [
+				'pizza-ordering: 1.2.3',
+			], undefined, done);
+		});
+		
+		it('Displays help screen', (done) => {
+			runTest('--help', [
+				'Usage: node entry.js [commands]',
+			], undefined, done);
+		});
+		
+		it('Displays help screen for a command', (done) => {
+			runTest('list --help', [
+				'Usage: node entry.js list [flags]',
+			], undefined, done);
+		});
 	});
 });

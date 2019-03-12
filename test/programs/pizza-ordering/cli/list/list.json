@@ -2,7 +2,7 @@
     "description": "List something",
     "data": {
         "description": "What you want to list",
-        "accepts": ["toppings", "crusts"],
+        "accepts": ["toppings", "crusts", "two words"],
         "required": true
     },
     "flags": {

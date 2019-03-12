@@ -15,14 +15,18 @@ describe('Utils', () => {
 				'/path/to/node',
 				'/path/to/entry.js',
 				'command',
-				'--option=value',
+				'--option1=value',
+				'--option2',
+				'value',
 				'--flag',
 				'-f',
 				'data1',
 				'data2',
 			]), [
 				'command',
-				'--option',
+				'--option1',
+				'value',
+				'--option2',
 				'value',
 				'--flag',
 				'-f',
@@ -126,7 +130,7 @@ describe('Utils', () => {
 			assert.deepEqual(utils(settings).getMergedSpec('list'), {
 				data: {
 					description: 'What you want to list',
-					accepts: ['toppings', 'crusts'],
+					accepts: ['toppings', 'crusts', 'two words'],
 					required: true,
 				},
 				description: 'List something',
@@ -246,6 +250,66 @@ describe('Utils', () => {
 				values: [],
 				data: 'toppings',
 				command: 'list',
+			});
+		});
+		
+		it('handles simple command with multi-word data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'two', 'words'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'two words',
+				command: 'list',
+			});
+		});
+		
+		it('handles simple command with flag after data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['list', 'toppings', '--help'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: ['help'],
+				options: [],
+				values: [],
+				data: 'toppings',
+				command: 'list',
+			});
+		});
+		
+		it('ignores flag in data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'dine-in', 'something', '--help'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'something --help',
+				command: 'order dine-in',
+			});
+		});
+		
+		it('ignores options in data', () => {
+			const settings = Object.assign({}, defaultSettings, {
+				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
+			});
+			
+			assert.deepEqual(utils(settings).organizeArguments(), {
+				flags: [],
+				options: [],
+				values: [],
+				data: 'something --delivery-zip-code 55555',
+				command: 'order dine-in',
 			});
 		});
 		

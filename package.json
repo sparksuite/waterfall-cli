@@ -1,6 +1,6 @@
 {
   "name": "waterfall-cli",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Effortlessly create CLIs powered by Node.js",
   "main": "src/index.js",
   "files": [

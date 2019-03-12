@@ -183,7 +183,7 @@ module.exports = function Constructor(currentSettings) {
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 			
-			settings.arguments.forEach((argument, index) => {
+			settings.arguments.forEach((argument) => {
 				// Verbose output
 				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
 				
@@ -242,7 +242,7 @@ module.exports = function Constructor(currentSettings) {
 					
 					
 					// Append onto data
-					organizedArguments.data += ' '+argument;
+					organizedArguments.data += ` ${argument}`;
 					
 					
 					// Skip further processing
@@ -347,7 +347,7 @@ module.exports = function Constructor(currentSettings) {
 					if (organizedArguments.data === null) {
 						organizedArguments.data = argument;
 					} else {
-						organizedArguments.data += ' '+argument;
+						organizedArguments.data += ` ${argument}`;
 					}
 				}
 			});

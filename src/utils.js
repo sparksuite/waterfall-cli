@@ -516,6 +516,13 @@ module.exports = function Constructor(currentSettings) {
 		},
 		
 		
+		// Print a pretty error message
+		printPrettyError(message) {
+			console.error(`${' ERROR '.inverse.red.bold}\n`);
+			console.error((`> ${message.split('\n').join('\n> ')}\n`).red);
+		},
+		
+		
 		// File functions
 		files: {
 			// Return true if this path is a directory

@@ -7,10 +7,12 @@ const utils = require('./utils.js');
 module.exports = {
 	app: {
 		name: null,
+		packageName: null,
 		version: null,
 	},
 	arguments: utils({}).processArguments(process.argv),
 	mainFilename: require.main.filename,
+	newVersionWarning: true,
 	onStart: null,
 	packageFilePath: '../package.json',
 	spacing: {

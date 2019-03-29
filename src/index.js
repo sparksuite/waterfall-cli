@@ -58,7 +58,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Handle --help
-	if (organizedArguments.flags.includes('help')) {
+	if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
 		// Output
 		process.stdout.write(screens(settings).help());
 		

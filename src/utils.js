@@ -63,6 +63,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				// Store information
 				app.name = app.name || packageInfo.name;
+				app.packageName = packageInfo.name;
 				app.version = app.version || packageInfo.version;
 			} else {
 				module.exports(settings).verboseLog(`Could not find package.json at: ${pathToPackageFile}`);

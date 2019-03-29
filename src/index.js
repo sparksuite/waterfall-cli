@@ -74,7 +74,7 @@ module.exports = function Constructor(customSettings) {
 	
 	
 	// Handle new version warning
-	if (settings.newVersionWarning !== false && settings.app.packageName) {
+	if (settings.newVersionWarning.enabled && settings.app.packageName) {
 		// Determine where to store the version
 		const pathToLatestVersion = path.join(__dirname, `../app-versions/${settings.app.packageName.replace(/[^a-zA-Z0-9-.]/g, '=')}`);
 		
@@ -105,7 +105,7 @@ module.exports = function Constructor(customSettings) {
 			// Determine if warning is needed
 			if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
 				console.log((`You're using an outdated version of ${settings.app.name} (${currentVersion}). The latest version is ${latestVersion.bold}`).yellow);
-				console.log(`${(`  > Upgrade by running: ${(`npm install --global ${settings.app.packageName}@${latestVersion}`).bold}`).yellow}\n`);
+				console.log(`${(`  > Upgrade by running: ${(`npm install ${settings.newVersionWarning.installedGlobally ? '--global ' : ''}${settings.app.packageName}@${latestVersion}`).bold}`).yellow}\n`);
 			}
 		}
 		

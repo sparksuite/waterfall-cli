@@ -4,6 +4,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 const semver = require('semver');
+const deepmerge = require('deepmerge');
 const defaultSettings = require('./default-settings.js');
 const ErrorWithoutStack = require('./error-without-stack.js');
 const screens = require('./screens.js');
@@ -20,8 +21,7 @@ process.on('uncaughtException', (error) => {
 // The constructor, for use at the entry point
 module.exports = function Constructor(customSettings) {
 	// Merge custom settings into default settings
-	const settings = Object.assign({}, defaultSettings);
-	Object.assign(settings, customSettings);
+	const settings = deepmerge(defaultSettings, customSettings);
 	
 	
 	// Add spacing before

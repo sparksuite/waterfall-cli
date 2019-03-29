@@ -102,5 +102,11 @@ describe('Pizza ordering', () => {
 				'Usage: node entry.js list [flags]',
 			], undefined, done);
 		});
+		
+		it('Displays help screen when no arguments', (done) => {
+			runTest('', [
+				'Usage: node entry.js [commands]',
+			], undefined, done);
+		});
 	});
 });

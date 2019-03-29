@@ -25,8 +25,13 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 	let stderr = '';
 	
 	
+	// Form spawn array
+	let spawnArray = [entryFile, ...customArguments.split(' ')];
+	spawnArray = spawnArray.filter(element => element !== '');
+	
+	
 	// Spawn
-	const child = spawn('node', [entryFile, ...customArguments.split(' ')]);
+	const child = spawn('node', spawnArray);
 	
 	
 	// Listeners
@@ -93,6 +98,12 @@ describe('Pizza ordering', () => {
 		it('Displays help screen for a command', (done) => {
 			runTest('list --help', [
 				'Usage: node entry.js list [flags]',
+			], undefined, done);
+		});
+		
+		it('Displays help screen when no arguments', (done) => {
+			runTest('', [
+				'Usage: node entry.js [commands]',
 			], undefined, done);
 		});
 	});

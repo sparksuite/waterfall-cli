@@ -27,9 +27,7 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 	
 	// Form spawn array
 	let spawnArray = [entryFile, ...customArguments.split(' ')];
-	spawnArray = spawnArray.filter((element) => {
-		return element !== '';
-	});
+	spawnArray = spawnArray.filter(element => element !== '');
 	
 	
 	// Spawn

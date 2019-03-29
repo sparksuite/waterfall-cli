@@ -25,8 +25,15 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 	let stderr = '';
 	
 	
+	// Form spawn array
+	let spawnArray = [entryFile, ...customArguments.split(' ')];
+	spawnArray = spawnArray.filter((element) => {
+		return element !== '';
+	});
+	
+	
 	// Spawn
-	const child = spawn('node', [entryFile, ...customArguments.split(' ')]);
+	const child = spawn('node', spawnArray);
 	
 	
 	// Listeners

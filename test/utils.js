@@ -68,6 +68,7 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).retrieveAppInformation(), {
 				name: 'pizza-ordering',
+				packageName: 'pizza-ordering',
 				version: '1.2.3',
 			});
 		});
@@ -80,6 +81,7 @@ describe('Utils', () => {
 			
 			assert.deepEqual(utils(settings).retrieveAppInformation(), {
 				name: null,
+				packageName: null,
 				version: null,
 			});
 		});

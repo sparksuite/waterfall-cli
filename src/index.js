@@ -39,6 +39,40 @@ module.exports = function Constructor(customSettings) {
 	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
 	
 	
+	// Organize the arguments
+	const organizedArguments = utils(settings).organizeArguments();
+	
+	
+	// Handle --version
+	if (organizedArguments.flags.includes('version')) {
+		// Output
+		process.stdout.write(screens(settings).version());
+		
+		
+		// Verbose output
+		utils(settings).verboseLog('Skipping further processing...');
+		
+		
+		// Stop processing
+		return;
+	}
+	
+	
+	// Handle --help
+	if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
+		// Output
+		process.stdout.write(screens(settings).help());
+		
+		
+		// Verbose output
+		utils(settings).verboseLog('Skipping further processing...');
+		
+		
+		// Stop processing
+		return;
+	}
+	
+	
 	// Handle new version warning
 	if (settings.newVersionWarning !== false && settings.app.packageName) {
 		// Determine where to store the version
@@ -84,40 +118,6 @@ module.exports = function Constructor(customSettings) {
 				// Do nothing
 			});
 		});
-	}
-	
-	
-	// Organize the arguments
-	const organizedArguments = utils(settings).organizeArguments();
-	
-	
-	// Handle --version
-	if (organizedArguments.flags.includes('version')) {
-		// Output
-		process.stdout.write(screens(settings).version());
-		
-		
-		// Verbose output
-		utils(settings).verboseLog('Skipping further processing...');
-		
-		
-		// Stop processing
-		return;
-	}
-	
-	
-	// Handle --help
-	if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
-		// Output
-		process.stdout.write(screens(settings).help());
-		
-		
-		// Verbose output
-		utils(settings).verboseLog('Skipping further processing...');
-		
-		
-		// Stop processing
-		return;
 	}
 	
 	

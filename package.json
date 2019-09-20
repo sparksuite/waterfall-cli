@@ -7,7 +7,9 @@
     "/src"
   ],
   "scripts": {
-    "test": "nyc --reporter=html --reporter=text mocha"
+    "test": "nyc --reporter=html --reporter=text mocha",
+    "lint": "eslint . --ext .js && prettier --check '**/*.{js,json}'",
+    "format": "eslint --fix . --ext .js && prettier --write '**/*.{js,json}'"
   },
   "repository": {
     "type": "git",
@@ -34,7 +36,6 @@
     "eslint": "^6.4.0",
     "eslint-config-prettier": "^6.3.0",
     "eslint-plugin-import": "^2.18.2",
-    "eslint-plugin-prettier": "^3.1.1",
     "mocha": "^6.2.0",
     "nyc": "^14.1.1",
     "prettier": "1.18.2"

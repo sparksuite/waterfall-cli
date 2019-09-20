@@ -2,7 +2,6 @@
 const path = require('path');
 const utils = require('./utils.js');
 
-
 // Default settings
 module.exports = {
 	app: {

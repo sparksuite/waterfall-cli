@@ -1,9 +1,8 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 /* eslint no-control-regex: "off" */
 
 // Dependencies
 require('colors');
-const assert = require('assert');
 const defaultSettings = require('../src/default-settings.js');
 const screens = require('../src/screens.js');
 
@@ -27,12 +26,11 @@ describe('Screens', () => {
 				},
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).version()).includes(
 					'Example program: 1.2.3'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Missing name', () => {
@@ -44,12 +42,10 @@ describe('Screens', () => {
 				},
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).version()).includes('1.2.3'),
-				true
-			);
-			assert.equal(
-				removeFormatting(screens(settings).version()).includes(':'),
+			expect(
+				removeFormatting(screens(settings).version()).includes('1.2.3')
+			).toBe(true);
+			expect(removeFormatting(screens(settings).version()).includes(':')).toBe(
 				false
 			);
 		});
@@ -64,12 +60,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'Description: List something'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Usage line (commands + flags + options)', () => {
@@ -79,12 +74,11 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'Usage: node entry.js [commands] [flags] [options]'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Usage line (flags + options + data)', () => {
@@ -95,12 +89,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'Usage: node entry.js list [flags] [options] [data]'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Flags - header', () => {
@@ -110,10 +103,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('FLAGS:'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('FLAGS:')
+			).toBe(true);
 		});
 
 		test('Flags - non-cascading', () => {
@@ -123,10 +115,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('--non-cascading'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('--non-cascading')
+			).toBe(true);
 
 			settings = {
 				...defaultSettings,
@@ -135,10 +126,9 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('--non-cascading'),
-				false
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('--non-cascading')
+			).toBe(false);
 		});
 
 		test('Flags - cascading', () => {
@@ -148,10 +138,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('--quiet'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('--quiet')
+			).toBe(true);
 
 			settings = {
 				...defaultSettings,
@@ -160,10 +149,9 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('--quiet'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('--quiet')
+			).toBe(true);
 		});
 
 		test('Flags - shorthand', () => {
@@ -173,10 +161,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('--quiet, -q'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('--quiet, -q')
+			).toBe(true);
 		});
 
 		test('Flags - description', () => {
@@ -186,12 +173,11 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'Disable interactivity, rely on default values instead'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Options - header', () => {
@@ -201,10 +187,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('OPTIONS:'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('OPTIONS:')
+			).toBe(true);
 		});
 
 		test('Options - cascading', () => {
@@ -214,12 +199,11 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'--delivery-zip-code'
-				),
-				true
-			);
+				)
+			).toBe(true);
 
 			settings = {
 				...defaultSettings,
@@ -228,12 +212,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'--delivery-zip-code'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Options - shorthand', () => {
@@ -243,12 +226,11 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'--delivery-zip-code, -z'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Options - description', () => {
@@ -258,12 +240,11 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'The delivery ZIP code, for context'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Options - description (type)', () => {
@@ -274,12 +255,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'The maximum price of the items to list (float)'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Options - description (required + accepts)', () => {
@@ -290,12 +270,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'How to sort the list (required) (accepts: popularity, alphabetical)'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Commands - header', () => {
@@ -305,10 +284,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('COMMANDS:'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('COMMANDS:')
+			).toBe(true);
 
 			settings = {
 				...defaultSettings,
@@ -317,10 +295,9 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('COMMANDS:'),
-				false
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('COMMANDS:')
+			).toBe(false);
 		});
 
 		test('Commands - description', () => {
@@ -330,10 +307,9 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('Order a pizza'),
-				true
-			);
+			expect(
+				removeFormatting(screens(settings).help()).includes('Order a pizza')
+			).toBe(true);
 		});
 
 		test('Data - header', () => {
@@ -344,8 +320,7 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('DATA:'),
+			expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
 				true
 			);
 
@@ -355,8 +330,7 @@ describe('Screens', () => {
 				usageCommand: 'node entry.js',
 			};
 
-			assert.equal(
-				removeFormatting(screens(settings).help()).includes('DATA:'),
+			expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
 				false
 			);
 		});
@@ -369,12 +343,11 @@ describe('Screens', () => {
 				arguments: ['order', 'dine-in'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'What type of pizza to order'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 
 		test('Data - description (required + accepts)', () => {
@@ -385,12 +358,11 @@ describe('Screens', () => {
 				arguments: ['list'],
 			};
 
-			assert.equal(
+			expect(
 				removeFormatting(screens(settings).help()).includes(
 					'What you want to list (required) (accepts: toppings, crusts, two words)'
-				),
-				true
-			);
+				)
+			).toBe(true);
 		});
 	});
 });

@@ -1,9 +1,8 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 /* eslint no-control-regex: "off" */
 
 // Dependencies
 require('colors');
-const assert = require('assert');
 const { spawn } = require('child_process');
 
 // Initialize
@@ -40,13 +39,13 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 		// Loop over includes
 		if (typeof stdoutIncludes === 'object') {
 			stdoutIncludes.forEach(text => {
-				assert.equal(removeFormatting(stdout).includes(text), true);
+				expect(removeFormatting(stdout).includes(text)).toBe(true);
 			});
 		}
 
 		if (typeof stderrIncludes === 'object') {
 			stderrIncludes.forEach(text => {
-				assert.equal(removeFormatting(stderr).includes(text), true);
+				expect(removeFormatting(stderr).includes(text)).toBe(true);
 			});
 		}
 

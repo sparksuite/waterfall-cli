@@ -1,7 +1,6 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 
 // Dependencies
-const assert = require('assert');
 const defaultSettings = require('../src/default-settings.js');
 const utils = require('../src/utils.js');
 
@@ -9,7 +8,7 @@ const utils = require('../src/utils.js');
 describe('Utils', () => {
 	describe('#processArguments()', () => {
 		test('Handles normal arguments', () => {
-			assert.deepEqual(
+			expect(
 				utils({}).processArguments([
 					'/path/to/node',
 					'/path/to/entry.js',
@@ -21,43 +20,40 @@ describe('Utils', () => {
 					'-f',
 					'data1',
 					'data2',
-				]),
-				[
-					'command',
-					'--option1',
-					'value',
-					'--option2',
-					'value',
-					'--flag',
-					'-f',
-					'data1',
-					'data2',
-				]
-			);
+				])
+			).toStrictEqual([
+				'command',
+				'--option1',
+				'value',
+				'--option2',
+				'value',
+				'--flag',
+				'-f',
+				'data1',
+				'data2',
+			]);
 		});
 
 		test('Handles data with special characters', () => {
-			assert.deepEqual(
+			expect(
 				utils({}).processArguments([
 					'/path/to/node',
 					'/path/to/entry.js',
 					'command',
 					'~!@#$%^&*()-=_+',
-				]),
-				['command', '~!@#$%^&*()-=_+']
-			);
+				])
+			).toStrictEqual(['command', '~!@#$%^&*()-=_+']);
 		});
 
 		test('Handles dangling equals sign', () => {
-			assert.deepEqual(
+			expect(
 				utils({}).processArguments([
 					'/path/to/node',
 					'/path/to/entry.js',
 					'command',
 					'--option=',
-				]),
-				['command', '--option']
-			);
+				])
+			).toStrictEqual(['command', '--option']);
 		});
 	});
 
@@ -68,7 +64,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			};
 
-			assert.deepEqual(utils(settings).retrieveAppInformation(), {
+			expect(utils(settings).retrieveAppInformation()).toStrictEqual({
 				name: 'pizza-ordering',
 				packageName: 'pizza-ordering',
 				version: '1.2.3',
@@ -82,7 +78,7 @@ describe('Utils', () => {
 				packageFilePath: '../fake.json',
 			};
 
-			assert.deepEqual(utils(settings).retrieveAppInformation(), {
+			expect(utils(settings).retrieveAppInformation()).toStrictEqual({
 				name: null,
 				packageName: null,
 				version: null,
@@ -97,7 +93,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			};
 
-			assert.deepEqual(utils(settings).getMergedSpec(''), {
+			expect(utils(settings).getMergedSpec('')).toStrictEqual({
 				data: undefined,
 				description: undefined,
 				flags: {
@@ -135,7 +131,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			};
 
-			assert.deepEqual(utils(settings).getMergedSpec('list'), {
+			expect(utils(settings).getMergedSpec('list')).toStrictEqual({
 				data: {
 					description: 'What you want to list',
 					accepts: ['toppings', 'crusts', 'two words'],
@@ -191,9 +187,9 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).getMergedSpec('multiple-js');
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about multiple .json files', () => {
@@ -202,9 +198,9 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).getMergedSpec('multiple-json');
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about bad JSON', () => {
@@ -213,9 +209,9 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).getMergedSpec('bad json');
-			}, Error);
+			}).toThrow(Error);
 		});
 	});
 
@@ -227,7 +223,7 @@ describe('Utils', () => {
 				arguments: [],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -243,7 +239,7 @@ describe('Utils', () => {
 				arguments: ['list'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -259,7 +255,7 @@ describe('Utils', () => {
 				arguments: ['list', 'toppings'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -275,7 +271,7 @@ describe('Utils', () => {
 				arguments: ['list', 'two', 'words'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -291,7 +287,7 @@ describe('Utils', () => {
 				arguments: ['list', 'toppings', '--help'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['help'],
 				options: [],
 				values: [],
@@ -307,7 +303,7 @@ describe('Utils', () => {
 				arguments: ['order', 'dine-in', 'something', '--help'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -329,7 +325,7 @@ describe('Utils', () => {
 				],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -345,7 +341,7 @@ describe('Utils', () => {
 				arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -361,7 +357,7 @@ describe('Utils', () => {
 				arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -377,7 +373,7 @@ describe('Utils', () => {
 				arguments: ['order', 'integer-data', '10'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -393,7 +389,7 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '123.4'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -407,7 +403,7 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '123.'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -421,7 +417,7 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '123'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -435,7 +431,7 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '.123'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -451,7 +447,7 @@ describe('Utils', () => {
 				arguments: ['order', 'dine-in'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: [],
 				values: [],
@@ -467,7 +463,7 @@ describe('Utils', () => {
 				arguments: ['list', '--vegetarian'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['vegetarian'],
 				options: [],
 				values: [],
@@ -483,7 +479,7 @@ describe('Utils', () => {
 				arguments: ['list', '--quiet'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['quiet'],
 				options: [],
 				values: [],
@@ -499,7 +495,7 @@ describe('Utils', () => {
 				arguments: ['list', '-q'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['quiet'],
 				options: [],
 				values: [],
@@ -515,7 +511,7 @@ describe('Utils', () => {
 				arguments: ['list', '--vegetarian', '--quiet'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['vegetarian', 'quiet'],
 				options: [],
 				values: [],
@@ -531,7 +527,7 @@ describe('Utils', () => {
 				arguments: ['--quiet', 'list', '--vegetarian'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: ['quiet', 'vegetarian'],
 				options: [],
 				values: [],
@@ -547,7 +543,7 @@ describe('Utils', () => {
 				arguments: ['list', '--limit', '10'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['limit'],
 				values: [10],
@@ -563,7 +559,7 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '123.4'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['max-price'],
 				values: [123.4],
@@ -577,7 +573,7 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '123.'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['max-price'],
 				values: [123],
@@ -591,7 +587,7 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '123'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['max-price'],
 				values: [123],
@@ -605,7 +601,7 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '.123'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['max-price'],
 				values: [0.123],
@@ -621,7 +617,7 @@ describe('Utils', () => {
 				arguments: ['list', '--delivery-zip-code', '55555'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['delivery-zip-code'],
 				values: ['55555'],
@@ -637,7 +633,7 @@ describe('Utils', () => {
 				arguments: ['list', '-z', '55555'],
 			};
 
-			assert.deepEqual(utils(settings).organizeArguments(), {
+			expect(utils(settings).organizeArguments()).toStrictEqual({
 				flags: [],
 				options: ['delivery-zip-code'],
 				values: ['55555'],
@@ -653,9 +649,9 @@ describe('Utils', () => {
 				arguments: ['list', '.'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about missing option value', () => {
@@ -665,9 +661,9 @@ describe('Utils', () => {
 				arguments: ['list', '--delivery-zip-code'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about unrecognized option value type', () => {
@@ -677,9 +673,9 @@ describe('Utils', () => {
 				arguments: ['order', 'to-go', '--test', 'test'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about unrecognized data type', () => {
@@ -689,9 +685,9 @@ describe('Utils', () => {
 				arguments: ['order', 'to-go', 'test'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about unrecognized flag', () => {
@@ -701,9 +697,9 @@ describe('Utils', () => {
 				arguments: ['list', '--fake'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about non-permitted data', () => {
@@ -713,9 +709,9 @@ describe('Utils', () => {
 				arguments: ['order', 'abc', '123'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about option value not in "values"', () => {
@@ -725,9 +721,9 @@ describe('Utils', () => {
 				arguments: ['list', '--sort', 'fake'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about data not in "values"', () => {
@@ -737,9 +733,9 @@ describe('Utils', () => {
 				arguments: ['list', 'fake'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about option value not being integer', () => {
@@ -749,9 +745,9 @@ describe('Utils', () => {
 				arguments: ['list', '--limit', '123.4'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -759,9 +755,9 @@ describe('Utils', () => {
 				arguments: ['list', '--limit', 'abc'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about option value not being float', () => {
@@ -771,9 +767,9 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', 'abc'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -781,9 +777,9 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '123.4.5'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -791,9 +787,9 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', '.'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -801,9 +797,9 @@ describe('Utils', () => {
 				arguments: ['list', '--max-price', ''],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about data not being integer', () => {
@@ -813,9 +809,9 @@ describe('Utils', () => {
 				arguments: ['order', 'integer-data', '123.4'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -823,9 +819,9 @@ describe('Utils', () => {
 				arguments: ['order', 'integer-data', 'abc'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about data not being float', () => {
@@ -835,9 +831,9 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', 'abc'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -845,9 +841,9 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '123.4.5'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -855,9 +851,9 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', '.'],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 
 			settings = {
 				...defaultSettings,
@@ -865,9 +861,9 @@ describe('Utils', () => {
 				arguments: ['order', 'float-data', ''],
 			};
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).organizeArguments();
-			}, Error);
+			}).toThrow(Error);
 		});
 	});
 
@@ -890,21 +886,20 @@ describe('Utils', () => {
 
 			const organizedArguments = utils(settings).organizeArguments();
 
-			assert.deepEqual(
-				utils(settings).constructInputObject(organizedArguments),
-				{
-					command: 'list',
-					data: 'toppings',
-					deliveryZipCode: '55555',
-					help: false,
-					limit: undefined,
-					maxPrice: undefined,
-					quiet: true,
-					sort: 'popularity',
-					vegetarian: true,
-					version: false,
-				}
-			);
+			expect(
+				utils(settings).constructInputObject(organizedArguments)
+			).toStrictEqual({
+				command: 'list',
+				data: 'toppings',
+				deliveryZipCode: '55555',
+				help: false,
+				limit: undefined,
+				maxPrice: undefined,
+				quiet: true,
+				sort: 'popularity',
+				vegetarian: true,
+				version: false,
+			});
 		});
 
 		test('Complains about missing required option', () => {
@@ -916,9 +911,9 @@ describe('Utils', () => {
 
 			const organizedArguments = utils(settings).organizeArguments();
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).constructInputObject(organizedArguments);
-			}, Error);
+			}).toThrow(Error);
 		});
 
 		test('Complains about missing required data', () => {
@@ -930,9 +925,9 @@ describe('Utils', () => {
 
 			const organizedArguments = utils(settings).organizeArguments();
 
-			assert.throws(() => {
+			expect(() => {
 				utils(settings).constructInputObject(organizedArguments);
-			}, Error);
+			}).toThrow(Error);
 		});
 	});
 
@@ -943,7 +938,7 @@ describe('Utils', () => {
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 			};
 
-			assert.deepEqual(utils(settings).getAllProgramCommands(), [
+			expect(utils(settings).getAllProgramCommands()).toStrictEqual([
 				'list',
 				'order',
 				'order dine-in',
@@ -956,15 +951,13 @@ describe('Utils', () => {
 
 	describe('#convertDashesToCamelCase()', () => {
 		test('Normal string', () => {
-			assert.equal(
-				utils({}).convertDashesToCamelCase('aaa-aaa-aaa'),
+			expect(utils({}).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual(
 				'aaaAaaAaa'
 			);
 		});
 
 		test('With numbers', () => {
-			assert.equal(
-				utils({}).convertDashesToCamelCase('aaa-123-aaa'),
+			expect(utils({}).convertDashesToCamelCase('aaa-123-aaa')).toEqual(
 				'aaa123Aaa'
 			);
 		});
@@ -972,75 +965,68 @@ describe('Utils', () => {
 
 	describe('#files', () => {
 		test('Detects directory is directory', () => {
-			assert.equal(
-				utils({}).files.isDirectory(`${__dirname}/file-tree/directory1`),
-				true
-			);
+			expect(
+				utils({}).files.isDirectory(`${__dirname}/file-tree/directory1`)
+			).toEqual(true);
 		});
 
 		test('Detects file is not directory', () => {
-			assert.equal(
-				utils({}).files.isDirectory(`${__dirname}/file-tree/file1.js`),
-				false
-			);
+			expect(
+				utils({}).files.isDirectory(`${__dirname}/file-tree/file1.js`)
+			).toEqual(false);
 		});
 
 		test('Detects file is file', () => {
-			assert.equal(
-				utils({}).files.isFile(`${__dirname}/file-tree/file1.js`),
+			expect(utils({}).files.isFile(`${__dirname}/file-tree/file1.js`)).toEqual(
 				true
 			);
 		});
 
 		test('Detects directory is not file', () => {
-			assert.equal(
-				utils({}).files.isFile(`${__dirname}/file-tree/directory1`),
-				false
-			);
+			expect(
+				utils({}).files.isFile(`${__dirname}/file-tree/directory1`)
+			).toEqual(false);
 		});
 
 		test('Retrieves first level files', () => {
-			assert.deepEqual(utils({}).files.getFiles(`${__dirname}/file-tree`), [
+			expect(utils({}).files.getFiles(`${__dirname}/file-tree`)).toEqual([
 				`${__dirname}/file-tree/file1.js`,
 				`${__dirname}/file-tree/file2.js`,
 			]);
 		});
 
 		test('Retrieves first level directories', () => {
-			assert.deepEqual(
-				utils({}).files.getDirectories(`${__dirname}/file-tree`),
-				[
-					`${__dirname}/file-tree/directory1`,
-					`${__dirname}/file-tree/directory2`,
-				]
-			);
+			expect(utils({}).files.getDirectories(`${__dirname}/file-tree`)).toEqual([
+				`${__dirname}/file-tree/directory1`,
+				`${__dirname}/file-tree/directory2`,
+			]);
 		});
 
 		test('Retrieves all directories', () => {
-			assert.deepEqual(
-				utils({}).files.getAllDirectories(`${__dirname}/file-tree`),
-				[
-					`${__dirname}/file-tree/directory1`,
-					`${__dirname}/file-tree/directory1/directory1`,
-					`${__dirname}/file-tree/directory1/directory2`,
-					`${__dirname}/file-tree/directory2`,
-				]
-			);
+			expect(
+				utils({}).files.getAllDirectories(`${__dirname}/file-tree`)
+			).toStrictEqual([
+				`${__dirname}/file-tree/directory1`,
+				`${__dirname}/file-tree/directory1/directory1`,
+				`${__dirname}/file-tree/directory1/directory2`,
+				`${__dirname}/file-tree/directory2`,
+			]);
 		});
 
 		test('GetFiles() returns empty array if path not found', () => {
-			assert.deepEqual(utils({}).files.getFiles(`${__dirname}/fake`), []);
+			expect(utils({}).files.getFiles(`${__dirname}/fake`)).toStrictEqual([]);
 		});
 
 		test('GetDirectories() returns empty array if path not found', () => {
-			assert.deepEqual(utils({}).files.getDirectories(`${__dirname}/fake`), []);
+			expect(utils({}).files.getDirectories(`${__dirname}/fake`)).toStrictEqual(
+				[]
+			);
 		});
 
 		test('GetAllDirectories() returns empty array if path not found', () => {
-			assert.deepEqual(
-				utils({}).files.getAllDirectories(`${__dirname}/fake`),
-				[]
-			);
+			expect(
+				utils({}).files.getAllDirectories(`${__dirname}/fake`)
+			).toStrictEqual([]);
 		});
 	});
 });

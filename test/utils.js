@@ -62,9 +62,7 @@ describe('Utils', () => {
 	
 	describe('#retrieveAppInformation()', () => {
 		it('Retrieves app info', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js` };
 			
 			assert.deepEqual(utils(settings).retrieveAppInformation(), {
 				name: 'pizza-ordering',
@@ -74,10 +72,11 @@ describe('Utils', () => {
 		});
 		
 		it('Cannot find package.json', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				packageFilePath: '../fake.json',
-			});
+			};
 			
 			assert.deepEqual(utils(settings).retrieveAppInformation(), {
 				name: null,
@@ -89,9 +88,7 @@ describe('Utils', () => {
 	
 	describe('#getMergedSpec()', () => {
 		it('Gets top-level spec', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js` };
 			
 			assert.deepEqual(utils(settings).getMergedSpec(''), {
 				data: undefined,
@@ -125,9 +122,7 @@ describe('Utils', () => {
 		});
 		
 		it('Gets merged spec', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js` };
 			
 			assert.deepEqual(utils(settings).getMergedSpec('list'), {
 				data: {
@@ -179,9 +174,7 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about multiple .js files', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js` };
 			
 			assert.throws(() => {
 				utils(settings).getMergedSpec('multiple-js');
@@ -189,9 +182,7 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about multiple .json files', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js` };
 			
 			assert.throws(() => {
 				utils(settings).getMergedSpec('multiple-json');
@@ -199,9 +190,7 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about bad JSON', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js` };
 			
 			assert.throws(() => {
 				utils(settings).getMergedSpec('bad json');
@@ -211,10 +200,11 @@ describe('Utils', () => {
 	
 	describe('#organizeArguments()', () => {
 		it('Handles no arguments', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: [],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -226,10 +216,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles simple command', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -241,10 +232,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles simple command with data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'toppings'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -256,10 +248,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles simple command with multi-word data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'two', 'words'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -271,10 +264,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles simple command with flag after data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'toppings', '--help'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['help'],
@@ -286,10 +280,11 @@ describe('Utils', () => {
 		});
 		
 		it('Ignores flag in data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'dine-in', 'something', '--help'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -301,10 +296,11 @@ describe('Utils', () => {
 		});
 		
 		it('Ignores options in data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -316,10 +312,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles simple command with longer data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -331,10 +328,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles data with special characters', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -346,10 +344,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles integer data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'integer-data', '10'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -361,10 +360,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles float data', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '123.4'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -374,10 +374,11 @@ describe('Utils', () => {
 				command: 'order float-data',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '123.'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -387,10 +388,11 @@ describe('Utils', () => {
 				command: 'order float-data',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '123'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -400,10 +402,11 @@ describe('Utils', () => {
 				command: 'order float-data',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '.123'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -415,10 +418,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles multiple commands', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'dine-in'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -430,10 +434,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles flag', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--vegetarian'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['vegetarian'],
@@ -445,10 +450,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles cascading flag', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--quiet'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['quiet'],
@@ -460,10 +466,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles shorthand flag', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '-q'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['quiet'],
@@ -475,10 +482,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles multiple flags', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--vegetarian', '--quiet'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['vegetarian', 'quiet'],
@@ -490,10 +498,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles cascading flag before command', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['--quiet', 'list', '--vegetarian'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: ['quiet', 'vegetarian'],
@@ -505,10 +514,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles integer option', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--limit', '10'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -520,10 +530,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles float option', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '123.4'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -533,10 +544,11 @@ describe('Utils', () => {
 				command: 'list',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '123.'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -546,10 +558,11 @@ describe('Utils', () => {
 				command: 'list',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '123'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -559,10 +572,11 @@ describe('Utils', () => {
 				command: 'list',
 			});
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '.123'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -574,10 +588,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles cascading option', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--delivery-zip-code', '55555'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -589,10 +604,11 @@ describe('Utils', () => {
 		});
 		
 		it('Handles shorthand option', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '-z', '55555'],
-			});
+			};
 			
 			assert.deepEqual(utils(settings).organizeArguments(), {
 				flags: [],
@@ -604,10 +620,11 @@ describe('Utils', () => {
 		});
 		
 		it('Treats bad command as data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '.'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -615,10 +632,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about missing option value', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--delivery-zip-code'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -626,10 +644,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about unrecognized option value type', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'to-go', '--test', 'test'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -637,10 +656,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about unrecognized data type', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'to-go', 'test'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -648,10 +668,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about unrecognized flag', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--fake'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -659,10 +680,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about non-permitted data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'abc', '123'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -670,10 +692,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about option value not in "values"', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--sort', 'fake'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -681,10 +704,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about data not in "values"', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'fake'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -692,19 +716,21 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about option value not being integer', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--limit', '123.4'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--limit', 'abc'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -712,37 +738,41 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about option value not being float', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', 'abc'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '123.4.5'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', '.'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--max-price', ''],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -750,19 +780,21 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about data not being integer', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'integer-data', '123.4'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'integer-data', 'abc'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -770,37 +802,41 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about data not being float', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', 'abc'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '123.4.5'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', '.'],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
 			}, Error);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['order', 'float-data', ''],
-			});
+			};
 			
 			assert.throws(() => {
 				utils(settings).organizeArguments();
@@ -810,10 +846,11 @@ describe('Utils', () => {
 	
 	describe('#constructInputObject()', () => {
 		it('Handles combination of input', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
-			});
+			};
 			
 			const organizedArguments = utils(settings).organizeArguments();
 			
@@ -832,10 +869,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about missing required option', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', 'toppings'],
-			});
+			};
 			
 			const organizedArguments = utils(settings).organizeArguments();
 			
@@ -845,10 +883,11 @@ describe('Utils', () => {
 		});
 		
 		it('Complains about missing required data', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				arguments: ['list', '--sort', 'popularity'],
-			});
+			};
 			
 			const organizedArguments = utils(settings).organizeArguments();
 			
@@ -860,9 +899,7 @@ describe('Utils', () => {
 	
 	describe('#getAllProgramCommands()', () => {
 		it('Gets all commands', () => {
-			const settings = Object.assign({}, defaultSettings, {
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-			});
+			const settings = { ...defaultSettings, mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js` };
 			
 			assert.deepEqual(utils(settings).getAllProgramCommands(), ['list', 'order', 'order dine-in', 'order float-data', 'order integer-data', 'order to-go']);
 		});

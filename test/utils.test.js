@@ -8,7 +8,7 @@ const utils = require('../src/utils.js');
 // Tests
 describe('Utils', () => {
 	describe('#processArguments()', () => {
-		it('Handles normal arguments', () => {
+		test('Handles normal arguments', () => {
 			assert.deepEqual(
 				utils({}).processArguments([
 					'/path/to/node',
@@ -36,7 +36,7 @@ describe('Utils', () => {
 			);
 		});
 
-		it('Handles data with special characters', () => {
+		test('Handles data with special characters', () => {
 			assert.deepEqual(
 				utils({}).processArguments([
 					'/path/to/node',
@@ -48,7 +48,7 @@ describe('Utils', () => {
 			);
 		});
 
-		it('Handles dangling equals sign', () => {
+		test('Handles dangling equals sign', () => {
 			assert.deepEqual(
 				utils({}).processArguments([
 					'/path/to/node',
@@ -62,7 +62,7 @@ describe('Utils', () => {
 	});
 
 	describe('#retrieveAppInformation()', () => {
-		it('Retrieves app info', () => {
+		test('Retrieves app info', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -75,7 +75,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Cannot find package.json', () => {
+		test('Cannot find package.json', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -91,7 +91,7 @@ describe('Utils', () => {
 	});
 
 	describe('#getMergedSpec()', () => {
-		it('Gets top-level spec', () => {
+		test('Gets top-level spec', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -129,7 +129,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Gets merged spec', () => {
+		test('Gets merged spec', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -185,7 +185,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Complains about multiple .js files', () => {
+		test('Complains about multiple .js files', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
@@ -196,7 +196,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about multiple .json files', () => {
+		test('Complains about multiple .json files', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
@@ -207,7 +207,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about bad JSON', () => {
+		test('Complains about bad JSON', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
@@ -220,7 +220,7 @@ describe('Utils', () => {
 	});
 
 	describe('#organizeArguments()', () => {
-		it('Handles no arguments', () => {
+		test('Handles no arguments', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -236,7 +236,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles simple command', () => {
+		test('Handles simple command', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -252,7 +252,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles simple command with data', () => {
+		test('Handles simple command with data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -268,7 +268,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles simple command with multi-word data', () => {
+		test('Handles simple command with multi-word data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -284,7 +284,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles simple command with flag after data', () => {
+		test('Handles simple command with flag after data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -300,7 +300,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Ignores flag in data', () => {
+		test('Ignores flag in data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -316,7 +316,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Ignores options in data', () => {
+		test('Ignores options in data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -338,7 +338,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles simple command with longer data', () => {
+		test('Handles simple command with longer data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -354,7 +354,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles data with special characters', () => {
+		test('Handles data with special characters', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -370,7 +370,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles integer data', () => {
+		test('Handles integer data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -386,7 +386,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles float data', () => {
+		test('Handles float data', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -444,7 +444,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles multiple commands', () => {
+		test('Handles multiple commands', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -460,7 +460,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles flag', () => {
+		test('Handles flag', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -476,7 +476,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles cascading flag', () => {
+		test('Handles cascading flag', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -492,7 +492,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles shorthand flag', () => {
+		test('Handles shorthand flag', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -508,7 +508,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles multiple flags', () => {
+		test('Handles multiple flags', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -524,7 +524,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles cascading flag before command', () => {
+		test('Handles cascading flag before command', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -540,7 +540,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles integer option', () => {
+		test('Handles integer option', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -556,7 +556,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles float option', () => {
+		test('Handles float option', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -614,7 +614,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles cascading option', () => {
+		test('Handles cascading option', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -630,7 +630,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Handles shorthand option', () => {
+		test('Handles shorthand option', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -646,7 +646,7 @@ describe('Utils', () => {
 			});
 		});
 
-		it('Treats bad command as data', () => {
+		test('Treats bad command as data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -658,7 +658,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about missing option value', () => {
+		test('Complains about missing option value', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -670,7 +670,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about unrecognized option value type', () => {
+		test('Complains about unrecognized option value type', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -682,7 +682,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about unrecognized data type', () => {
+		test('Complains about unrecognized data type', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -694,7 +694,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about unrecognized flag', () => {
+		test('Complains about unrecognized flag', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -706,7 +706,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about non-permitted data', () => {
+		test('Complains about non-permitted data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -718,7 +718,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about option value not in "values"', () => {
+		test('Complains about option value not in "values"', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -730,7 +730,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about data not in "values"', () => {
+		test('Complains about data not in "values"', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -742,7 +742,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about option value not being integer', () => {
+		test('Complains about option value not being integer', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -764,7 +764,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about option value not being float', () => {
+		test('Complains about option value not being float', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -806,7 +806,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about data not being integer', () => {
+		test('Complains about data not being integer', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -828,7 +828,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about data not being float', () => {
+		test('Complains about data not being float', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -872,7 +872,7 @@ describe('Utils', () => {
 	});
 
 	describe('#constructInputObject()', () => {
-		it('Handles combination of input', () => {
+		test('Handles combination of input', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -907,7 +907,7 @@ describe('Utils', () => {
 			);
 		});
 
-		it('Complains about missing required option', () => {
+		test('Complains about missing required option', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -921,7 +921,7 @@ describe('Utils', () => {
 			}, Error);
 		});
 
-		it('Complains about missing required data', () => {
+		test('Complains about missing required data', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -937,7 +937,7 @@ describe('Utils', () => {
 	});
 
 	describe('#getAllProgramCommands()', () => {
-		it('Gets all commands', () => {
+		test('Gets all commands', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -955,14 +955,14 @@ describe('Utils', () => {
 	});
 
 	describe('#convertDashesToCamelCase()', () => {
-		it('Normal string', () => {
+		test('Normal string', () => {
 			assert.equal(
 				utils({}).convertDashesToCamelCase('aaa-aaa-aaa'),
 				'aaaAaaAaa'
 			);
 		});
 
-		it('With numbers', () => {
+		test('With numbers', () => {
 			assert.equal(
 				utils({}).convertDashesToCamelCase('aaa-123-aaa'),
 				'aaa123Aaa'
@@ -971,42 +971,42 @@ describe('Utils', () => {
 	});
 
 	describe('#files', () => {
-		it('Detects directory is directory', () => {
+		test('Detects directory is directory', () => {
 			assert.equal(
 				utils({}).files.isDirectory(`${__dirname}/file-tree/directory1`),
 				true
 			);
 		});
 
-		it('Detects file is not directory', () => {
+		test('Detects file is not directory', () => {
 			assert.equal(
 				utils({}).files.isDirectory(`${__dirname}/file-tree/file1.js`),
 				false
 			);
 		});
 
-		it('Detects file is file', () => {
+		test('Detects file is file', () => {
 			assert.equal(
 				utils({}).files.isFile(`${__dirname}/file-tree/file1.js`),
 				true
 			);
 		});
 
-		it('Detects directory is not file', () => {
+		test('Detects directory is not file', () => {
 			assert.equal(
 				utils({}).files.isFile(`${__dirname}/file-tree/directory1`),
 				false
 			);
 		});
 
-		it('Retrieves first level files', () => {
+		test('Retrieves first level files', () => {
 			assert.deepEqual(utils({}).files.getFiles(`${__dirname}/file-tree`), [
 				`${__dirname}/file-tree/file1.js`,
 				`${__dirname}/file-tree/file2.js`,
 			]);
 		});
 
-		it('Retrieves first level directories', () => {
+		test('Retrieves first level directories', () => {
 			assert.deepEqual(
 				utils({}).files.getDirectories(`${__dirname}/file-tree`),
 				[
@@ -1016,7 +1016,7 @@ describe('Utils', () => {
 			);
 		});
 
-		it('Retrieves all directories', () => {
+		test('Retrieves all directories', () => {
 			assert.deepEqual(
 				utils({}).files.getAllDirectories(`${__dirname}/file-tree`),
 				[
@@ -1028,15 +1028,15 @@ describe('Utils', () => {
 			);
 		});
 
-		it('GetFiles() returns empty array if path not found', () => {
+		test('GetFiles() returns empty array if path not found', () => {
 			assert.deepEqual(utils({}).files.getFiles(`${__dirname}/fake`), []);
 		});
 
-		it('GetDirectories() returns empty array if path not found', () => {
+		test('GetDirectories() returns empty array if path not found', () => {
 			assert.deepEqual(utils({}).files.getDirectories(`${__dirname}/fake`), []);
 		});
 
-		it('GetAllDirectories() returns empty array if path not found', () => {
+		test('GetAllDirectories() returns empty array if path not found', () => {
 			assert.deepEqual(
 				utils({}).files.getAllDirectories(`${__dirname}/fake`),
 				[]

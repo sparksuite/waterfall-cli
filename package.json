@@ -7,7 +7,7 @@
 		"/src"
 	],
 	"scripts": {
-		"test": "nyc --reporter=html --reporter=text mocha",
+		"test": "jest",
 		"lint": "eslint . --ext .js && prettier --check '**/*.{js,json}'",
 		"format": "eslint --fix . --ext .js && prettier --write '**/*.{js,json}'"
 	},
@@ -36,8 +36,7 @@
 		"eslint": "^6.4.0",
 		"eslint-config-prettier": "^6.3.0",
 		"eslint-plugin-import": "^2.18.2",
-		"mocha": "^6.2.0",
-		"nyc": "^14.1.1",
+		"jest": "^24.9.0",
 		"prettier": "1.18.2"
 	}
 }

@@ -2,6 +2,7 @@
 /* eslint no-control-regex: "off" */
 
 // Dependencies
+require('colors');
 const assert = require('assert');
 const defaultSettings = require('../src/default-settings.js');
 const screens = require('../src/screens.js');
@@ -17,7 +18,7 @@ function removeFormatting(text) {
 // Tests
 describe('Screens', () => {
 	describe('#version()', () => {
-		it('Full version screen', () => {
+		test('Full version screen', () => {
 			const settings = {
 				...defaultSettings,
 				app: {
@@ -34,7 +35,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Missing name', () => {
+		test('Missing name', () => {
 			const settings = {
 				...defaultSettings,
 				app: {
@@ -55,7 +56,7 @@ describe('Screens', () => {
 	});
 
 	describe('#help()', () => {
-		it('Description line', () => {
+		test('Description line', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -71,7 +72,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Usage line (commands + flags + options)', () => {
+		test('Usage line (commands + flags + options)', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -86,7 +87,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Usage line (flags + options + data)', () => {
+		test('Usage line (flags + options + data)', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -102,7 +103,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Flags - header', () => {
+		test('Flags - header', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -115,7 +116,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Flags - non-cascading', () => {
+		test('Flags - non-cascading', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -140,7 +141,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Flags - cascading', () => {
+		test('Flags - cascading', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -165,7 +166,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Flags - shorthand', () => {
+		test('Flags - shorthand', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -178,7 +179,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Flags - description', () => {
+		test('Flags - description', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -193,7 +194,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - header', () => {
+		test('Options - header', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -206,7 +207,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - cascading', () => {
+		test('Options - cascading', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -235,7 +236,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - shorthand', () => {
+		test('Options - shorthand', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -250,7 +251,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - description', () => {
+		test('Options - description', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -265,7 +266,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - description (type)', () => {
+		test('Options - description (type)', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -281,7 +282,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Options - description (required + accepts)', () => {
+		test('Options - description (required + accepts)', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -297,7 +298,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Commands - header', () => {
+		test('Commands - header', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -322,7 +323,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Commands - description', () => {
+		test('Commands - description', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -335,7 +336,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Data - header', () => {
+		test('Data - header', () => {
 			let settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -360,7 +361,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Data - description', () => {
+		test('Data - description', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
@@ -376,7 +377,7 @@ describe('Screens', () => {
 			);
 		});
 
-		it('Data - description (required + accepts)', () => {
+		test('Data - description (required + accepts)', () => {
 			const settings = {
 				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,

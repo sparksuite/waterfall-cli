@@ -8,7 +8,7 @@ const ErrorWithoutStack = require('./error-without-stack.js');
 // Helpful utility functions
 module.exports = function Constructor(currentSettings) {
 	// Store an internal copy of the current settings
-	const settings = Object.assign({}, currentSettings);
+	const settings = { ...currentSettings };
 	
 	
 	// Return the functions
@@ -44,7 +44,7 @@ module.exports = function Constructor(currentSettings) {
 		// Retrieve app information
 		retrieveAppInformation() {
 			// Initialize
-			const app = Object.assign({}, settings.app);
+			const app = { ...settings.app };
 			
 			
 			// Build path to package.json file
@@ -114,17 +114,17 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Error if not exactly one .js and one .json file
-				if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
+				if (commandFiles.filter((path) => path.match(/\.js$/)).length !== 1) {
 					throw new ErrorWithoutStack(`There should be exactly one .js file in: ${currentPathPrefix}`);
 				}
 				
-				if (commandFiles.filter(path => path.match(/\.json$/)).length !== 1) {
+				if (commandFiles.filter((path) => path.match(/\.json$/)).length !== 1) {
 					throw new ErrorWithoutStack(`There should be exactly one .json file in: ${currentPathPrefix}`);
 				}
 				
 				
 				// Get spec
-				const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
+				const specFilePath = commandFiles.filter((path) => path.match(/\.json$/))[0];
 				let spec = {};
 				
 				try {
@@ -325,7 +325,7 @@ module.exports = function Constructor(currentSettings) {
 				
 				
 				// Get the command path
-				const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
+				const commandPath = commandFiles.filter((path) => path.match(/\.js$/))[0];
 				
 				
 				// Check if that file exists
@@ -501,9 +501,9 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Process into just commands
-			commands = commands.map(file => file.replace(`${mainDir}/`, ''));
-			commands = commands.map(file => file.replace(/\.js$/, ''));
-			commands = commands.map(file => file.replace(/\//, ' '));
+			commands = commands.map((file) => file.replace(`${mainDir}/`, ''));
+			commands = commands.map((file) => file.replace(/\.js$/, ''));
+			commands = commands.map((file) => file.replace(/\//, ' '));
 			
 			
 			// Return
@@ -513,7 +513,7 @@ module.exports = function Constructor(currentSettings) {
 		
 		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
 		convertDashesToCamelCase(string) {
-			return string.replace(/-(.)/g, g => g[1].toUpperCase());
+			return string.replace(/-(.)/g, (g) => g[1].toUpperCase());
 		},
 		
 		
@@ -544,7 +544,7 @@ module.exports = function Constructor(currentSettings) {
 					return [];
 				}
 				
-				const allItems = fs.readdirSync(directory).map(name => path.join(directory, name));
+				const allItems = fs.readdirSync(directory).map((name) => path.join(directory, name));
 				
 				return allItems.filter(module.exports(settings).files.isFile);
 			},
@@ -556,7 +556,7 @@ module.exports = function Constructor(currentSettings) {
 					return [];
 				}
 				
-				const allItems = fs.readdirSync(directory).map(name => path.join(directory, name));
+				const allItems = fs.readdirSync(directory).map((name) => path.join(directory, name));
 				
 				return allItems.filter(module.exports(settings).files.isDirectory);
 			},

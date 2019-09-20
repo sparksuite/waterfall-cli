@@ -18,23 +18,25 @@ function removeFormatting(text) {
 describe('Screens', () => {
 	describe('#version()', () => {
 		it('Full version screen', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				app: {
 					name: 'Example program',
 					version: '1.2.3',
 				},
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).version()).includes('Example program: 1.2.3'), true);
 		});
 		
 		it('Missing name', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				app: {
 					name: undefined,
 					version: '1.2.3',
 				},
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).version()).includes('1.2.3'), true);
 			assert.equal(removeFormatting(screens(settings).version()).includes(':'), false);
@@ -43,218 +45,242 @@ describe('Screens', () => {
 	
 	describe('#help()', () => {
 		it('Description line', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('Description: List something'), true);
 		});
 		
 		it('Usage line (commands + flags + options)', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('Usage: node entry.js [commands] [flags] [options]'), true);
 		});
 		
 		it('Usage line (flags + options + data)', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('Usage: node entry.js list [flags] [options] [data]'), true);
 		});
 		
 		it('Flags - header', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('FLAGS:'), true);
 		});
 		
 		it('Flags - non-cascading', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--non-cascading'), true);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--non-cascading'), false);
 		});
 		
 		it('Flags - cascading', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--quiet'), true);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--quiet'), true);
 		});
 		
 		it('Flags - shorthand', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--quiet, -q'), true);
 		});
 		
 		it('Flags - description', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('Disable interactivity, rely on default values instead'), true);
 		});
 		
 		it('Options - header', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('OPTIONS:'), true);
 		});
 		
 		it('Options - cascading', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--delivery-zip-code'), true);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--delivery-zip-code'), true);
 		});
 		
 		it('Options - shorthand', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('--delivery-zip-code, -z'), true);
 		});
 		
 		it('Options - description', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('The delivery ZIP code, for context'), true);
 		});
 		
 		it('Options - description (type)', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('The maximum price of the items to list (float)'), true);
 		});
 		
 		it('Options - description (required + accepts)', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('How to sort the list (required) (accepts: popularity, alphabetical)'), true);
 		});
 		
 		it('Commands - header', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('COMMANDS:'), true);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('COMMANDS:'), false);
 		});
 		
 		it('Commands - description', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('Order a pizza'), true);
 		});
 		
 		it('Data - header', () => {
-			let settings = Object.assign({}, defaultSettings, {
+			let settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('DATA:'), true);
 			
-			settings = Object.assign({}, defaultSettings, {
+			settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('DATA:'), false);
 		});
 		
 		it('Data - description', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['order', 'dine-in'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('What type of pizza to order'), true);
 		});
 		
 		it('Data - description (required + accepts)', () => {
-			const settings = Object.assign({}, defaultSettings, {
+			const settings = {
+				...defaultSettings,
 				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
 				usageCommand: 'node entry.js',
 				arguments: ['list'],
-			});
+			};
 			
 			assert.equal(removeFormatting(screens(settings).help()).includes('What you want to list (required) (accepts: toppings, crusts, two words)'), true);
 		});

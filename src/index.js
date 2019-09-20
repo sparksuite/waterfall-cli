@@ -136,11 +136,11 @@ module.exports = function Constructor(customSettings) {
 		
 		
 		// Get the command path
-		const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
+		const commandPath = commandFiles.filter((path) => path.match(/\.js$/))[0];
 		
 		
 		// Get spec
-		const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
+		const specFilePath = commandFiles.filter((path) => path.match(/\.json$/))[0];
 		let spec = {};
 		
 		try {

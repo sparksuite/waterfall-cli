@@ -6,7 +6,7 @@ const utils = require('./utils.js');
 // Helpful utility functions
 module.exports = function Constructor(currentSettings) {
 	// Store an internal copy of the current settings
-	const settings = Object.assign({}, currentSettings);
+	const settings = { ...currentSettings };
 	
 	
 	// Return the functions
@@ -57,17 +57,17 @@ module.exports = function Constructor(currentSettings) {
 			
 			
 			// Add leading space to commands
-			commands = commands.map(command => ` ${command}`);
+			commands = commands.map((command) => ` ${command}`);
 			const preppedCommand = ` ${organizedArguments.command}`.replace(/^ $/g, '');
 			
 			
 			// Filter out any unnecessary commands, which are...
-			commands = commands.filter(command => command.substring(0, preppedCommand.length) === `${preppedCommand}`); // Not related to current command
-			commands = commands.filter(command => (command.match(/ /g) || []).length === ((preppedCommand.match(/ /g) || []).length + 1)); // Not a direct sub-command of the current command
+			commands = commands.filter((command) => command.substring(0, preppedCommand.length) === `${preppedCommand}`); // Not related to current command
+			commands = commands.filter((command) => (command.match(/ /g) || []).length === ((preppedCommand.match(/ /g) || []).length + 1)); // Not a direct sub-command of the current command
 			
 			
 			// Strip current command off front
-			commands = commands.map(command => command.substring(preppedCommand.length + 1));
+			commands = commands.map((command) => command.substring(preppedCommand.length + 1));
 			
 			
 			// Sort commands

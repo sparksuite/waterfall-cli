@@ -23,6 +23,7 @@ jobs:
       node_js: lts/*
       script:
         - npm install -g codecov
+        - npm test
         - codecov
     - stage: publish
       if: type = push AND tag IS present

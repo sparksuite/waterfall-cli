@@ -21,6 +21,9 @@ jobs:
       if: type = pull_request OR tag IS present
       name: Run tests (Node.js LTS)
       node_js: lts/*
+      script:
+        - npm install -g codecov
+        - codecov
     - stage: publish
       if: type = push AND tag IS present
       name: Publish to npm

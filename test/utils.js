@@ -1,5 +1,5 @@
 /* eslint-env mocha */
-// this comment
+
 // Dependencies
 const assert = require('assert');
 const defaultSettings = require('../src/default-settings.js');

@@ -42,9 +42,6 @@
 	"jest": {
 		"verbose": true,
 		"coverageDirectory": "./coverage/",
-		"collectCoverage": true,
-		"roots": [
-			"<rootDir>/test/"
-		]
+		"collectCoverage": true
 	}
 }

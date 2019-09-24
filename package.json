@@ -10,7 +10,7 @@
 		"test": "tsc && jest",
 		"lint": "eslint --ext .js,.ts src test && prettier --check '**/*.{ts,js,json}'",
 		"format": "eslint --fix --ext .js,.ts src test && prettier --write '**/*.{ts,js,json}'",
-		"build-ts": "tsc",
+		"compile": "tsc",
 		"clean": "rm -rf dist coverage"
 	},
 	"repository": {

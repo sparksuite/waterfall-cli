@@ -7,10 +7,11 @@
 		"/dist"
 	],
 	"scripts": {
-		"test": "jest",
-		"lint": "eslint . --ext .js,.ts,.tsx && prettier --check '**/*.{js,json}'",
-		"format": "eslint --fix . --ext .js,.ts,.tsx && prettier --write '**/*.{js,json}'",
-		"build-ts": "tsc"
+		"test": "tsc && jest",
+		"lint": "eslint --ext .js,.ts,.tsx src test && prettier --check '**/*.{ts,tsx,js,json}'",
+		"format": "eslint --fix --ext .js,.ts,.tsx src test && prettier --write '**/*.{ts,tsx,js,json}'",
+		"build-ts": "tsc",
+		"clean": "rm -rf dist coverage"
 	},
 	"repository": {
 		"type": "git",
@@ -49,6 +50,15 @@
 	"jest": {
 		"verbose": true,
 		"coverageDirectory": "./coverage/",
-		"collectCoverage": true
+		"collectCoverage": true,
+		"preset": "ts-jest/presets/js-with-ts",
+		"testEnvironment": "node",
+		"transform": {
+			"^.+\\.tsx?$": "ts-jest"
+		},
+		"rootDir": ".",
+		"roots": [
+			"test"
+		]
 	}
 }

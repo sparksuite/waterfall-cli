@@ -1,9 +1,8 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 /* eslint no-control-regex: "off" */
 
 // Dependencies
 require('colors');
-const assert = require('assert');
 const { spawn } = require('child_process');
 
 // Initialize
@@ -40,13 +39,13 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 		// Loop over includes
 		if (typeof stdoutIncludes === 'object') {
 			stdoutIncludes.forEach(text => {
-				assert.equal(removeFormatting(stdout).includes(text), true);
+				expect(removeFormatting(stdout).includes(text)).toBe(true);
 			});
 		}
 
 		if (typeof stderrIncludes === 'object') {
 			stderrIncludes.forEach(text => {
-				assert.equal(removeFormatting(stderr).includes(text), true);
+				expect(removeFormatting(stderr).includes(text)).toBe(true);
 			});
 		}
 
@@ -70,19 +69,19 @@ function runTest(customArguments, stdoutIncludes, stderrIncludes, done) {
 // Tests
 describe('Pizza ordering', () => {
 	describe('Built-in abilities', () => {
-		it('Displays version', done => {
+		test('Displays version', done => {
 			runTest('--version', ['pizza-ordering: 1.2.3'], undefined, done);
 		});
 
-		it('Displays version for a command', done => {
+		test('Displays version for a command', done => {
 			runTest('list --version', ['pizza-ordering: 1.2.3'], undefined, done);
 		});
 
-		it('Displays help screen', done => {
+		test('Displays help screen', done => {
 			runTest('--help', ['Usage: node entry.js [commands]'], undefined, done);
 		});
 
-		it('Displays help screen for a command', done => {
+		test('Displays help screen for a command', done => {
 			runTest(
 				'list --help',
 				['Usage: node entry.js list [flags]'],

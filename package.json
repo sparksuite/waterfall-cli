@@ -43,10 +43,8 @@
 		"verbose": true,
 		"coverageDirectory": "./coverage/",
 		"collectCoverage": true,
-		"expand": true,
 		"roots": [
 			"<rootDir>/test/"
-		],
-		"testRegex": "test/?[^/]+?\\.test\\.[jt]s[x]?$"
+		]
 	}
 }

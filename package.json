@@ -51,15 +51,6 @@
 	"jest": {
 		"verbose": true,
 		"coverageDirectory": "./coverage/",
-		"collectCoverage": true,
-		"preset": "ts-jest/presets/js-with-ts",
-		"testEnvironment": "node",
-		"transform": {
-			"^.+\\.tsx?$": "ts-jest"
-		},
-		"rootDir": ".",
-		"roots": [
-			"test"
-		]
+		"collectCoverage": true
 	}
 }

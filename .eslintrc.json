@@ -1,13 +1,25 @@
 {
-	"extends": ["eslint:recommended", "prettier"],
 	"env": {
 		"es6": true,
 		"node": true
 	},
+	"extends": [
+		"eslint:recommended", 
+		"prettier",
+		"prettier/@typescript-eslint",
+		"plugin:@typescript-eslint/eslint-recommended",
+		"plugin:@typescript-eslint/recommended",
+		"plugin:@typescript-eslint/recommended-requiring-type-checking"
+	],
+	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
 		"ecmaVersion": 2018,
-		"sourceType": "module"
+		"sourceType": "module",
+		"project": "./tsconfig.json"
 	},
+	"plugins": [
+		["@typescript-eslint"]
+	],
 	"rules": {
 		"no-unused-vars": [
 			"error",

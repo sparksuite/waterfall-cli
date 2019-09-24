@@ -2,3 +2,7 @@ node_modules/
 .nyc_output
 coverage
 app-versions/
+
+built/
+
+dist/

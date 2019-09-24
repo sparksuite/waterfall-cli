@@ -3,8 +3,8 @@
 
 // Dependencies
 require('colors');
-const defaultSettings = require('../src/default-settings.js');
-const screens = require('../src/screens.js');
+const defaultSettings = require('../dist/default-settings.js');
+const screens = require('../dist/screens.js');
 
 // Remove ANSI formatting
 function removeFormatting(text) {

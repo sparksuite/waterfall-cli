@@ -28,6 +28,7 @@
 	},
 	"homepage": "https://github.com/sparksuite/waterfall-cli",
 	"dependencies": {
+		"@types/node": "^12.7.7",
 		"cli-table": "^0.3.1",
 		"colors": "^1.3.3",
 		"deepmerge": "^4.0.0",

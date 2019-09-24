@@ -8,8 +8,8 @@
 	],
 	"scripts": {
 		"test": "tsc && jest",
-		"lint": "eslint --ext .js,.ts,.tsx src test && prettier --check '**/*.{ts,tsx,js,json}'",
-		"format": "eslint --fix --ext .js,.ts,.tsx src test && prettier --write '**/*.{ts,tsx,js,json}'",
+		"lint": "eslint --ext .js,.ts src test && prettier --check '**/*.{ts,js,json}'",
+		"format": "eslint --fix --ext .js,.ts src test && prettier --write '**/*.{ts,js,json}'",
 		"build-ts": "tsc",
 		"clean": "rm -rf dist coverage"
 	},

@@ -1,17 +1,17 @@
 {
 	"compilerOptions": {
-		"target": "es6",
-		"module": "commonjs",
 		"allowJs": true,
-		"rootDir": "src",
-		"sourceMap": true,
+    "esModuleInterop": true,
 		"outDir": "./dist",
-		"removeComments": true,
-		"strict": true,
 		"noImplicitAny": true,
 		"noUnusedLocals": true,
+		"module": "commonjs",
 		"moduleResolution": "node",
-		"esModuleInterop": true
+		"removeComments": true,
+		"rootDir": "src",
+    "sourceMap": true,
+		"strict": true,
+    "target": "es6"
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules", "**/*.spec.ts"]

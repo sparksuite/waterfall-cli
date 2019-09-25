@@ -2,14 +2,15 @@
 	"name": "waterfall-cli",
 	"version": "0.2.0",
 	"description": "Effortlessly create CLIs powered by Node.js",
-	"main": "src/index.js",
+	"main": "dist/src/index.js",
 	"files": [
-		"/src"
+		"/dist"
 	],
 	"scripts": {
-		"test": "jest",
-		"lint": "eslint . --ext .js && prettier --check '**/*.{js,json}'",
-		"format": "eslint --fix . --ext .js && prettier --write '**/*.{js,json}'"
+		"test": "npm run compile && jest",
+		"lint": "eslint --ext .js,.ts src test && prettier --check '**/*.{ts,js,json}'",
+		"format": "eslint --fix --ext .js,.ts src test && prettier --write '**/*.{ts,js,json}'",
+		"compile": "tsc"
 	},
 	"repository": {
 		"type": "git",
@@ -33,11 +34,16 @@
 		"semver": "^6.3.0"
 	},
 	"devDependencies": {
+		"@types/jest": "^24.0.18",
+		"@types/node": "^12.7.7",
+		"@typescript-eslint/eslint-plugin": "^2.3.1",
+		"@typescript-eslint/parser": "^2.3.1",
 		"eslint": "^6.4.0",
 		"eslint-config-prettier": "^6.3.0",
 		"eslint-plugin-import": "^2.18.2",
 		"jest": "^24.9.0",
-		"prettier": "1.18.2"
+		"prettier": "1.18.2",
+		"typescript": "^3.6.3"
 	},
 	"jest": {
 		"verbose": true,

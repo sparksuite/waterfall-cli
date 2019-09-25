@@ -29,7 +29,9 @@ jobs:
       if: type = push AND tag IS present
       name: Publish to npm
       node_js: lts/*
-      script: echo "Publishing to npm..."
+      script:
+        - npm run compile
+        - echo "Publishing to npm..."
       deploy:
         provider: npm
         email: wes@sparksuite.com

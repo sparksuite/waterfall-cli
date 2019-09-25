@@ -1,4 +1,4 @@
 // Parse command input
-const input = require('../../../../../src/index.js').command();
+const input = require('../../../../../dist/index.js').command();
 
 console.log(input);

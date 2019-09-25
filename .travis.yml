@@ -30,8 +30,8 @@ jobs:
       name: Publish to npm
       node_js: lts/*
       script:
-        - echo "Publishing to npm..."
         - npm run compile
+        - echo "Publishing to npm..."
       deploy:
         provider: npm
         email: wes@sparksuite.com

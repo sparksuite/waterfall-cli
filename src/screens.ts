@@ -1,14 +1,13 @@
-export { };
+export {};
 
 // Dependencies
 const Table = require('cli-table');
-//import utils = require('./utils');
 const utils = require('./utils.js');
 
 // Helpful utility functions
-module.exports = function Constructor(currentSettings: ConstructorSettings|object) {
+module.exports = function Constructor(currentSettings: ConstructorSettings) {
 	// Store an internal copy of the current settings
-	const settings:ConstructorSettings = { ...currentSettings };
+	const settings: ConstructorSettings = { ...currentSettings };
 
 	// Return the functions
 	return {
@@ -28,15 +27,14 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 					outputString += `${settings.app.version}\n`;
 				}
 			}
-			
-			
+
 			if (settings.spacing && settings.spacing.after) {
 				// Add spacing after
 				for (let i = 0; i < settings.spacing.after; i += 1) {
 					outputString += '\n';
 				}
 			}
-			
+
 			// Return
 			return outputString;
 		},
@@ -47,10 +45,12 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 			let outputString = '';
 
 			// Organize the arguments
-			const organizedArguments:OrganizedArguments = utils(settings).organizeArguments();
+			const organizedArguments: OrganizedArguments = utils(
+				settings
+			).organizeArguments();
 
 			// Get all commands in this program
-			let commands:string[] = utils(settings).getAllProgramCommands();
+			let commands: string[] = utils(settings).getAllProgramCommands();
 
 			// Verbose output
 			utils(settings).verboseLog(`Found commands: ${commands.join(' | ')}`);
@@ -63,10 +63,7 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 			);
 
 			// Filter out any unnecessary commands, which are...
-			commands = commands.filter(
-				command =>
-					command.substring(0, preppedCommand.length) === `${preppedCommand}`
-			); // Not related to current command
+			commands = commands.filter(command => command.startsWith(preppedCommand)); // Not related to current command
 			commands = commands.filter(
 				command =>
 					(command.match(/ /g) || []).length ===
@@ -85,7 +82,7 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 			utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
 
 			// Get merged spec for this command
-			const mergedSpec:CommandSpec = utils(settings).getMergedSpec(
+			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
 			);
 
@@ -251,11 +248,12 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 					}
 
 					if (mergedSpec.data.accepts) {
-						fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`
-							.gray.italic;
+						fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(
+							', '
+						)})`.gray.italic;
 					}
 				}
-				
+
 				// Print
 				outputString += `  ${fullDescription}\n`;
 			}
@@ -266,7 +264,7 @@ module.exports = function Constructor(currentSettings: ConstructorSettings|objec
 					outputString += '\n';
 				}
 			}
-			
+
 			// Return
 			return outputString;
 		},

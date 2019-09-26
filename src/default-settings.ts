@@ -1,9 +1,8 @@
-export { };
+export {};
 
 // Dependencies
 const path = require('path');
 const utils = require('./utils.js');
-
 
 // interface AppSettings {
 // 	name: string | null;
@@ -35,10 +34,8 @@ const utils = require('./utils.js');
 // 	verbose: boolean;
 // }
 
-
 // Default Settings
-const settings:Settings = 
-{
+const settings: Settings = {
 	app: {
 		name: null,
 		packageName: null,

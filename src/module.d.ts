@@ -2,7 +2,7 @@ interface AppSettings {
 	name: string | null;
 	packageName: string | null;
 	version: string | null;
-	[propName: string]: any;
+	[propName: string]: string | number | null;
 }
 
 interface NewVersionWarning {
@@ -17,7 +17,7 @@ interface SpacingSettings {
 
 interface Settings {
 	app: AppSettings;
-	arguments: any;
+	arguments: string[];
 	mainFilename: string;
 	newVersionWarning: NewVersionWarning;
 	onStart: string | null;
@@ -27,14 +27,17 @@ interface Settings {
 	verbose: boolean;
 }
 
-
-
-
-
-
+interface CommandSpecOption {
+	description?: string;
+	required?: boolean;
+	type?: string;
+	accepts?: string[];
+	shorthand?: string;
+	cascades?: boolean;
+}
 
 interface CommandSpecOptions {
-	[propName: string]: any;
+	[propName: string]: CommandSpecOption;
 }
 
 interface CommandSpecFlag {
@@ -49,7 +52,8 @@ interface CommandSpecFlags {
 
 interface CommandSpecData {
 	ignoreFlagsAndOptions?: boolean;
-	[propName: string]: any;
+	accepts?: string[];
+	[propName: string]: boolean | string | string[] | number | undefined;
 }
 
 interface CommandSpec {
@@ -60,33 +64,43 @@ interface CommandSpec {
 	executeOnCascade?: boolean;
 }
 
+interface ConstructorSettingsSpacing {
+	after?: number;
+	before?: number;
+}
+
 interface ConstructorSettings {
 	verbose?: boolean;
 	mainFilename?: string;
 	packageFilePath?: string;
 	app?: AppSettings;
 	arguments?: string[];
-	spacing?: {
-		after?: number | null;
-	}
-	[propName: string]: any;
+	spacing?: ConstructorSettingsSpacing;
+	[propName: string]:
+		| boolean
+		| string
+		| number
+		| AppSettings
+		| ConstructorSettingsSpacing
+		| string[]
+		| undefined;
 }
 
 interface OrganizedArguments {
-	flags: any[];
-	options: any[];
-	values: any[];
-	data: any | null;
+	flags: string[];
+	options: (string | number)[];
+	values: (string | number)[];
+	data: string | number | null;
 	command: string;
 }
 
 interface InputObject {
 	command: string | null;
-	data: any | null;
-	[propName: string]: any;
+	data: string | number | null;
+	[propName: string]: boolean | string | number | undefined | null;
 }
 interface Utils {
-	verboseLog(message:string): void;
+	verboseLog(message: string): void;
 	processArguments(argv: string[]): string[];
 	retrieveAppInformation(): AppSettings;
 	getMergedSpec(command: string): CommandSpec;
@@ -95,13 +109,13 @@ interface Utils {
 	convertDashesToCamelCase(string: string): string;
 	getAllProgramCommands(): string[];
 	printPrettyError(message: string): void;
-	
+
 	files: {
-		getAllDirectories(string: string): string[];
 		isDirectory(path: string): boolean;
 		isFile(path: string): boolean;
 		getFiles(directory: string): string[];
 		getDirectories(directory: string): string[];
+		getAllDirectories(string: string): string[];
 		getAllDirectories(directory: string): string[];
-	}
+	};
 }

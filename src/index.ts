@@ -1,5 +1,7 @@
+export { }
+
 // Dependencies
-require('colors');
+import 'colors';
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -16,8 +18,10 @@ process.on('uncaughtException', error => {
 	process.exit(1);
 });
 
+
+
 // The constructor, for use at the entry point
-module.exports = function Constructor(customSettings) {
+module.exports = function Constructor(customSettings: ConstructorSettings) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 
@@ -128,7 +132,7 @@ module.exports = function Constructor(customSettings) {
 			'version',
 		]);
 
-		versionCheck.stdout.on('data', stdout => {
+		versionCheck.stdout.on('data', (stdout:string) => {
 			fs.writeFile(
 				pathToLatestVersion,
 				semver.clean(`${stdout}`),
@@ -141,23 +145,26 @@ module.exports = function Constructor(customSettings) {
 	}
 
 	// Form execution paths
-	const executionPaths = [];
+	const executionPaths:string[] = [];
 	let currentPathPrefix = path.dirname(settings.mainFilename);
-	const commandPieces = organizedArguments.command.trim().split(' ');
+	const commandPieces:string[] = organizedArguments.command.trim().split(' ');
 
 	commandPieces.forEach((command, index) => {
 		// Update current path prefix
 		currentPathPrefix = path.join(currentPathPrefix, command);
 
 		// Get the files we care about
-		const commandFiles = utils(settings).files.getFiles(currentPathPrefix);
+		const commandFiles:string[] = utils(settings).files.getFiles(currentPathPrefix);
 
 		// Get the command path
 		const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
 
 		// Get spec
 		const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
-		let spec = {};
+		let spec: CommandSpec = {
+			flags: {},
+			options: {},
+		};
 
 		try {
 			spec = JSON.parse(fs.readFileSync(specFilePath));
@@ -185,7 +192,7 @@ module.exports = function Constructor(customSettings) {
 	}
 
 	// Execute each path sequentially, starting with the first
-	const executePath = paths => {
+	const executePath = (paths:string[]) => {
 		// Stop if none
 		if (paths.length === 0) {
 			return;
@@ -200,7 +207,7 @@ module.exports = function Constructor(customSettings) {
 		});
 
 		// Wait for exit
-		child.on('exit', code => {
+		child.on('exit', (code:number) => {
 			// Handle a SIGKILL
 			if (code === null) {
 				console.log(); // Ensure it goes to the next line
@@ -231,7 +238,7 @@ module.exports = function Constructor(customSettings) {
 		});
 
 		// Handle error
-		child.on('error', error => {
+		child.on('error', (error:Error) => {
 			throw new Error(error.toString().replace(/^Error: /i, ''));
 		});
 	};
@@ -245,7 +252,7 @@ module.exports.command = function command() {
 };
 
 // A helper function provided to commands to keep error messages consistent
-module.exports.error = function error(message) {
+module.exports.error = function error(message:string) {
 	utils({}).printPrettyError(message);
 	process.exit(255);
 };

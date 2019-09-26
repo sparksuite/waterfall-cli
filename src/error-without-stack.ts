@@ -1,6 +1,6 @@
 // Custom error class that does not print a stack
 module.exports = class ErrorWithoutStack extends Error {
-	constructor(...args) {
+	constructor(...args:any) {
 		super(...args);
 		this.stack = this.message;
 	}

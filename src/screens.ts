@@ -1,11 +1,14 @@
+export { };
+
 // Dependencies
 const Table = require('cli-table');
+//import utils = require('./utils');
 const utils = require('./utils.js');
 
 // Helpful utility functions
-module.exports = function Constructor(currentSettings) {
+module.exports = function Constructor(currentSettings: ConstructorSettings|object) {
 	// Store an internal copy of the current settings
-	const settings = { ...currentSettings };
+	const settings:ConstructorSettings = { ...currentSettings };
 
 	// Return the functions
 	return {
@@ -14,19 +17,26 @@ module.exports = function Constructor(currentSettings) {
 			// Initialize
 			let outputString = '';
 
-			// Add name, if we have one
-			if (settings.app.name) {
-				outputString += `${settings.app.name}: `.bold;
+			if (settings.app) {
+				// Add name, if we have one
+				if (settings.app.name) {
+					outputString += `${settings.app.name}: `.bold;
+				}
+
+				// Add version and a newline
+				if (settings.app.version) {
+					outputString += `${settings.app.version}\n`;
+				}
 			}
-
-			// Add version and a newline
-			outputString += `${settings.app.version}\n`;
-
-			// Add spacing after
-			for (let i = 0; i < settings.spacing.after; i += 1) {
-				outputString += '\n';
+			
+			
+			if (settings.spacing && settings.spacing.after) {
+				// Add spacing after
+				for (let i = 0; i < settings.spacing.after; i += 1) {
+					outputString += '\n';
+				}
 			}
-
+			
 			// Return
 			return outputString;
 		},
@@ -37,10 +47,10 @@ module.exports = function Constructor(currentSettings) {
 			let outputString = '';
 
 			// Organize the arguments
-			const organizedArguments = utils(settings).organizeArguments();
+			const organizedArguments:OrganizedArguments = utils(settings).organizeArguments();
 
 			// Get all commands in this program
-			let commands = utils(settings).getAllProgramCommands();
+			let commands:string[] = utils(settings).getAllProgramCommands();
 
 			// Verbose output
 			utils(settings).verboseLog(`Found commands: ${commands.join(' | ')}`);
@@ -75,7 +85,7 @@ module.exports = function Constructor(currentSettings) {
 			utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
 
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(
+			const mergedSpec:CommandSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
 			);
 
@@ -227,32 +237,36 @@ module.exports = function Constructor(currentSettings) {
 				// Form full description
 				let fullDescription = '';
 
-				if (mergedSpec.data.description) {
-					fullDescription += mergedSpec.data.description;
-				}
+				if (mergedSpec.data) {
+					if (mergedSpec.data.description) {
+						fullDescription += mergedSpec.data.description;
+					}
 
-				if (mergedSpec.data.required) {
-					fullDescription += ' (required)'.gray.italic;
-				}
+					if (mergedSpec.data.required) {
+						fullDescription += ' (required)'.gray.italic;
+					}
 
-				if (mergedSpec.data.type) {
-					fullDescription += ` (${mergedSpec.data.type})`.gray.italic;
-				}
+					if (mergedSpec.data.type) {
+						fullDescription += ` (${mergedSpec.data.type})`.gray.italic;
+					}
 
-				if (mergedSpec.data.accepts) {
-					fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`
-						.gray.italic;
+					if (mergedSpec.data.accepts) {
+						fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`
+							.gray.italic;
+					}
 				}
-
+				
 				// Print
 				outputString += `  ${fullDescription}\n`;
 			}
 
-			// Add spacing after
-			for (let i = 0; i < settings.spacing.after; i += 1) {
-				outputString += '\n';
+			if (settings.spacing && settings.spacing.after) {
+				// Add spacing after
+				for (let i = 0; i < settings.spacing.after; i += 1) {
+					outputString += '\n';
+				}
 			}
-
+			
 			// Return
 			return outputString;
 		},

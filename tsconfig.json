@@ -12,7 +12,9 @@
 		"rootDir": "src",
 		"sourceMap": true,
 		"strict": true,
-		"target": "es6"
+		"strictNullChecks": true,
+		"target": "ES6",
+		"types": ["node"]
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules"]

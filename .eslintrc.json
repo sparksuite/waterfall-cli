@@ -13,8 +13,11 @@
 	},
 	"parser": "@typescript-eslint/parser",
 	"parserOptions": {
-		"ecmaVersion": "ES6",
+		"ecmaVersion": 6,
 		"sourceType": "module",
+		"ecmaFeatures": {
+			"modules": true
+		},
 		"project": ["./tsconfig.json", "./tsconfig.eslint.json"]
 	},
 	"plugins": ["@typescript-eslint"],

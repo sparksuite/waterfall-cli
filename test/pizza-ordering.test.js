@@ -2,7 +2,6 @@
 /* eslint no-control-regex: "off" */
 
 // Dependencies
-require('colors');
 const { spawn } = require('child_process');
 
 // Initialize

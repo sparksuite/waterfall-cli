@@ -1,7 +1,7 @@
 export {};
 
 // Dependencies
-import 'colors';
+const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
 const Fuse = require('fuse.js');
@@ -24,7 +24,7 @@ module.exports = function utils(
 		// Verbose log output helper function
 		verboseLog(message) {
 			if (settings.verbose) {
-				console.log(`[VERBOSE] ${message}`.dim.italic);
+				console.log(chalk.dim.italic(`[VERBOSE] ${message}`));
 			}
 		},
 
@@ -435,16 +435,16 @@ module.exports = function utils(
 					const command = `${settings.usageCommand}${organizedArguments.command}`;
 
 					// Form error message
-					let errorMessage = `You provided ${
-						organizedArguments.data.toString().bold
-					} to ${command.bold}\n`;
+					let errorMessage = `You provided ${chalk.bold(
+						organizedArguments.data.toString()
+					)} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch && settings.usageCommand) {
 						errorMessage +=
 							'If you were trying to pass in data, this command does not accept data\n';
-						errorMessage += `If you were trying to use a command, did you mean ${
-							settings.usageCommand.toString().bold
-						} ${bestMatch.bold}?\n`;
+						errorMessage += `If you were trying to use a command, did you mean ${chalk.bold(
+							settings.usageCommand.toString()
+						)} ${chalk.bold(bestMatch)}?\n`;
 					} else {
 						errorMessage += 'However, this command does not accept data\n';
 					}
@@ -585,8 +585,8 @@ module.exports = function utils(
 
 		// Print a pretty error message
 		printPrettyError(message: string): void {
-			console.error(`${' ERROR '.inverse.red.bold}\n`);
-			console.error(`> ${message.split('\n').join('\n> ')}\n`.red);
+			console.error(`${chalk.inverse.red.bold(' ERROR ')}\n`);
+			console.error(chalk.red(`> ${message.split('\n').join('\n> ')}\n`));
 		},
 
 		// File functions

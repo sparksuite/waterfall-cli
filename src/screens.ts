@@ -195,7 +195,9 @@ module.exports = function Constructor(currentSettings: ConstructorSettings) {
 					}
 
 					if (details.accepts) {
-						fullDescription += chalk.gray.italic(` (accepts: ${details.accepts.join(', ')})`);
+						fullDescription += chalk.gray.italic(
+							` (accepts: ${details.accepts.join(', ')})`
+						);
 					}
 
 					// Add to table

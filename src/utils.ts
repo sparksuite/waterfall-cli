@@ -58,10 +58,17 @@ interface ConstructorSettingsSpacing {
 	before?: number;
 }
 
+interface NewVersionWarningSettings {
+	enabled: boolean;
+	installedGlobally: boolean;
+}
+
 export interface ConstructorSettings {
 	app?: AppSettings;
 	arguments?: string[];
 	mainFilename?: string;
+	newVersionWarning?: NewVersionWarningSettings;
+	onStart?: string | null;
 	packageFilePath?: string;
 	spacing?: ConstructorSettingsSpacing;
 	usageCommand?: string;

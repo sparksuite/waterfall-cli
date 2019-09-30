@@ -4,32 +4,32 @@ export {};
 const path = require('path');
 const utils = require('./utils.js');
 
-import { AppSettings } from './utils.js';
+import { ConstructorSettings } from './utils.js';
 
-interface SpacingSettings {
-	after: number;
-	before: number;
-}
+// interface SpacingSettings {
+// 	after: number;
+// 	before: number;
+// }
 
-interface NewVersionWarningSettings {
-	enabled: boolean;
-	installedGlobally: boolean;
-}
+// interface NewVersionWarningSettings {
+// 	enabled: boolean;
+// 	installedGlobally: boolean;
+// }
 
-interface Settings {
-	app: AppSettings;
-	arguments: string[];
-	mainFilename: string;
-	newVersionWarning: NewVersionWarningSettings;
-	onStart: string | null;
-	packageFilePath: string;
-	spacing: SpacingSettings;
-	usageCommand: string;
-	verbose: boolean;
-}
+// interface Settings {
+// 	app: AppSettings;
+// 	arguments: string[];
+// 	mainFilename: string;
+// 	newVersionWarning: NewVersionWarningSettings;
+// 	onStart: string | null;
+// 	packageFilePath: string;
+// 	spacing: SpacingSettings;
+// 	usageCommand: string;
+// 	verbose: boolean;
+// }
 
 // Default Settings
-const settings: Settings = {
+const settings: ConstructorSettings = {
 	app: {
 		name: null,
 		packageName: null,

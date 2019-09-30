@@ -70,12 +70,12 @@ interface ConstructorSettingsSpacing {
 }
 
 interface ConstructorSettings {
-	verbose?: boolean;
-	mainFilename?: string;
-	packageFilePath?: string;
 	app?: AppSettings;
 	arguments?: string[];
+	mainFilename?: string;
+	packageFilePath?: string;
 	spacing?: ConstructorSettingsSpacing;
+	verbose?: boolean;
 	[propName: string]:
 		| boolean
 		| string

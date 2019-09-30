@@ -61,5 +61,4 @@ const settings: Settings = {
 	verbose: false,
 };
 
-// Export
 module.exports = settings;

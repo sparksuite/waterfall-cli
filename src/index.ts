@@ -12,6 +12,8 @@ const ErrorWithoutStack = require('./error-without-stack.js');
 const screens = require('./screens.js');
 const utils = require('./utils.js');
 
+import { ConstructorSettings, CommandSpec } from './utils.js';
+
 // Handle exceptions
 process.on('uncaughtException', error => {
 	utils({}).printPrettyError(error.stack);

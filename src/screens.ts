@@ -5,6 +5,12 @@ const chalk = require('chalk');
 const Table = require('cli-table');
 const utils = require('./utils.js');
 
+import {
+	OrganizedArguments,
+	ConstructorSettings,
+	CommandSpec,
+} from './utils.js';
+
 // Helpful utility functions
 module.exports = function Constructor(currentSettings: ConstructorSettings) {
 	// Store an internal copy of the current settings

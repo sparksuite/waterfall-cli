@@ -4,35 +4,29 @@ export {};
 const path = require('path');
 const utils = require('./utils.js');
 
-// interface AppSettings {
-// 	name: string | null;
-// 	packageName: string | null;
-// 	version: string | null;
-// 	[propName: string]: any;
-// }
+import { AppSettings } from './utils.js';
 
-// interface NewVersionWarningSettings {
-// 	enabled: boolean;
-// 	installedGlobally: boolean;
-// }
+interface SpacingSettings {
+	after: number;
+	before: number;
+}
 
-// interface SpacingSettings {
-// 	before: number;
-// 	after: number;
-// }
+interface NewVersionWarningSettings {
+	enabled: boolean;
+	installedGlobally: boolean;
+}
 
-// // @ts-ignore TS6196 - seems to think this is never used.
-// interface Settings {
-// 	app: AppSettings;
-// 	arguments: any;
-// 	mainFilename: string;
-// 	newVersionWarning: NewVersionWarningSettings;
-// 	onStart: string | null;
-// 	packageFilePath: string;
-// 	spacing: SpacingSettings;
-// 	usageCommand: string;
-// 	verbose: boolean;
-// }
+interface Settings {
+	app: AppSettings;
+	arguments: string[];
+	mainFilename: string;
+	newVersionWarning: NewVersionWarningSettings;
+	onStart: string | null;
+	packageFilePath: string;
+	spacing: SpacingSettings;
+	usageCommand: string;
+	verbose: boolean;
+}
 
 // Default Settings
 const settings: Settings = {

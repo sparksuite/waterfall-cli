@@ -11,7 +11,7 @@ const utils = require('./utils.js');
 // 	[propName: string]: any;
 // }
 
-// interface NewVersionWarning {
+// interface NewVersionWarningSettings {
 // 	enabled: boolean;
 // 	installedGlobally: boolean;
 // }
@@ -26,7 +26,7 @@ const utils = require('./utils.js');
 // 	app: AppSettings;
 // 	arguments: any;
 // 	mainFilename: string;
-// 	newVersionWarning: NewVersionWarning;
+// 	newVersionWarning: NewVersionWarningSettings;
 // 	onStart: string | null;
 // 	packageFilePath: string;
 // 	spacing: SpacingSettings;

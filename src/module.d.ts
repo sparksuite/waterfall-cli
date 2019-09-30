@@ -5,7 +5,7 @@ interface AppSettings {
 	[propName: string]: string | number | null;
 }
 
-interface NewVersionWarning {
+interface NewVersionWarningSettings {
 	enabled: boolean;
 	installedGlobally: boolean;
 }
@@ -19,7 +19,7 @@ interface Settings {
 	app: AppSettings;
 	arguments: string[];
 	mainFilename: string;
-	newVersionWarning: NewVersionWarning;
+	newVersionWarning: NewVersionWarningSettings;
 	onStart: string | null;
 	packageFilePath: string;
 	spacing: SpacingSettings;

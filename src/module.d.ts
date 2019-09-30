@@ -11,8 +11,8 @@ interface NewVersionWarningSettings {
 }
 
 interface SpacingSettings {
-	before: number;
 	after: number;
+	before: number;
 }
 
 interface Settings {
@@ -28,12 +28,12 @@ interface Settings {
 }
 
 interface CommandSpecOption {
+	accepts?: string[];
+	cascades?: boolean;
 	description?: string;
 	required?: boolean;
-	type?: string;
-	accepts?: string[];
 	shorthand?: string;
-	cascades?: boolean;
+	type?: string;	
 }
 
 interface CommandSpecOptions {
@@ -41,9 +41,9 @@ interface CommandSpecOptions {
 }
 
 interface CommandSpecFlag {
-	shorthand?: string;
-	description?: string | null;
 	cascades?: boolean;
+	description?: string | null;
+	shorthand?: string;
 }
 
 interface CommandSpecFlags {
@@ -51,14 +51,16 @@ interface CommandSpecFlags {
 }
 
 interface CommandSpecData {
-	ignoreFlagsAndOptions?: boolean;
 	accepts?: string[];
-	[propName: string]: boolean | string | string[] | number | undefined;
+	description?: string;
+	ignoreFlagsAndOptions?: boolean;
+	required?: boolean;
+	type?: string;
 }
 
 interface CommandSpec {
-	description?: string | null;
 	data?: CommandSpecData;
+	description?: string | null;
 	flags: CommandSpecFlags;
 	options: CommandSpecOptions;
 	executeOnCascade?: boolean;
@@ -75,23 +77,16 @@ interface ConstructorSettings {
 	mainFilename?: string;
 	packageFilePath?: string;
 	spacing?: ConstructorSettingsSpacing;
+	usageCommand?: string;
 	verbose?: boolean;
-	[propName: string]:
-		| boolean
-		| string
-		| number
-		| AppSettings
-		| ConstructorSettingsSpacing
-		| string[]
-		| undefined;
 }
 
 interface OrganizedArguments {
+	command: string;
+	data: string | number | null;
 	flags: string[];
 	options: (string | number)[];
 	values: (string | number)[];
-	data: string | number | null;
-	command: string;
 }
 
 interface InputObject {
@@ -100,22 +95,22 @@ interface InputObject {
 	[propName: string]: boolean | string | number | undefined | null;
 }
 interface Utils {
-	verboseLog(message: string): void;
-	processArguments(argv: string[]): string[];
-	retrieveAppInformation(): AppSettings;
-	getMergedSpec(command: string): CommandSpec;
-	organizeArguments(): OrganizedArguments;
 	constructInputObject(organizedArguments: OrganizedArguments): object;
 	convertDashesToCamelCase(string: string): string;
 	getAllProgramCommands(): string[];
+	getMergedSpec(command: string): CommandSpec;
+	organizeArguments(): OrganizedArguments;
 	printPrettyError(message: string): void;
+	processArguments(argv: string[]): string[];
+	retrieveAppInformation(): AppSettings;
+	verboseLog(message: string): void;
 
 	files: {
 		isDirectory(path: string): boolean;
 		isFile(path: string): boolean;
-		getFiles(directory: string): string[];
-		getDirectories(directory: string): string[];
-		getAllDirectories(string: string): string[];
 		getAllDirectories(directory: string): string[];
+		getAllDirectories(string: string): string[];
+		getDirectories(directory: string): string[];
+		getFiles(directory: string): string[];
 	};
 }

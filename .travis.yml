@@ -16,6 +16,7 @@ jobs:
     - stage: test
       if: type = pull_request OR tag IS present
       name: Run tests (Node.js Current)
+      node_js: node
     - stage: test
       if: type = pull_request OR tag IS present
       name: Run tests (Node.js LTS)

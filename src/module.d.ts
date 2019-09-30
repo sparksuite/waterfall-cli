@@ -33,7 +33,7 @@ interface CommandSpecOption {
 	description?: string;
 	required?: boolean;
 	shorthand?: string;
-	type?: string;	
+	type?: string;
 }
 
 interface CommandSpecOptions {

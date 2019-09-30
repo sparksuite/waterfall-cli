@@ -36,8 +36,6 @@ const settings: Settings = {
 		version: null,
 	},
 	arguments: utils({}).processArguments(process.argv),
-	//mainFilename: __filename,
-	//mainFilename: req.main.filename,
 	mainFilename: process.argv[1],
 	newVersionWarning: {
 		enabled: true,
@@ -49,8 +47,6 @@ const settings: Settings = {
 		before: 1,
 		after: 1,
 	},
-	//usageCommand: `node ${path.basename(__filename)}`,
-	//usageCommand: `node ${path.basename(req.main.filename)}`,
 	usageCommand: `node ${path.basename(process.argv[1])}`,
 	verbose: false,
 };

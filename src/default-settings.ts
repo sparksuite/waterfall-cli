@@ -1,7 +1,6 @@
 // Dependencies
 import path from 'path';
 import utils from './utils.js';
-
 import { ConstructorSettings } from './util-defs.js';
 
 // Default Settings

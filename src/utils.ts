@@ -1,88 +1,17 @@
-export {};
+//export {};
+import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
+import Fuse from 'fuse.js';
+import ErrorWithoutStack from './error-without-stack';
+import {
+	AppSettings,
+	ConstructorSettings,
+	CommandSpec,
+	OrganizedArguments,
+} from './util-defs';
 
 // Dependencies
-const chalk = require('chalk');
-const fs = require('fs');
-const path = require('path');
-const Fuse = require('fuse.js');
-const ErrorWithoutStack = require('./error-without-stack.js');
-
-export interface AppSettings {
-	name: string | null;
-	packageName: string | null;
-	version: string | null;
-	[propName: string]: string | number | null;
-}
-
-interface CommandSpecOption {
-	accepts?: string[];
-	cascades?: boolean;
-	description?: string;
-	required?: boolean;
-	shorthand?: string;
-	type?: string;
-}
-
-interface CommandSpecOptions {
-	[propName: string]: CommandSpecOption;
-}
-
-interface CommandSpecFlag {
-	cascades?: boolean;
-	description?: string | null;
-	shorthand?: string;
-}
-
-interface CommandSpecFlags {
-	[propName: string]: CommandSpecFlag;
-}
-
-interface CommandSpecData {
-	accepts?: string[];
-	description?: string;
-	ignoreFlagsAndOptions?: boolean;
-	required?: boolean;
-	type?: string;
-}
-
-export interface CommandSpec {
-	data?: CommandSpecData;
-	description?: string | null;
-	flags: CommandSpecFlags;
-	options: CommandSpecOptions;
-	executeOnCascade?: boolean;
-}
-
-interface ConstructorSettingsSpacing {
-	after?: number;
-	before?: number;
-}
-
-interface NewVersionWarningSettings {
-	enabled: boolean;
-	installedGlobally: boolean;
-}
-
-export interface ConstructorSettings {
-	app?: AppSettings;
-	arguments?: string[];
-	mainFilename?: string;
-	newVersionWarning?: NewVersionWarningSettings;
-	onStart?: string | null;
-	packageFilePath?: string;
-	spacing?: ConstructorSettingsSpacing;
-	usageCommand?: string;
-	verbose?: boolean;
-}
-
-export interface OrganizedArguments {
-	command: string;
-	data: string | number | null;
-	flags: string[];
-	options: (string | number)[];
-	values: (string | number)[];
-}
-
 interface InputObject {
 	command: string | null;
 	data: string | number | null;
@@ -90,7 +19,7 @@ interface InputObject {
 }
 
 interface Utils {
-	constructInputObject(organizedArguments: OrganizedArguments): object;
+	constructInputObject(organizedArguments: OrganizedArguments): InputObject;
 	convertDashesToCamelCase(string: string): string;
 	getAllProgramCommands(): string[];
 	getMergedSpec(command: string): CommandSpec;
@@ -111,9 +40,7 @@ interface Utils {
 }
 
 // Helpful utility functions
-module.exports = function utils(
-	currentSettings: ConstructorSettings | object
-): Utils {
+function utils(currentSettings: ConstructorSettings | object): Utils {
 	// Store an internal copy of the current settings
 	const settings: ConstructorSettings = {
 		mainFilename: '',
@@ -160,31 +87,35 @@ module.exports = function utils(
 				...settings.app,
 			};
 
-			// Build path to package.json file
-			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
-				settings.packageFilePath
-			}`;
+			if (settings.mainFilename) {
+				// Build path to package.json file
+				const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
+					settings.packageFilePath
+				}`;
 
-			// Handle if a package.json file exists
-			if (fs.existsSync(pathToPackageFile)) {
-				// Verbose output
-				module
-					.exports(settings)
-					.verboseLog(`Found package.json at: ${pathToPackageFile}`);
+				// Handle if a package.json file exists
+				if (fs.existsSync(pathToPackageFile)) {
+					// Verbose output
+					utils(settings).verboseLog(
+						`Found package.json at: ${pathToPackageFile}`
+					);
 
-				// Get package
-				const packageInfo = JSON.parse(
-					fs.readFileSync(pathToPackageFile).toString()
-				);
+					// Get package
+					const packageInfo = JSON.parse(
+						fs.readFileSync(pathToPackageFile).toString()
+					);
 
-				// Store information
-				app.name = app.name || packageInfo.name;
-				app.packageName = packageInfo.name;
-				app.version = app.version || packageInfo.version;
+					// Store information
+					app.name = app.name || packageInfo.name;
+					app.packageName = packageInfo.name;
+					app.version = app.version || packageInfo.version;
+				} else {
+					utils(settings).verboseLog(
+						`Could not find package.json at: ${pathToPackageFile}`
+					);
+				}
 			} else {
-				module
-					.exports(settings)
-					.verboseLog(`Could not find package.json at: ${pathToPackageFile}`);
+				utils(settings).verboseLog('Could not determine package.json location');
 			}
 
 			// Return info
@@ -223,9 +154,9 @@ module.exports = function utils(
 				}
 
 				// Get the files we care about
-				const commandFiles: string[] = module
-					.exports(settings)
-					.files.getFiles(currentPathPrefix);
+				const commandFiles: string[] = utils(settings).files.getFiles(
+					currentPathPrefix
+				);
 
 				// Error if not exactly one .js and one .json file
 				if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
@@ -304,18 +235,14 @@ module.exports = function utils(
 			if (settings.arguments) {
 				for (const argument of settings.arguments) {
 					// Verbose output
-					module
-						.exports(settings)
-						.verboseLog(`Inspecting argument: ${argument}`);
+					utils(settings).verboseLog(`Inspecting argument: ${argument}`);
 
 					// Skip option values
 					if (nextIsOptionValue === 1) {
 						// Verbose output
-						module
-							.exports(settings)
-							.verboseLog(
-								`...Is value for previous option (${previousOption})`
-							);
+						utils(settings).verboseLog(
+							`...Is value for previous option (${previousOption})`
+						);
 
 						// Initialize
 						let value: string | number = argument;
@@ -367,9 +294,9 @@ module.exports = function utils(
 					}
 
 					// Get merged spec for this command
-					const mergedSpec: CommandSpec = module
-						.exports(settings)
-						.getMergedSpec(organizedArguments.command);
+					const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+						organizedArguments.command
+					);
 
 					// Handle if we're supposed to ignore anything that looks like flags/options
 					if (
@@ -378,7 +305,7 @@ module.exports = function utils(
 						mergedSpec.data.ignoreFlagsAndOptions === true
 					) {
 						// Verbose output
-						module.exports(settings).verboseLog('...Is data');
+						utils(settings).verboseLog('...Is data');
 
 						// Append onto data
 						organizedArguments.data += ` ${argument}`;
@@ -403,7 +330,7 @@ module.exports = function utils(
 									// Handle a match
 									if (matchesFullOption || matchesShorthandOption) {
 										// Verbose output
-										module.exports(settings).verboseLog('...Is an option');
+										utils(settings).verboseLog('...Is an option');
 
 										// Store details
 										previousOption = argument;
@@ -426,7 +353,7 @@ module.exports = function utils(
 								Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
 									if (argument === `--${flag.trim().toLowerCase()}`) {
 										// Verbose output
-										module.exports(settings).verboseLog('...Is a flag');
+										utils(settings).verboseLog('...Is a flag');
 
 										// Store details
 										matchedFlag = true;
@@ -436,7 +363,7 @@ module.exports = function utils(
 										argument === `-${details.shorthand.trim().toLowerCase()}`
 									) {
 										// Verbose output
-										module.exports(settings).verboseLog('...Is a flag');
+										utils(settings).verboseLog('...Is a flag');
 
 										// Store details
 										matchedFlag = true;
@@ -458,9 +385,9 @@ module.exports = function utils(
 					}
 
 					// Get the files we care about
-					const commandFiles: string[] = module
-						.exports(settings)
-						.files.getFiles(`${currentPathPrefix}/${argument}`);
+					const commandFiles: string[] = utils(settings).files.getFiles(
+						`${currentPathPrefix}/${argument}`
+					);
 
 					// Get the command path
 					const commandPath = commandFiles.filter(path =>
@@ -474,14 +401,14 @@ module.exports = function utils(
 						argument.replace(/[/\\?%*:|"<>.]/g, '') !== ''
 					) {
 						// Verbose output
-						module.exports(settings).verboseLog('...Is a command');
+						utils(settings).verboseLog('...Is a command');
 
 						// Add to currents
 						currentPathPrefix += `/${argument}`;
 						organizedArguments.command += ` ${argument}`;
 					} else {
 						// Verbose output
-						module.exports(settings).verboseLog('...Is data');
+						utils(settings).verboseLog('...Is data');
 
 						// Store details
 						reachedData = true;
@@ -505,14 +432,14 @@ module.exports = function utils(
 			// Handle if there's any data
 			if (organizedArguments.data !== null) {
 				// Get merged spec for this command
-				const mergedSpec = module
-					.exports(settings)
-					.getMergedSpec(organizedArguments.command);
+				const mergedSpec = utils(settings).getMergedSpec(
+					organizedArguments.command
+				);
 
 				// Check if data is allowed
 				if (!mergedSpec.data || !mergedSpec.data.description) {
 					// Get all commands in this program
-					const commands = module.exports(settings).getAllProgramCommands();
+					const commands = utils(settings).getAllProgramCommands();
 
 					// Search for the best match
 					const fuse = new Fuse(commands, {
@@ -560,7 +487,13 @@ module.exports = function utils(
 
 				// Validate data, if necessary
 				if (mergedSpec.data.accepts) {
-					if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
+					if (
+						!mergedSpec.data.accepts.includes(
+							typeof organizedArguments.data === 'string'
+								? organizedArguments.data
+								: organizedArguments.data.toString()
+						)
+					) {
 						throw new ErrorWithoutStack(
 							`Unrecognized data for "${organizedArguments.command.trim()}": ${
 								organizedArguments.data
@@ -614,7 +547,7 @@ module.exports = function utils(
 		},
 
 		// Construct a full input object
-		constructInputObject(organizedArguments) {
+		constructInputObject(organizedArguments): InputObject {
 			// Initialize
 			const inputObject: InputObject = {
 				command: null,
@@ -622,22 +555,22 @@ module.exports = function utils(
 			};
 
 			// Get merged spec for this command
-			const mergedSpec: CommandSpec = module
-				.exports(settings)
-				.getMergedSpec(organizedArguments.command);
+			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+				organizedArguments.command
+			);
 
 			// Loop over each component and store
 			Object.entries(mergedSpec.flags).forEach(([flag]) => {
-				const camelCaseKey: string = module
-					.exports(settings)
-					.convertDashesToCamelCase(flag);
+				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+					flag
+				);
 				inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
 			});
 
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				const camelCaseKey: string = module
-					.exports(settings)
-					.convertDashesToCamelCase(option);
+				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+					option
+				);
 				const optionIndex = organizedArguments.options.indexOf(option);
 				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
 
@@ -668,9 +601,7 @@ module.exports = function utils(
 		getAllProgramCommands(): string[] {
 			// Get all directories
 			const mainDir = path.dirname(settings.mainFilename);
-			let commands: string[] = module
-				.exports(settings)
-				.files.getAllDirectories(mainDir);
+			let commands: string[] = utils(settings).files.getAllDirectories(mainDir);
 
 			// Process into just commands
 			commands = commands.map(file => file.replace(`${mainDir}/`, ''));
@@ -714,7 +645,7 @@ module.exports = function utils(
 					.readdirSync(directory)
 					.map((name: string) => path.join(directory, name));
 
-				return allItems.filter(module.exports(settings).files.isFile);
+				return allItems.filter(utils(settings).files.isFile);
 			},
 
 			// Get child directories of a parent directory
@@ -727,7 +658,7 @@ module.exports = function utils(
 					.readdirSync(directory)
 					.map((name: string) => path.join(directory, name));
 
-				return allItems.filter(module.exports(settings).files.isDirectory);
+				return allItems.filter(utils(settings).files.isDirectory);
 			},
 
 			// Get child directories of a parent directory, recursively & synchronously
@@ -741,11 +672,11 @@ module.exports = function utils(
 					.reduce((files: string[], file: string) => {
 						const name = path.join(directory, file);
 
-						if (module.exports(settings).files.isDirectory(name)) {
+						if (utils(settings).files.isDirectory(name)) {
 							return [
 								...files,
 								name,
-								...module.exports(settings).files.getAllDirectories(name),
+								...utils(settings).files.getAllDirectories(name),
 							];
 						}
 
@@ -754,4 +685,6 @@ module.exports = function utils(
 			},
 		},
 	};
-};
+}
+
+export = utils;

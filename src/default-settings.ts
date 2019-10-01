@@ -1,32 +1,10 @@
-export {};
+//export {};
 
 // Dependencies
-const path = require('path');
-const utils = require('./utils.js');
+import path from 'path';
+import utils from './utils.js';
 
-import { ConstructorSettings } from './utils.js';
-
-// interface SpacingSettings {
-// 	after: number;
-// 	before: number;
-// }
-
-// interface NewVersionWarningSettings {
-// 	enabled: boolean;
-// 	installedGlobally: boolean;
-// }
-
-// interface Settings {
-// 	app: AppSettings;
-// 	arguments: string[];
-// 	mainFilename: string;
-// 	newVersionWarning: NewVersionWarningSettings;
-// 	onStart: string | null;
-// 	packageFilePath: string;
-// 	spacing: SpacingSettings;
-// 	usageCommand: string;
-// 	verbose: boolean;
-// }
+import { ConstructorSettings } from './util-defs.js';
 
 // Default Settings
 const settings: ConstructorSettings = {
@@ -52,4 +30,4 @@ const settings: ConstructorSettings = {
 };
 
 // Export
-module.exports = settings;
+export = settings;

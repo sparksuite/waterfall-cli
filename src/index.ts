@@ -1,33 +1,37 @@
-export {};
+//export {};
 
 // Dependencies
-const chalk = require('chalk');
-const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const semver = require('semver');
-const deepmerge = require('deepmerge');
-const defaultSettings = require('./default-settings.js');
-const ErrorWithoutStack = require('./error-without-stack.js');
-const screens = require('./screens.js');
-const utils = require('./utils.js');
+import chalk from 'chalk';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import semver from 'semver';
+import deepmerge from 'deepmerge';
+import defaultSettings from './default-settings.js';
+import ErrorWithoutStack from './error-without-stack.js';
+import screens from './screens.js';
+import utils from './utils.js';
 
-import { ConstructorSettings, CommandSpec } from './utils.js';
+import { ConstructorSettings, CommandSpec } from './util-defs.js';
 
 // Handle exceptions
-process.on('uncaughtException', error => {
-	utils({}).printPrettyError(error.stack);
+process.on('uncaughtException', (error: Error) => {
+	if (error.stack) {
+		utils({}).printPrettyError(error.stack);
+	}
 	process.exit(1);
 });
 
 // The constructor, for use at the entry point
-module.exports = function Constructor(customSettings: ConstructorSettings) {
+export = function Constructor(customSettings: ConstructorSettings) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 
 	// Add spacing before
-	for (let i = 0; i < settings.spacing.before; i += 1) {
-		console.log();
+	if (settings && settings.spacing && settings.spacing.before) {
+		for (let i = 0; i < settings.spacing.before; i += 1) {
+			console.log();
+		}
 	}
 
 	// Determine app information
@@ -92,9 +96,14 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 			const latestVersion = semver.clean(
 				`${fs.readFileSync(pathToLatestVersion)}`
 			);
-			const currentVersion = semver.clean(settings.app.version);
+			const currentVersion = settings.app.version
+				? semver.clean(settings.app.version)
+				: null;
 			const bothVersionsAreValid =
-				semver.valid(latestVersion) && semver.valid(currentVersion);
+				latestVersion &&
+				semver.valid(latestVersion) &&
+				currentVersion &&
+				semver.valid(currentVersion);
 
 			// Verbose ouput
 			utils(settings).verboseLog(
@@ -108,7 +117,12 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 			);
 
 			// Determine if warning is needed
-			if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
+			if (
+				bothVersionsAreValid &&
+				latestVersion &&
+				currentVersion &&
+				semver.gt(latestVersion, currentVersion)
+			) {
 				console.log(
 					chalk.yellow(
 						`You're using an outdated version of ${
@@ -174,7 +188,7 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 		};
 
 		try {
-			spec = JSON.parse(fs.readFileSync(specFilePath));
+			spec = JSON.parse(fs.readFileSync(specFilePath).toString());
 		} catch (error) {
 			throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
 		}
@@ -194,7 +208,7 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 	);
 
 	// Call onStart() function, if any
-	if (typeof settings.onStart === 'function') {
+	if (settings && typeof settings.onStart === 'function') {
 		settings.onStart(inputObject);
 	}
 
@@ -237,9 +251,11 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 			if (paths[1]) {
 				executePath(paths.slice(1));
 			} else {
-				// Add spacing after
-				for (let i = 0; i < settings.spacing.after; i += 1) {
-					console.log();
+				if (settings.spacing.after) {
+					// Add spacing after
+					for (let i = 0; i < settings.spacing.after; i += 1) {
+						console.log();
+					}
 				}
 			}
 		});
@@ -251,15 +267,4 @@ module.exports = function Constructor(customSettings: ConstructorSettings) {
 	};
 
 	executePath(executionPaths);
-};
-
-// The function used to kick off commands
-module.exports.command = function command() {
-	return JSON.parse(process.argv[2]);
-};
-
-// A helper function provided to commands to keep error messages consistent
-module.exports.error = function error(message: string) {
-	utils({}).printPrettyError(message);
-	process.exit(255);
 };

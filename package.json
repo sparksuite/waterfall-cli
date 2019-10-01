@@ -6,7 +6,6 @@
 	"files": [
 		"/dist"
 	],
-	"type": "commonjs",
 	"scripts": {
 		"test": "npm run compile && jest",
 		"lint": "eslint --ext .js,.ts src test && prettier --check '**/*.{ts,js,json}'",

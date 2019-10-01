@@ -1,3 +1,4 @@
+// Interface declarations
 export interface AppSettings {
 	name: string | null;
 	packageName: string | null;

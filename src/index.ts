@@ -1,5 +1,3 @@
-//export {};
-
 // Dependencies
 import chalk from 'chalk';
 import { spawn } from 'child_process';
@@ -11,7 +9,6 @@ import defaultSettings from './default-settings.js';
 import ErrorWithoutStack from './error-without-stack.js';
 import screens from './screens.js';
 import utils from './utils.js';
-
 import { ConstructorSettings, CommandSpec } from './util-defs.js';
 
 // Handle exceptions

@@ -1,16 +1,14 @@
-//export {};
-
 // Dependencies
 import chalk from 'chalk';
 import Table from 'cli-table';
 import utils from './utils.js';
-
 import {
 	OrganizedArguments,
 	ConstructorSettings,
 	CommandSpec,
 } from './util-defs.js';
 
+// Default export
 export = function Constructor(currentSettings: ConstructorSettings) {
 	// Store an internal copy of the current settings
 	const settings: ConstructorSettings = { ...currentSettings };

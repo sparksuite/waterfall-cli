@@ -1,4 +1,4 @@
-//export {};
+// Dependencies
 import chalk from 'chalk';
 import fs from 'fs';
 import path from 'path';
@@ -11,7 +11,7 @@ import {
 	OrganizedArguments,
 } from './util-defs';
 
-// Dependencies
+// Interface declarations
 interface InputObject {
 	command: string | null;
 	data: string | number | null;
@@ -45,7 +45,7 @@ function utils(currentSettings: ConstructorSettings | object): Utils {
 	const settings: ConstructorSettings = {
 		mainFilename: '',
 		verbose: true,
-		spacing: { after: 3 },
+		spacing: { after: 1, before: 1 },
 		...currentSettings,
 	};
 

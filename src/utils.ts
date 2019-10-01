@@ -548,40 +548,12 @@ function utils(currentSettings: ConstructorSettings | object): Utils {
 
 		// Construct a full input object
 		constructInputObject(organizedArguments): InputObject {
-			// Initialize
-			const inputObject: InputObject = {
-				command: null,
-				data: null,
-			};
-
 			// Get merged spec for this command
 			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
 			);
 
-			// Loop over each component and store
-			Object.entries(mergedSpec.flags).forEach(([flag]) => {
-				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-					flag
-				);
-				inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
-			});
-
-			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-					option
-				);
-				const optionIndex = organizedArguments.options.indexOf(option);
-				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
-
-				if (details.required && !organizedArguments.options.includes(option)) {
-					throw new ErrorWithoutStack(`The --${option} option is required`);
-				}
-			});
-
-			// Store data
-			inputObject.data = organizedArguments.data;
-
+			// Handle missing required data
 			if (
 				mergedSpec.data &&
 				mergedSpec.data.required &&
@@ -590,11 +562,38 @@ function utils(currentSettings: ConstructorSettings | object): Utils {
 				throw new ErrorWithoutStack('Data is required');
 			}
 
-			// Store command
-			inputObject.command = organizedArguments.command;
+			// Holder for additional arguments
+			const extraDetails: {
+				[propName: string]: boolean | string | number | undefined | null;
+			} = {};
+
+			// Loop over each component and store
+			Object.entries(mergedSpec.flags).forEach(([flag]) => {
+				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+					flag
+				);
+
+				extraDetails[camelCaseKey] = organizedArguments.flags.includes(flag);
+			});
+
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+					option
+				);
+				const optionIndex = organizedArguments.options.indexOf(option);
+				extraDetails[camelCaseKey] = organizedArguments.values[optionIndex];
+
+				if (details.required && !organizedArguments.options.includes(option)) {
+					throw new ErrorWithoutStack(`The --${option} option is required`);
+				}
+			});
 
 			// Return
-			return inputObject;
+			return {
+				...extraDetails,
+				command: organizedArguments.command,
+				data: organizedArguments.data,
+			};
 		},
 
 		// Get all commands in program

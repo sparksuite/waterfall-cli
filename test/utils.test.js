@@ -1,8 +1,8 @@
 /* eslint-env jest */
 
 // Dependencies
-const defaultSettings = require('../dist/default-settings.js');
-const utils = require('../dist/utils.js');
+const defaultSettings = require('../dist/default-settings.js').default;
+const utils = require('../dist/utils.js').default;
 
 // Tests
 describe('Utils', () => {

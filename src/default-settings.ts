@@ -27,4 +27,4 @@ const settings: ConstructorSettings = {
 };
 
 // Export
-export = settings;
+export default settings;

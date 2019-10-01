@@ -40,11 +40,11 @@ interface Utils {
 }
 
 // Helpful utility functions
-function utils(currentSettings: ConstructorSettings | object): Utils {
+function utils(currentSettings: Partial<ConstructorSettings>): Utils {
 	// Store an internal copy of the current settings
 	const settings: ConstructorSettings = {
 		mainFilename: '',
-		verbose: true,
+		verbose: false,
 		spacing: { after: 1, before: 1 },
 		...currentSettings,
 	};
@@ -686,4 +686,4 @@ function utils(currentSettings: ConstructorSettings | object): Utils {
 	};
 }
 
-export = utils;
+export default utils;

@@ -2,8 +2,8 @@
 /* eslint no-control-regex: "off" */
 
 // Dependencies
-const defaultSettings = require('../dist/default-settings.js');
-const screens = require('../dist/screens.js');
+const defaultSettings = require('../dist/default-settings.js').default;
+const screens = require('../dist/screens.js').default;
 
 // Remove ANSI formatting
 function removeFormatting(text) {

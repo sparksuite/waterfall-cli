@@ -9,7 +9,7 @@ import {
 } from './util-defs.js';
 
 // Default export
-export = function Constructor(currentSettings: ConstructorSettings) {
+export default function Constructor(currentSettings: ConstructorSettings) {
 	// Store an internal copy of the current settings
 	const settings: ConstructorSettings = { ...currentSettings };
 
@@ -276,4 +276,4 @@ export = function Constructor(currentSettings: ConstructorSettings) {
 			return outputString;
 		},
 	};
-};
+}

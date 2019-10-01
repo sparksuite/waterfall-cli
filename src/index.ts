@@ -19,8 +19,21 @@ process.on('uncaughtException', (error: Error) => {
 	process.exit(1);
 });
 
+// The function used to kick off commands
+export function command() {
+	return JSON.parse(process.argv[2]);
+}
+
+// A helper function provided to commands to keep error messages consistent
+export function error(message: string) {
+	utils({}).printPrettyError(message);
+	process.exit(255);
+}
+
 // The constructor, for use at the entry point
-export = function Constructor(customSettings: ConstructorSettings) {
+export default function Constructor(
+	customSettings: Partial<ConstructorSettings>
+) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 
@@ -56,6 +69,7 @@ export = function Constructor(customSettings: ConstructorSettings) {
 	// Handle --help
 	if (
 		organizedArguments.flags.includes('help') ||
+		!settings.arguments ||
 		settings.arguments.length === 0
 	) {
 		// Output
@@ -69,7 +83,11 @@ export = function Constructor(customSettings: ConstructorSettings) {
 	}
 
 	// Handle new version warning
-	if (settings.newVersionWarning.enabled && settings.app.packageName) {
+	if (
+		settings.newVersionWarning &&
+		settings.newVersionWarning.enabled &&
+		settings.app.packageName
+	) {
 		// Determine where to store the version
 		const pathToLatestVersion = path.join(
 			__dirname,
@@ -248,7 +266,7 @@ export = function Constructor(customSettings: ConstructorSettings) {
 			if (paths[1]) {
 				executePath(paths.slice(1));
 			} else {
-				if (settings.spacing.after) {
+				if (settings.spacing && settings.spacing.after) {
 					// Add spacing after
 					for (let i = 0; i < settings.spacing.after; i += 1) {
 						console.log();
@@ -264,4 +282,4 @@ export = function Constructor(customSettings: ConstructorSettings) {
 	};
 
 	executePath(executionPaths);
-};
+}

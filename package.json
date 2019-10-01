@@ -31,7 +31,6 @@
 		"cli-table": "^0.3.1",
 		"deepmerge": "^4.0.0",
 		"fuse.js": "^3.4.5",
-		"require-main-filename": "^2.0.0",
 		"semver": "^6.3.0"
 	},
 	"devDependencies": {

@@ -406,9 +406,9 @@ module.exports = function Constructor(currentSettings) {
 					const command = `${settings.usageCommand}${organizedArguments.command}`;
 
 					// Form error message
-					let errorMessage = `You provided ${
-						chalk.bold(organizedArguments.data)
-					} to ${chalk.bold(command)}\n`;
+					let errorMessage = `You provided ${chalk.bold(
+						organizedArguments.data
+					)} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch) {
 						errorMessage +=

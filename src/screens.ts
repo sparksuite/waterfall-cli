@@ -128,10 +128,10 @@ export function screens(currentSettings: ConstructorSettings) {
 			let usageLine = `${chalk.bold('Usage:')} ${settings.usageCommand}${
 				organizedArguments.command ? ` ${organizedArguments.command}` : ''
 			}`;
-			usageLine += `${chalk.gray(hasCommands ? ' [commands]' : '')}`;
-			usageLine += `${chalk.gray(hasFlags ? ' [flags]' : '')}`;
-			usageLine += `${chalk.gray(hasOptions ? ' [options]' : '')}`;
-			usageLine += `${chalk.gray(acceptsData ? ' [data]' : '')}`;
+			usageLine += chalk.gray(hasCommands ? ' [commands]' : '');
+			usageLine += chalk.gray(hasFlags ? ' [flags]' : '');
+			usageLine += chalk.gray(hasOptions ? ' [options]' : '');
+			usageLine += chalk.gray(acceptsData ? ' [data]' : '');
 
 			outputString += `${usageLine}\n`;
 

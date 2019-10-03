@@ -19,7 +19,7 @@ module.exports = function runProgram(
 	return new Promise(resolve => {
 		// Build the array of all arguments
 		let allArguments = [
-			...nodeArguments,
+			...nodeArguments.split(' '),
 			entryFile,
 			...programArguments.split(' '),
 		];

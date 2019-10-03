@@ -10,7 +10,11 @@ function removeFormatting(text) {
 }
 
 // Test runner
-module.exports = function runProgram(entryFile, programArguments = '', nodeArguments = '') {
+module.exports = function runProgram(
+	entryFile,
+	programArguments = '',
+	nodeArguments = ''
+) {
 	// Return a promise
 	return new Promise(resolve => {
 		// Initialize
@@ -18,7 +22,11 @@ module.exports = function runProgram(entryFile, programArguments = '', nodeArgum
 		let stderr = '';
 
 		// Form spawn array
-		let spawnArray = [...nodeArguments, entryFile, ...programArguments.split(' ')];
+		let spawnArray = [
+			...nodeArguments,
+			entryFile,
+			...programArguments.split(' '),
+		];
 		spawnArray = spawnArray.filter(element => element !== '');
 
 		// Spawn

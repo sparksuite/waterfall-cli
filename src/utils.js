@@ -1,4 +1,5 @@
 // Dependencies
+const chalk = require('chalk');
 const fs = require('fs');
 const Fuse = require('fuse.js');
 const path = require('path');
@@ -14,7 +15,7 @@ module.exports = function Constructor(currentSettings) {
 		// Verbose log output helper function
 		verboseLog(message) {
 			if (settings.verbose) {
-				console.log(`[VERBOSE] ${message}`.dim.italic);
+				console.log(chalk.dim.italic(`[VERBOSE] ${message}`));
 			}
 		},
 
@@ -405,12 +406,16 @@ module.exports = function Constructor(currentSettings) {
 					const command = `${settings.usageCommand}${organizedArguments.command}`;
 
 					// Form error message
-					let errorMessage = `You provided ${organizedArguments.data.bold} to ${command.bold}\n`;
+					let errorMessage = `You provided ${chalk.bold(
+						organizedArguments.data
+					)} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch) {
 						errorMessage +=
 							'If you were trying to pass in data, this command does not accept data\n';
-						errorMessage += `If you were trying to use a command, did you mean ${settings.usageCommand.bold} ${bestMatch.bold}?\n`;
+						errorMessage += `If you were trying to use a command, did you mean ${chalk.bold(
+							settings.usageCommand
+						)} ${chalk.bold(bestMatch)}?\n`;
 					} else {
 						errorMessage += 'However, this command does not accept data\n';
 					}
@@ -542,8 +547,8 @@ module.exports = function Constructor(currentSettings) {
 
 		// Print a pretty error message
 		printPrettyError(message) {
-			console.error(`${' ERROR '.inverse.red.bold}\n`);
-			console.error(`> ${message.split('\n').join('\n> ')}\n`.red);
+			console.error(`${chalk.inverse.red.bold(' ERROR ')}\n`);
+			console.error(chalk.red(`> ${message.split('\n').join('\n> ')}\n`));
 		},
 
 		// File functions

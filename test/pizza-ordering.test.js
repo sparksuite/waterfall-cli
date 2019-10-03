@@ -1,7 +1,6 @@
 /* eslint-env jest */
 
 // Dependencies
-require('colors');
 const runProgram = require('./run-program');
 
 // Initialize

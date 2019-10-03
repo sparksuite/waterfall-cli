@@ -1,4 +1,5 @@
 // Dependencies
+const chalk = require('chalk');
 const Table = require('cli-table');
 const utils = require('./utils.js');
 
@@ -16,7 +17,7 @@ module.exports = function Constructor(currentSettings) {
 
 			// Add name, if we have one
 			if (settings.app.name) {
-				outputString += `${settings.app.name}: `.bold;
+				outputString += chalk.bold(`${settings.app.name}: `);
 			}
 
 			// Add version and a newline
@@ -109,17 +110,19 @@ module.exports = function Constructor(currentSettings) {
 
 			// Output description
 			if (mergedSpec.description) {
-				outputString += `${'Description:'.bold} ${mergedSpec.description}\n`;
+				outputString += `${chalk.bold('Description:')} ${
+					mergedSpec.description
+				}\n`;
 			}
 
 			// Form and output usage line
-			let usageLine = `${'Usage:'.bold} ${settings.usageCommand}${
+			let usageLine = `${chalk.bold('Usage:')} ${settings.usageCommand}${
 				organizedArguments.command ? ` ${organizedArguments.command}` : ''
 			}`;
-			usageLine += `${(hasCommands ? ' [commands]' : '').gray}`;
-			usageLine += `${(hasFlags ? ' [flags]' : '').gray}`;
-			usageLine += `${(hasOptions ? ' [options]' : '').gray}`;
-			usageLine += `${(acceptsData ? ' [data]' : '').gray}`;
+			usageLine += chalk.gray(hasCommands ? ' [commands]' : '');
+			usageLine += chalk.gray(hasFlags ? ' [flags]' : '');
+			usageLine += chalk.gray(hasOptions ? ' [options]' : '');
+			usageLine += chalk.gray(acceptsData ? ' [data]' : '');
 
 			outputString += `${usageLine}\n`;
 
@@ -177,16 +180,17 @@ module.exports = function Constructor(currentSettings) {
 					}
 
 					if (details.required) {
-						fullDescription += ' (required)'.gray.italic;
+						fullDescription += chalk.gray.italic(' (required)');
 					}
 
 					if (details.type) {
-						fullDescription += ` (${details.type})`.gray.italic;
+						fullDescription += chalk.gray.italic(` (${details.type})`);
 					}
 
 					if (details.accepts) {
-						fullDescription += ` (accepts: ${details.accepts.join(', ')})`.gray
-							.italic;
+						fullDescription += chalk.gray.italic(
+							` (accepts: ${details.accepts.join(', ')})`
+						);
 					}
 
 					// Add to table
@@ -232,16 +236,17 @@ module.exports = function Constructor(currentSettings) {
 				}
 
 				if (mergedSpec.data.required) {
-					fullDescription += ' (required)'.gray.italic;
+					fullDescription += chalk.gray.italic(' (required)');
 				}
 
 				if (mergedSpec.data.type) {
-					fullDescription += ` (${mergedSpec.data.type})`.gray.italic;
+					fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
 				}
 
 				if (mergedSpec.data.accepts) {
-					fullDescription += ` (accepts: ${mergedSpec.data.accepts.join(', ')})`
-						.gray.italic;
+					fullDescription += chalk.gray.italic(
+						` (accepts: ${mergedSpec.data.accepts.join(', ')})`
+					);
 				}
 
 				// Print

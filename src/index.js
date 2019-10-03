@@ -1,5 +1,5 @@
 // Dependencies
-require('colors');
+const chalk = require('chalk');
 const { spawn } = require('child_process');
 const fs = require('fs');
 const path = require('path');
@@ -106,17 +106,22 @@ module.exports = function Constructor(customSettings) {
 			// Determine if warning is needed
 			if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
 				console.log(
-					`You're using an outdated version of ${settings.app.name} (${currentVersion}). The latest version is ${latestVersion.bold}`
-						.yellow
+					chalk.yellow(
+						`You're using an outdated version of ${
+							settings.app.name
+						} (${currentVersion}). The latest version is ${chalk.bold(
+							latestVersion
+						)}`
+					)
 				);
 				console.log(
-					`${
-						`  > Upgrade by running: ${
+					`${chalk.yellow(
+						`  > Upgrade by running: ${chalk.bold(
 							`npm install ${
 								settings.newVersionWarning.installedGlobally ? '--global ' : ''
-							}${settings.app.packageName}@${latestVersion}`.bold
-						}`.yellow
-					}\n`
+							}${settings.app.packageName}@${latestVersion}`
+						)}`
+					)}\n`
 				);
 			}
 		}

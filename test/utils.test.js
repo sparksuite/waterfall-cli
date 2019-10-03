@@ -105,8 +105,7 @@ describe('#getMergedSpec()', () => {
 				},
 				quiet: {
 					cascades: true,
-					description:
-						'Disable interactivity, rely on default values instead',
+					description: 'Disable interactivity, rely on default values instead',
 					shorthand: 'q',
 				},
 				version: {
@@ -144,8 +143,7 @@ describe('#getMergedSpec()', () => {
 				},
 				quiet: {
 					cascades: true,
-					description:
-						'Disable interactivity, rely on default values instead',
+					description: 'Disable interactivity, rely on default values instead',
 					shorthand: 'q',
 				},
 				vegetarian: {
@@ -982,9 +980,9 @@ describe('#files', () => {
 	});
 
 	test('Detects directory is not file', () => {
-		expect(
-			utils({}).files.isFile(`${__dirname}/file-tree/directory1`)
-		).toEqual(false);
+		expect(utils({}).files.isFile(`${__dirname}/file-tree/directory1`)).toEqual(
+			false
+		);
 	});
 
 	test('Retrieves first level files', () => {

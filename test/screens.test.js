@@ -101,9 +101,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('FLAGS:')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help()).includes('FLAGS:')).toBe(
+			true
+		);
 	});
 
 	test('Flags - non-cascading', () => {
@@ -136,9 +136,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--quiet')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
+			true
+		);
 
 		settings = {
 			...defaultSettings,
@@ -147,9 +147,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--quiet')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
+			true
+		);
 	});
 
 	test('Flags - shorthand', () => {
@@ -198,9 +198,7 @@ describe('#help()', () => {
 		};
 
 		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'--delivery-zip-code'
-			)
+			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
 		).toBe(true);
 
 		settings = {
@@ -211,9 +209,7 @@ describe('#help()', () => {
 		};
 
 		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'--delivery-zip-code'
-			)
+			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
 		).toBe(true);
 	});
 

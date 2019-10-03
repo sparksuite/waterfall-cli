@@ -12,7 +12,7 @@ if (semver.lt(semver.clean(process.version), '12.0.0')) {
 	test('Tests disabled on Node.js versions older than v12', () => {
 		expect(true).toBe(true);
 	});
-	
+
 	process.exit();
 }
 

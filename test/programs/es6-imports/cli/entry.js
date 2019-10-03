@@ -1,5 +1,6 @@
-// Initialize Waterfall CLI
-import waterfall from '../../../../dist/index.js';
-waterfall.cli({
+// Import and initialize Waterfall CLI
+import waterfallCLI from '../../../../dist/index.js';
+
+waterfallCLI({
 	verbose: true,
 });

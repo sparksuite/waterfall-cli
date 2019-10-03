@@ -10,7 +10,7 @@ module.exports = {
 		version: null,
 	},
 	arguments: utils({}).processArguments(process.argv),
-	mainFilename: require.main.filename,
+	mainFilename: process.argv[1],
 	newVersionWarning: {
 		enabled: true,
 		installedGlobally: true,
@@ -21,6 +21,6 @@ module.exports = {
 		before: 1,
 		after: 1,
 	},
-	usageCommand: `node ${path.basename(require.main.filename)}`,
+	usageCommand: `node ${path.basename(process.argv[1])}`,
 	verbose: false,
 };

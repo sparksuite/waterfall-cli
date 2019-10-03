@@ -14,354 +14,348 @@ function removeFormatting(text) {
 }
 
 // Tests
-describe('Screens', () => {
-	describe('#version()', () => {
-		test('Full version screen', () => {
-			const settings = {
-				...defaultSettings,
-				app: {
-					name: 'Example program',
-					version: '1.2.3',
-				},
-			};
+describe('#version()', () => {
+	test('Full version screen', () => {
+		const settings = {
+			...defaultSettings,
+			app: {
+				name: 'Example program',
+				version: '1.2.3',
+			},
+		};
 
-			expect(
-				removeFormatting(screens(settings).version()).includes(
-					'Example program: 1.2.3'
-				)
-			).toBe(true);
-		});
-
-		test('Missing name', () => {
-			const settings = {
-				...defaultSettings,
-				app: {
-					name: undefined,
-					version: '1.2.3',
-				},
-			};
-
-			expect(
-				removeFormatting(screens(settings).version()).includes('1.2.3')
-			).toBe(true);
-			expect(removeFormatting(screens(settings).version()).includes(':')).toBe(
-				false
-			);
-		});
+		expect(
+			removeFormatting(screens(settings).version()).includes(
+				'Example program: 1.2.3'
+			)
+		).toBe(true);
 	});
 
-	describe('#help()', () => {
-		test('Description line', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Missing name', () => {
+		const settings = {
+			...defaultSettings,
+			app: {
+				name: undefined,
+				version: '1.2.3',
+			},
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'Description: List something'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).version()).includes('1.2.3')
+		).toBe(true);
+		expect(removeFormatting(screens(settings).version()).includes(':')).toBe(
+			false
+		);
+	});
+});
 
-		test('Usage line (commands + flags + options)', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+describe('#help()', () => {
+	test('Description line', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'Usage: node entry.js [commands] [flags] [options]'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'Description: List something'
+			)
+		).toBe(true);
+	});
 
-		test('Usage line (flags + options + data)', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Usage line (commands + flags + options)', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'Usage: node entry.js list [flags] [options] [data]'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'Usage: node entry.js [commands] [flags] [options]'
+			)
+		).toBe(true);
+	});
 
-		test('Flags - header', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Usage line (flags + options + data)', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('FLAGS:')
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'Usage: node entry.js list [flags] [options] [data]'
+			)
+		).toBe(true);
+	});
 
-		test('Flags - non-cascading', () => {
-			let settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Flags - header', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('--non-cascading')
-			).toBe(true);
+		expect(removeFormatting(screens(settings).help()).includes('FLAGS:')).toBe(
+			true
+		);
+	});
 
-			settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Flags - non-cascading', () => {
+		let settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('--non-cascading')
-			).toBe(false);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('--non-cascading')
+		).toBe(true);
 
-		test('Flags - cascading', () => {
-			let settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+		settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('--quiet')
-			).toBe(true);
+		expect(
+			removeFormatting(screens(settings).help()).includes('--non-cascading')
+		).toBe(false);
+	});
 
-			settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Flags - cascading', () => {
+		let settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('--quiet')
-			).toBe(true);
-		});
+		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
+			true
+		);
 
-		test('Flags - shorthand', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+		settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('--quiet, -q')
-			).toBe(true);
-		});
+		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
+			true
+		);
+	});
 
-		test('Flags - description', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Flags - shorthand', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'Disable interactivity, rely on default values instead'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('--quiet, -q')
+		).toBe(true);
+	});
 
-		test('Options - header', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Flags - description', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('OPTIONS:')
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'Disable interactivity, rely on default values instead'
+			)
+		).toBe(true);
+	});
 
-		test('Options - cascading', () => {
-			let settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Options - header', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'--delivery-zip-code'
-				)
-			).toBe(true);
+		expect(
+			removeFormatting(screens(settings).help()).includes('OPTIONS:')
+		).toBe(true);
+	});
 
-			settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Options - cascading', () => {
+		let settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'--delivery-zip-code'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
+		).toBe(true);
 
-		test('Options - shorthand', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+		settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'--delivery-zip-code, -z'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
+		).toBe(true);
+	});
 
-		test('Options - description', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Options - shorthand', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'The delivery ZIP code, for context'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'--delivery-zip-code, -z'
+			)
+		).toBe(true);
+	});
 
-		test('Options - description (type)', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Options - description', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'The maximum price of the items to list (float)'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'The delivery ZIP code, for context'
+			)
+		).toBe(true);
+	});
 
-		test('Options - description (required + accepts)', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Options - description (type)', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'How to sort the list (required) (accepts: popularity, alphabetical)'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'The maximum price of the items to list (float)'
+			)
+		).toBe(true);
+	});
 
-		test('Commands - header', () => {
-			let settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Options - description (required + accepts)', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('COMMANDS:')
-			).toBe(true);
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'How to sort the list (required) (accepts: popularity, alphabetical)'
+			)
+		).toBe(true);
+	});
 
-			settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Commands - header', () => {
+		let settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('COMMANDS:')
-			).toBe(false);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('COMMANDS:')
+		).toBe(true);
 
-		test('Commands - description', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+		settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes('Order a pizza')
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes('COMMANDS:')
+		).toBe(false);
+	});
 
-		test('Data - header', () => {
-			let settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Commands - description', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
-				true
-			);
+		expect(
+			removeFormatting(screens(settings).help()).includes('Order a pizza')
+		).toBe(true);
+	});
 
-			settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-			};
+	test('Data - header', () => {
+		let settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
 
-			expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
-				false
-			);
-		});
+		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
+			true
+		);
 
-		test('Data - description', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['order', 'dine-in'],
-			};
+		settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'What type of pizza to order'
-				)
-			).toBe(true);
-		});
+		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
+			false
+		);
+	});
 
-		test('Data - description (required + accepts)', () => {
-			const settings = {
-				...defaultSettings,
-				mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-				usageCommand: 'node entry.js',
-				arguments: ['list'],
-			};
+	test('Data - description', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['order', 'dine-in'],
+		};
 
-			expect(
-				removeFormatting(screens(settings).help()).includes(
-					'What you want to list (required) (accepts: toppings, crusts, two words)'
-				)
-			).toBe(true);
-		});
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'What type of pizza to order'
+			)
+		).toBe(true);
+	});
+
+	test('Data - description (required + accepts)', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['list'],
+		};
+
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'What you want to list (required) (accepts: toppings, crusts, two words)'
+			)
+		).toBe(true);
 	});
 });

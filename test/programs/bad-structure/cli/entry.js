@@ -1,4 +1,4 @@
 // Initialize Waterfall CLI
-require('../../../../src/index.js')({
+require('../../../../dist/index.js')({
 	verbose: true,
 });

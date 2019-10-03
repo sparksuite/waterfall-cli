@@ -407,7 +407,7 @@ module.exports = function Constructor(currentSettings) {
 
 					// Form error message
 					let errorMessage = `You provided ${
-						organizedArguments.data.bold
+						chalk.bold(organizedArguments.data)
 					} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch) {
@@ -415,7 +415,7 @@ module.exports = function Constructor(currentSettings) {
 							'If you were trying to pass in data, this command does not accept data\n';
 						errorMessage += `If you were trying to use a command, did you mean ${chalk.bold(
 							settings.usageCommand
-						)} ${bestMatch.bold}?\n`;
+						)} ${chalk.bold(bestMatch)}?\n`;
 					} else {
 						errorMessage += 'However, this command does not accept data\n';
 					}

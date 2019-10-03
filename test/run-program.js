@@ -1,5 +1,5 @@
 // Dependencies
-const { spawn } = require('child_process');
+const { exec } = require('child_process');
 
 // Remove ANSI formatting
 function removeFormatting(text) {
@@ -17,26 +17,21 @@ module.exports = function runProgram(
 ) {
 	// Return a promise
 	return new Promise(resolve => {
-		// Initialize
-		let stdout = '';
-		let stderr = '';
-
-		// Form spawn array
-		let spawnArray = [
+		// Build the array of all arguments
+		let allArguments = [
 			...nodeArguments,
 			entryFile,
 			...programArguments.split(' '),
 		];
-		spawnArray = spawnArray.filter(element => element !== '');
+		allArguments = allArguments.filter(element => element !== '');
 
-		// Spawn
-		const child = spawn('node', spawnArray);
-
-		// Listeners
-		child.on('exit', code => {
+		// Launch the program
+		exec('node ' + allArguments.join(' '), (error, stdout, stderr) => {
 			// Handle an issue
-			if (code !== 0) {
-				throw new Error(`Exit code ${code}`);
+			if (error) {
+				throw new Error(
+					`Program exited with code: ${error.code}. See details:\n\n${error}`
+				);
 			}
 
 			// Resolve and hand back stdout/stderr
@@ -44,18 +39,6 @@ module.exports = function runProgram(
 				stdout: removeFormatting(stdout),
 				stderr: removeFormatting(stderr),
 			});
-		});
-
-		child.on('error', error => {
-			throw new Error(error.toString());
-		});
-
-		child.stdout.on('data', data => {
-			stdout += data.toString();
-		});
-
-		child.stderr.on('data', data => {
-			stderr += data.toString();
 		});
 	});
 };

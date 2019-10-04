@@ -1,16 +1,12 @@
 // Dependencies
 import chalk from 'chalk';
 import Table from 'cli-table';
-import utils, {
-	OrganizedArguments,
-	ConstructorSettings,
-	CommandSpec,
-} from './utils';
+import utils, { OrganizedArguments, Settings, CommandSpec } from './utils';
 
 // Default export
-export function screens(currentSettings: ConstructorSettings) {
+export function screens(currentSettings: Settings) {
 	// Store an internal copy of the current settings
-	const settings: ConstructorSettings = { ...currentSettings };
+	const settings: Settings = { ...currentSettings };
 
 	// Return the functions
 	return {

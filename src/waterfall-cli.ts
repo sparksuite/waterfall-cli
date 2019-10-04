@@ -8,7 +8,7 @@ import deepmerge from 'deepmerge';
 import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
-import utils, { ConstructorSettings, CommandSpec } from './utils';
+import utils, { Settings, CommandSpec } from './utils';
 
 // Handle exceptions
 process.on('uncaughtException', (error: Error) => {
@@ -30,7 +30,7 @@ export function error(message: string) {
 }
 
 // The constructor, for use at the entry point
-export function cli(customSettings: Partial<ConstructorSettings>) {
+export function cli(customSettings: Partial<Settings>) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 

@@ -59,7 +59,7 @@ export interface CommandSpec {
 	executeOnCascade?: boolean;
 }
 
-export interface ConstructorSettings {
+export interface Settings {
 	app?: AppSettings;
 	arguments?: string[];
 	mainFilename: string;
@@ -86,9 +86,9 @@ export interface OrganizedArguments {
 }
 
 // Helpful utility functions
-export default function utils(currentSettings: Partial<ConstructorSettings>) {
+export default function utils(currentSettings: Partial<Settings>) {
 	// Store an internal copy of the current settings
-	const settings: ConstructorSettings = {
+	const settings: Settings = {
 		mainFilename: '',
 		verbose: false,
 		spacing: { after: 1, before: 1 },

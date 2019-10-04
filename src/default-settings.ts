@@ -1,10 +1,10 @@
 // Dependencies
 import path from 'path';
 import utils from './utils';
-import { ConstructorSettings } from './index';
+import { Settings } from './index';
 
 // Default Settings
-const settings: ConstructorSettings = {
+const settings: Settings = {
 	app: {
 		name: null,
 		packageName: null,

@@ -665,7 +665,7 @@ export default function utils(
 			return {
 				...extraDetails,
 				command: organizedArguments.command,
-				...organizedArguments.data && { data: organizedArguments.data }
+				...(organizedArguments.data && { data: organizedArguments.data }),
 			};
 		},
 

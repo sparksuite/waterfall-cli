@@ -14,8 +14,7 @@
 		"sourceMap": true,
 		"strict": true,
 		"strictNullChecks": true,
-		"target": "ES6",
-		"types": ["node"]
+		"target": "ES6"
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules"]

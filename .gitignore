@@ -3,5 +3,4 @@ node_modules/
 coverage
 app-versions/
 dist/
-
 test/programs/typescript/cli/

@@ -20,42 +20,32 @@ export interface AppSettings {
 	[propName: string]: string | number | null;
 }
 
-interface CommandSpecOption {
-	accepts?: string[];
-	cascades?: boolean;
-	description?: string;
-	required?: boolean;
-	shorthand?: string;
-	type?: string;
-}
-
-interface CommandSpecOptions {
-	[propName: string]: CommandSpecOption;
-}
-
-interface CommandSpecFlag {
-	cascades?: boolean;
-	description?: string | null;
-	shorthand?: string;
-}
-
-interface CommandSpecFlags {
-	[propName: string]: CommandSpecFlag;
-}
-
-interface CommandSpecData {
-	accepts?: string[];
-	description?: string;
-	ignoreFlagsAndOptions?: boolean;
-	required?: boolean;
-	type?: string;
-}
-
 export interface CommandSpec {
-	data?: CommandSpecData;
+	data?: {
+		accepts?: string[];
+		description?: string;
+		ignoreFlagsAndOptions?: boolean;
+		required?: boolean;
+		type?: string;
+	};
 	description?: string | null;
-	flags: CommandSpecFlags;
-	options: CommandSpecOptions;
+	flags: {
+		[propName: string]: {
+			cascades?: boolean;
+			description?: string | null;
+			shorthand?: string;
+		};
+	};
+	options: {
+		[propName: string]: {
+			accepts?: string[];
+			cascades?: boolean;
+			description?: string;
+			required?: boolean;
+			shorthand?: string;
+			type?: string;
+		};
+	};
 	executeOnCascade?: boolean;
 }
 

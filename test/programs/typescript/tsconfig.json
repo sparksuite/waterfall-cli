@@ -1,0 +1,19 @@
+{
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": true,
+		"esModuleInterop": true,
+		"module": "commonjs",
+		"moduleResolution": "node",
+		"noStrictGenericChecks": true,
+		"noUnusedLocals": true,
+		"outDir": "cli",
+		"removeComments": true,
+		"resolveJsonModule": true,
+		"rootDir": "src",
+		"sourceMap": true,
+		"strictFunctionTypes": false,
+		"target": "es6"
+	},
+	"include": ["src/**/*.ts", "src/**/*.json"],
+	"exclude": ["node_modules"]
+}

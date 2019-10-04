@@ -59,24 +59,20 @@ export interface CommandSpec {
 	executeOnCascade?: boolean;
 }
 
-interface ConstructorSettingsSpacing {
-	after?: number;
-	before?: number;
-}
-
-interface NewVersionWarningSettings {
-	enabled: boolean;
-	installedGlobally: boolean;
-}
-
 export interface ConstructorSettings {
 	app?: AppSettings;
 	arguments?: string[];
 	mainFilename: string;
-	newVersionWarning?: NewVersionWarningSettings;
+	newVersionWarning?: {
+		enabled: boolean;
+		installedGlobally: boolean;
+	};
 	onStart?: string | Function | null;
 	packageFilePath?: string;
-	spacing?: ConstructorSettingsSpacing;
+	spacing?: {
+		after?: number;
+		before?: number;
+	};
 	usageCommand?: string;
 	verbose?: boolean;
 }

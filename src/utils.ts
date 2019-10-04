@@ -124,14 +124,14 @@ export default function utils(
 	// Return the functions
 	return {
 		// Verbose log output helper function
-		verboseLog(message) {
+		verboseLog(message: string): void {
 			if (settings.verbose) {
 				console.log(chalk.dim.italic(`[VERBOSE] ${message}`));
 			}
 		},
 
 		// Process arguments
-		processArguments(argv) {
+		processArguments(argv: string[]): string[] {
 			const processedArguments: string[] = [];
 
 			argv.forEach(argument => {
@@ -150,7 +150,7 @@ export default function utils(
 		},
 
 		// Retrieve app information
-		retrieveAppInformation() {
+		retrieveAppInformation(): AppSettings {
 			// Initialize
 			const app: AppSettings = {
 				name: null,
@@ -195,7 +195,7 @@ export default function utils(
 		},
 
 		// Get specs for a command
-		getMergedSpec(command): CommandSpec {
+		getMergedSpec(command: string): CommandSpec {
 			// Break into pieces, with entry point
 			const pieces = `. ${command}`.trim().split(' ');
 
@@ -619,7 +619,7 @@ export default function utils(
 		},
 
 		// Construct a full input object
-		constructInputObject(organizedArguments): InputObject {
+		constructInputObject(organizedArguments: OrganizedArguments): InputObject {
 			// Get merged spec for this command
 			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
@@ -697,17 +697,17 @@ export default function utils(
 		// File functions
 		files: {
 			// Return true if this path is a directory
-			isDirectory(path) {
+			isDirectory(path: string): boolean {
 				return fs.lstatSync(path).isDirectory();
 			},
 
 			// Return true if this path is a file
-			isFile(path) {
+			isFile(path: string): boolean {
 				return fs.lstatSync(path).isFile();
 			},
 
 			// Get child files of a parent directory
-			getFiles(directory) {
+			getFiles(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}
@@ -720,7 +720,7 @@ export default function utils(
 			},
 
 			// Get child directories of a parent directory
-			getDirectories(directory) {
+			getDirectories(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}
@@ -733,7 +733,7 @@ export default function utils(
 			},
 
 			// Get child directories of a parent directory, recursively & synchronously
-			getAllDirectories(directory: string) {
+			getAllDirectories(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}

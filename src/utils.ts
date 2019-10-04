@@ -89,30 +89,8 @@ export interface OrganizedArguments {
 	values: (string | number)[];
 }
 
-interface Utils {
-	constructInputObject(organizedArguments: OrganizedArguments): InputObject;
-	convertDashesToCamelCase(string: string): string;
-	getAllProgramCommands(): string[];
-	getMergedSpec(command: string): CommandSpec;
-	organizeArguments(): OrganizedArguments;
-	printPrettyError(message: string): void;
-	processArguments(argv: string[]): string[];
-	retrieveAppInformation(): AppSettings;
-	verboseLog(message: string): void;
-
-	files: {
-		isDirectory(path: string): boolean;
-		isFile(path: string): boolean;
-		getAllDirectories(directory: string): string[];
-		getDirectories(directory: string): string[];
-		getFiles(directory: string): string[];
-	};
-}
-
 // Helpful utility functions
-export default function utils(
-	currentSettings: Partial<ConstructorSettings>
-): Utils {
+export default function utils(currentSettings: Partial<ConstructorSettings>) {
 	// Store an internal copy of the current settings
 	const settings: ConstructorSettings = {
 		mainFilename: '',

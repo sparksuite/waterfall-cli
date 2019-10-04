@@ -7,9 +7,9 @@ import ErrorWithoutStack from './error-without-stack';
 
 // Interface declarations
 interface InputObject {
-	command: string | null;
-	data: string | number | null;
-	[propName: string]: boolean | string | number | undefined | null;
+	command: string;
+	data?: string | number;
+	[propName: string]: boolean | string | number | undefined;
 }
 
 // Interface declarations
@@ -665,7 +665,7 @@ export default function utils(
 			return {
 				...extraDetails,
 				command: organizedArguments.command,
-				data: organizedArguments.data,
+				...organizedArguments.data && { data: organizedArguments.data }
 			};
 		},
 

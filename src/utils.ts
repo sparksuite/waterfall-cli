@@ -104,7 +104,6 @@ interface Utils {
 		isDirectory(path: string): boolean;
 		isFile(path: string): boolean;
 		getAllDirectories(directory: string): string[];
-		getAllDirectories(string: string): string[];
 		getDirectories(directory: string): string[];
 		getFiles(directory: string): string[];
 	};

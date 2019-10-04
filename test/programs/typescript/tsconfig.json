@@ -9,11 +9,11 @@
 		"outDir": "cli",
 		"removeComments": true,
 		"resolveJsonModule": true,
-		"rootDir": "cli",
+		"rootDir": "src",
 		"sourceMap": true,
 		"strictFunctionTypes": false,
 		"target": "es6"
 	},
-	"include": ["cli/*.ts"],
+	"include": ["src/*.ts", "src/*.json"],
 	"exclude": ["node_modules"]
 }

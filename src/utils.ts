@@ -23,16 +23,16 @@ export interface AppSettings {
 export interface CommandSpec {
 	data?: {
 		accepts?: string[];
-		description?: string;
+		description: string;
 		ignoreFlagsAndOptions?: boolean;
 		required?: boolean;
 		type?: string;
 	};
-	description?: string | null;
+	description?: string;
 	flags: {
 		[propName: string]: {
 			cascades?: boolean;
-			description?: string | null;
+			description?: string;
 			shorthand?: string;
 		};
 	};
@@ -165,8 +165,6 @@ export default function utils(currentSettings: Partial<Settings>) {
 
 			// Initialize
 			const mergedSpec: CommandSpec = {
-				description: null,
-				data: {},
 				flags: {
 					version: {
 						shorthand: 'v',

@@ -1,5 +1,4 @@
 // Initialize Waterfall CLI
-const cli = require('../../../../dist');
-cli.default({
+const cli = require('../../../../dist').default({
 	verbose: true,
 });

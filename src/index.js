@@ -9,10 +9,11 @@ const defaultSettings = require('./default-settings.js');
 const ErrorWithoutStack = require('./error-without-stack.js');
 const screens = require('./screens.js');
 const utils = require('./utils.js');
+const printPrettyError = require('./error-handling.js');
 
 // Handle exceptions
 process.on('uncaughtException', error => {
-	utils({}).printPrettyError(error.stack);
+	printPrettyError(error.stack);
 	process.exit(1);
 });
 
@@ -251,6 +252,6 @@ module.exports.command = function command() {
 
 // A helper function provided to commands to keep error messages consistent
 module.exports.error = function error(message) {
-	utils({}).printPrettyError(message);
+	printPrettyError(message);
 	process.exit(255);
 };

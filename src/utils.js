@@ -526,12 +526,6 @@ module.exports = function Constructor(currentSettings) {
 			return string.replace(/-(.)/g, g => g[1].toUpperCase());
 		},
 
-		// Print a pretty error message
-		printPrettyError(message) {
-			console.error(`${chalk.inverse.red.bold(' ERROR ')}\n`);
-			console.error(chalk.red(`> ${message.split('\n').join('\n> ')}\n`));
-		},
-
 		// File functions
 		files: {
 			// Return true if this path is a directory

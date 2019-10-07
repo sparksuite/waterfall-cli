@@ -949,13 +949,21 @@ describe('#getAllProgramCommands()', () => {
 
 describe('#convertDashesToCamelCase()', () => {
 	test('Normal string', () => {
-		expect(utils({}).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual(
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(utils(settings).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual(
 			'aaaAaaAaa'
 		);
 	});
 
 	test('With numbers', () => {
-		expect(utils({}).convertDashesToCamelCase('aaa-123-aaa')).toEqual(
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(utils(settings).convertDashesToCamelCase('aaa-123-aaa')).toEqual(
 			'aaa123Aaa'
 		);
 	});
@@ -963,46 +971,76 @@ describe('#convertDashesToCamelCase()', () => {
 
 describe('#files', () => {
 	test('Detects directory is directory', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
 		expect(
-			utils({}).files.isDirectory(`${__dirname}/file-tree/directory1`)
+			utils(settings).files.isDirectory(`${__dirname}/file-tree/directory1`)
 		).toEqual(true);
 	});
 
 	test('Detects file is not directory', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
 		expect(
-			utils({}).files.isDirectory(`${__dirname}/file-tree/file1.js`)
+			utils(settings).files.isDirectory(`${__dirname}/file-tree/file1.js`)
 		).toEqual(false);
 	});
 
 	test('Detects file is file', () => {
-		expect(utils({}).files.isFile(`${__dirname}/file-tree/file1.js`)).toEqual(
-			true
-		);
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(
+			utils(settings).files.isFile(`${__dirname}/file-tree/file1.js`)
+		).toEqual(true);
 	});
 
 	test('Detects directory is not file', () => {
-		expect(utils({}).files.isFile(`${__dirname}/file-tree/directory1`)).toEqual(
-			false
-		);
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(
+			utils(settings).files.isFile(`${__dirname}/file-tree/directory1`)
+		).toEqual(false);
 	});
 
 	test('Retrieves first level files', () => {
-		expect(utils({}).files.getFiles(`${__dirname}/file-tree`)).toEqual([
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(utils(settings).files.getFiles(`${__dirname}/file-tree`)).toEqual([
 			`${__dirname}/file-tree/file1.js`,
 			`${__dirname}/file-tree/file2.js`,
 		]);
 	});
 
 	test('Retrieves first level directories', () => {
-		expect(utils({}).files.getDirectories(`${__dirname}/file-tree`)).toEqual([
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(
+			utils(settings).files.getDirectories(`${__dirname}/file-tree`)
+		).toEqual([
 			`${__dirname}/file-tree/directory1`,
 			`${__dirname}/file-tree/directory2`,
 		]);
 	});
 
 	test('Retrieves all directories', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
 		expect(
-			utils({}).files.getAllDirectories(`${__dirname}/file-tree`)
+			utils(settings).files.getAllDirectories(`${__dirname}/file-tree`)
 		).toStrictEqual([
 			`${__dirname}/file-tree/directory1`,
 			`${__dirname}/file-tree/directory1/directory1`,
@@ -1012,18 +1050,32 @@ describe('#files', () => {
 	});
 
 	test('GetFiles() returns empty array if path not found', () => {
-		expect(utils({}).files.getFiles(`${__dirname}/fake`)).toStrictEqual([]);
-	});
-
-	test('GetDirectories() returns empty array if path not found', () => {
-		expect(utils({}).files.getDirectories(`${__dirname}/fake`)).toStrictEqual(
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(utils(settings).files.getFiles(`${__dirname}/fake`)).toStrictEqual(
 			[]
 		);
 	});
 
-	test('GetAllDirectories() returns empty array if path not found', () => {
+	test('GetDirectories() returns empty array if path not found', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
 		expect(
-			utils({}).files.getAllDirectories(`${__dirname}/fake`)
+			utils(settings).files.getDirectories(`${__dirname}/fake`)
+		).toStrictEqual([]);
+	});
+
+	test('GetAllDirectories() returns empty array if path not found', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+		};
+		expect(
+			utils(settings).files.getAllDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 });

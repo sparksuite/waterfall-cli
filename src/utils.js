@@ -19,25 +19,6 @@ module.exports = function Constructor(currentSettings) {
 			}
 		},
 
-		// Process arguments
-		processArguments(argv) {
-			const processedArguments = [];
-
-			argv.forEach(argument => {
-				if (argument.substr(0, 2) === '--') {
-					argument.split('=').forEach(piece => {
-						if (piece !== '') {
-							processedArguments.push(piece);
-						}
-					});
-				} else {
-					processedArguments.push(argument);
-				}
-			});
-
-			return processedArguments.slice(2);
-		},
-
 		// Retrieve app information
 		retrieveAppInformation() {
 			// Initialize

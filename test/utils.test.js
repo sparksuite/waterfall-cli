@@ -3,12 +3,13 @@
 // Dependencies
 const defaultSettings = require('../dist/default-settings.js');
 const utils = require('../dist/utils.js');
+const processArguments = require('../dist/process-arguments.js');
 
 // Tests
 describe('#processArguments()', () => {
 	test('Handles normal arguments', () => {
 		expect(
-			utils({}).processArguments([
+			processArguments([
 				'/path/to/node',
 				'/path/to/entry.js',
 				'command',
@@ -35,7 +36,7 @@ describe('#processArguments()', () => {
 
 	test('Handles data with special characters', () => {
 		expect(
-			utils({}).processArguments([
+			processArguments([
 				'/path/to/node',
 				'/path/to/entry.js',
 				'command',
@@ -46,7 +47,7 @@ describe('#processArguments()', () => {
 
 	test('Handles dangling equals sign', () => {
 		expect(
-			utils({}).processArguments([
+			processArguments([
 				'/path/to/node',
 				'/path/to/entry.js',
 				'command',

@@ -9,7 +9,7 @@ const defaultSettings = require('./default-settings.js');
 const ErrorWithoutStack = require('./error-without-stack.js');
 const screens = require('./screens.js');
 const utils = require('./utils.js');
-const printPrettyError = require('./error-handling.js');
+const printPrettyError = require('./print-pretty-error.js');
 
 // Handle exceptions
 process.on('uncaughtException', error => {

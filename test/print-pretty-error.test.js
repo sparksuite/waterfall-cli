@@ -24,39 +24,41 @@ describe('#printPrettyError()', () => {
 		expect(result).toContain(chalk.inverse.red.bold(' ERROR '));
 
 		restoreConsole();
-	}),
-		test('Has the indent of the message', () => {
-			const restoreConsole = mockConsole();
+	});
 
-			let result = '';
+	test('Has the indent of the message', () => {
+		const restoreConsole = mockConsole();
 
-			mockConsole({
-				error: string => {
-					result += string;
-				},
-			});
+		let result = '';
 
-			printPrettyError('Error message content');
-
-			expect(result).toContain('> ');
-
-			restoreConsole();
-		}),
-		test('Has the message text', () => {
-			const restoreConsole = mockConsole();
-
-			let result = '';
-
-			mockConsole({
-				error: string => {
-					result += string;
-				},
-			});
-
-			printPrettyError('Error message content');
-
-			expect(result).toContain('Error message content');
-
-			restoreConsole();
+		mockConsole({
+			error: string => {
+				result += string;
+			},
 		});
+
+		printPrettyError('Error message content');
+
+		expect(result).toContain('> ');
+
+		restoreConsole();
+	});
+
+	test('Has the message text', () => {
+		const restoreConsole = mockConsole();
+
+		let result = '';
+
+		mockConsole({
+			error: string => {
+				result += string;
+			},
+		});
+
+		printPrettyError('Error message content');
+
+		expect(result).toContain('Error message content');
+
+		restoreConsole();
+	});
 });

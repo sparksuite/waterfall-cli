@@ -15,23 +15,19 @@ export function screens(currentSettings: Settings) {
 			// Initialize
 			let outputString = '';
 
-			if (settings.app) {
-				// Add name, if we have one
-				if (settings.app.name) {
-					outputString += chalk.bold(`${settings.app.name}: `);
-				}
-
-				// Add version and a newline
-				if (settings.app.version) {
-					outputString += `${settings.app.version}\n`;
-				}
+			// Add name, if we have one
+			if (settings.app.name) {
+				outputString += chalk.bold(`${settings.app.name}: `);
 			}
 
-			if (settings.spacing && settings.spacing.after) {
-				// Add spacing after
-				for (let i = 0; i < settings.spacing.after; i += 1) {
-					outputString += '\n';
-				}
+			// Add version and a newline
+			if (settings.app.version) {
+				outputString += `${settings.app.version}\n`;
+			}
+
+			// Add spacing after
+			for (let i = 0; i < settings.spacing.after; i += 1) {
+				outputString += '\n';
 			}
 
 			// Return
@@ -236,35 +232,31 @@ export function screens(currentSettings: Settings) {
 				// Form full description
 				let fullDescription = '';
 
-				if (mergedSpec.data) {
-					if (mergedSpec.data.description) {
-						fullDescription += mergedSpec.data.description;
-					}
+				if (mergedSpec.data.description) {
+					fullDescription += mergedSpec.data.description;
+				}
 
-					if (mergedSpec.data.required) {
-						fullDescription += chalk.gray.italic(' (required)');
-					}
+				if (mergedSpec.data.required) {
+					fullDescription += chalk.gray.italic(' (required)');
+				}
 
-					if (mergedSpec.data.type) {
-						fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
-					}
+				if (mergedSpec.data.type) {
+					fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
+				}
 
-					if (mergedSpec.data.accepts) {
-						fullDescription += chalk.gray.italic(
-							` (accepts: ${mergedSpec.data.accepts.join(', ')})`
-						);
-					}
+				if (mergedSpec.data.accepts) {
+					fullDescription += chalk.gray.italic(
+						` (accepts: ${mergedSpec.data.accepts.join(', ')})`
+					);
 				}
 
 				// Print
 				outputString += `  ${fullDescription}\n`;
 			}
 
-			if (settings.spacing && settings.spacing.after) {
-				// Add spacing after
-				for (let i = 0; i < settings.spacing.after; i += 1) {
-					outputString += '\n';
-				}
+			// Add spacing after
+			for (let i = 0; i < settings.spacing.after; i += 1) {
+				outputString += '\n';
 			}
 
 			// Return

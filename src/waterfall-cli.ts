@@ -195,6 +195,9 @@ export function cli(customSettings: Partial<Settings>) {
 		// Get spec
 		const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
 		let spec: CommandSpec = {
+			data: {
+				description: '',
+			},
 			flags: {},
 			options: {},
 		};

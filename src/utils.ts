@@ -17,11 +17,11 @@ export interface AppSettings {
 	name: string | null;
 	packageName: string | null;
 	version: string | null;
-	[propName: string]: string | number | null;
+	//[propName: string]: string | number | null;
 }
 
 export interface CommandSpec {
-	data?: {
+	data: {
 		accepts?: string[];
 		description: string;
 		ignoreFlagsAndOptions?: boolean;
@@ -50,7 +50,7 @@ export interface CommandSpec {
 }
 
 export interface Settings {
-	app?: AppSettings;
+	app: AppSettings;
 	arguments?: string[];
 	mainFilename: string;
 	newVersionWarning?: {
@@ -59,9 +59,9 @@ export interface Settings {
 	};
 	onStart?: string | Function | null;
 	packageFilePath?: string;
-	spacing?: {
-		after?: number;
-		before?: number;
+	spacing: {
+		after: number;
+		before: number;
 	};
 	usageCommand?: string;
 	verbose?: boolean;
@@ -79,6 +79,11 @@ export interface OrganizedArguments {
 export default function utils(currentSettings: Partial<Settings>) {
 	// Store an internal copy of the current settings
 	const settings: Settings = {
+		app: {
+			name: null,
+			packageName: null,
+			version: null,
+		},
 		mainFilename: '',
 		verbose: false,
 		spacing: { after: 1, before: 1 },
@@ -165,6 +170,9 @@ export default function utils(currentSettings: Partial<Settings>) {
 
 			// Initialize
 			const mergedSpec: CommandSpec = {
+				data: {
+					description: 'mmm',
+				},
 				flags: {
 					version: {
 						shorthand: 'v',

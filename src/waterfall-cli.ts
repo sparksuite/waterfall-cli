@@ -9,11 +9,12 @@ import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
 import utils, { Settings, CommandSpec } from './utils';
+import printPrettyError from './pretty-print-errors';
 
 // Handle exceptions
 process.on('uncaughtException', (error: Error) => {
 	if (error.stack) {
-		utils({}).printPrettyError(error.stack);
+		printPrettyError(error.stack);
 	}
 	process.exit(1);
 });
@@ -25,7 +26,7 @@ export function command() {
 
 // A helper function provided to commands to keep error messages consistent
 export function error(message: string) {
-	utils({}).printPrettyError(message);
+	printPrettyError(message);
 	process.exit(255);
 }
 

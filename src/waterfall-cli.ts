@@ -46,8 +46,16 @@ export function cli(customSettings: Partial<Settings>) {
 	settings.app = utils(settings).retrieveAppInformation();
 
 	// Verbose output
-	utils(settings).verboseLog(`Set app name to: ${settings.app.name}`);
-	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
+	utils(settings).verboseLog(
+		settings.app.name
+			? `Set app name to: ${settings.app.name}`
+			: 'App name not set'
+	);
+	utils(settings).verboseLog(
+		settings.app.version
+			? `Set app version to: ${settings.app.version}`
+			: 'App version not set'
+	);
 
 	// Organize the arguments
 	const organizedArguments = utils(settings).organizeArguments();
@@ -133,8 +141,8 @@ export function cli(customSettings: Partial<Settings>) {
 			) {
 				console.log(
 					chalk.yellow(
-						`You're using an outdated version of ${
-							settings.app.name
+						`You're using an outdated version ${
+							settings.app.name ? `of ${settings.app.name}` : ''
 						} (${currentVersion}). The latest version is ${chalk.bold(
 							latestVersion
 						)}`
@@ -219,7 +227,7 @@ export function cli(customSettings: Partial<Settings>) {
 	);
 
 	// Call onStart() function, if any
-	if (settings && typeof settings.onStart === 'function') {
+	if (settings.onStart && typeof settings.onStart === 'function') {
 		settings.onStart(inputObject);
 	}
 

@@ -1,6 +1,6 @@
 // Dependencies
 const path = require('path');
-const utils = require('./utils.js');
+const processArguments = require('./process-arguments.js');
 
 // Default settings
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
 		packageName: null,
 		version: null,
 	},
-	arguments: utils({}).processArguments(process.argv),
+	arguments: processArguments(process.argv),
 	mainFilename: process.argv[1],
 	newVersionWarning: {
 		enabled: true,

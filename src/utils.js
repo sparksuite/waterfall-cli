@@ -19,25 +19,6 @@ module.exports = function Constructor(currentSettings) {
 			}
 		},
 
-		// Process arguments
-		processArguments(argv) {
-			const processedArguments = [];
-
-			argv.forEach(argument => {
-				if (argument.substr(0, 2) === '--') {
-					argument.split('=').forEach(piece => {
-						if (piece !== '') {
-							processedArguments.push(piece);
-						}
-					});
-				} else {
-					processedArguments.push(argument);
-				}
-			});
-
-			return processedArguments.slice(2);
-		},
-
 		// Retrieve app information
 		retrieveAppInformation() {
 			// Initialize
@@ -543,12 +524,6 @@ module.exports = function Constructor(currentSettings) {
 		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
 		convertDashesToCamelCase(string) {
 			return string.replace(/-(.)/g, g => g[1].toUpperCase());
-		},
-
-		// Print a pretty error message
-		printPrettyError(message) {
-			console.error(`${chalk.inverse.red.bold(' ERROR ')}\n`);
-			console.error(chalk.red(`> ${message.split('\n').join('\n> ')}\n`));
 		},
 
 		// File functions

@@ -27,19 +27,19 @@ afterEach(() => {
 
 // Tests
 describe('#printPrettyError()', () => {
-	test('Has the ERROR indicator', () => {
+	test('Has the "ERROR" title', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain(chalk.inverse.red.bold(' ERROR '));
 	});
 
-	test('Has the indent of the message', () => {
+	test('Has the indent marker (">")', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('> ');
 	});
 
-	test('Has the message text', () => {
+	test('Displays the message text', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('Error message content');

@@ -17,7 +17,6 @@ export interface AppSettings {
 	name: string | null;
 	packageName: string | null;
 	version: string | null;
-	//[index: string]: string | number | null;
 }
 
 export interface CommandSpec {

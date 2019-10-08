@@ -16,7 +16,6 @@ const settings: Settings = {
 		enabled: true,
 		installedGlobally: true,
 	},
-	onStart: null,
 	packageFilePath: '../package.json',
 	spacing: {
 		before: 1,

@@ -4,25 +4,31 @@
 const defaultSettings = require('../dist/default-settings.js');
 const utils = require('../dist/utils.js');
 
+const settingsBadStructure = {
+	...defaultSettings,
+	mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
+};
+
+const settingsPizzaOrdering = {
+	...defaultSettings,
+	mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+};
+
 // Tests
 describe('#retrieveAppInformation()', () => {
 	test('Retrieves app info', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-
-		expect(utils(settings).retrieveAppInformation()).toStrictEqual({
-			name: 'pizza-ordering',
-			packageName: 'pizza-ordering',
-			version: '1.2.3',
-		});
+		expect(utils(settingsPizzaOrdering).retrieveAppInformation()).toStrictEqual(
+			{
+				name: 'pizza-ordering',
+				packageName: 'pizza-ordering',
+				version: '1.2.3',
+			}
+		);
 	});
 
 	test('Cannot find package.json', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			packageFilePath: '../fake.json',
 		};
 
@@ -36,12 +42,7 @@ describe('#retrieveAppInformation()', () => {
 
 describe('#getMergedSpec()', () => {
 	test('Gets top-level spec', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-
-		expect(utils(settings).getMergedSpec('')).toStrictEqual({
+		expect(utils(settingsPizzaOrdering).getMergedSpec('')).toStrictEqual({
 			data: undefined,
 			description: undefined,
 			flags: {
@@ -73,12 +74,7 @@ describe('#getMergedSpec()', () => {
 	});
 
 	test('Gets merged spec', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-
-		expect(utils(settings).getMergedSpec('list')).toStrictEqual({
+		expect(utils(settingsPizzaOrdering).getMergedSpec('list')).toStrictEqual({
 			data: {
 				description: 'What you want to list',
 				accepts: ['toppings', 'crusts', 'two words'],
@@ -128,35 +124,20 @@ describe('#getMergedSpec()', () => {
 	});
 
 	test('Complains about multiple .js files', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-		};
-
 		expect(() => {
-			utils(settings).getMergedSpec('multiple-js');
+			utils(settingsBadStructure).getMergedSpec('multiple-js');
 		}).toThrow(Error);
 	});
 
 	test('Complains about multiple .json files', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-		};
-
 		expect(() => {
-			utils(settings).getMergedSpec('multiple-json');
+			utils(settingsBadStructure).getMergedSpec('multiple-json');
 		}).toThrow(Error);
 	});
 
 	test('Complains about bad JSON', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
-		};
-
 		expect(() => {
-			utils(settings).getMergedSpec('bad json');
+			utils(settingsBadStructure).getMergedSpec('bad json');
 		}).toThrow(Error);
 	});
 });
@@ -164,8 +145,7 @@ describe('#getMergedSpec()', () => {
 describe('#organizeArguments()', () => {
 	test('Handles no arguments', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: [],
 		};
 
@@ -180,8 +160,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles simple command', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list'],
 		};
 
@@ -196,8 +175,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles simple command with data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
 		};
 
@@ -212,8 +190,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles simple command with multi-word data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', 'two', 'words'],
 		};
 
@@ -228,8 +205,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles simple command with flag after data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings', '--help'],
 		};
 
@@ -244,8 +220,7 @@ describe('#organizeArguments()', () => {
 
 	test('Ignores flag in data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'something', '--help'],
 		};
 
@@ -260,8 +235,7 @@ describe('#organizeArguments()', () => {
 
 	test('Ignores options in data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: [
 				'order',
 				'dine-in',
@@ -282,8 +256,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles simple command with longer data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
 		};
 
@@ -298,8 +271,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles data with special characters', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
 		};
 
@@ -314,8 +286,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles integer data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '10'],
 		};
 
@@ -330,8 +301,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles float data', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.4'],
 		};
 
@@ -344,8 +314,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.'],
 		};
 
@@ -358,8 +327,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123'],
 		};
 
@@ -372,8 +340,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '.123'],
 		};
 
@@ -388,8 +355,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles multiple commands', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in'],
 		};
 
@@ -404,8 +370,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles flag', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian'],
 		};
 
@@ -420,8 +385,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles cascading flag', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--quiet'],
 		};
 
@@ -436,8 +400,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles shorthand flag', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '-q'],
 		};
 
@@ -452,8 +415,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles multiple flags', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian', '--quiet'],
 		};
 
@@ -468,8 +430,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles cascading flag before command', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['--quiet', 'list', '--vegetarian'],
 		};
 
@@ -484,8 +445,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles integer option', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '10'],
 		};
 
@@ -500,8 +460,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles float option', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.4'],
 		};
 
@@ -514,8 +473,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.'],
 		};
 
@@ -528,8 +486,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123'],
 		};
 
@@ -542,8 +499,7 @@ describe('#organizeArguments()', () => {
 		});
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '.123'],
 		};
 
@@ -558,8 +514,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles cascading option', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code', '55555'],
 		};
 
@@ -574,8 +529,7 @@ describe('#organizeArguments()', () => {
 
 	test('Handles shorthand option', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '-z', '55555'],
 		};
 
@@ -590,8 +544,7 @@ describe('#organizeArguments()', () => {
 
 	test('Treats bad command as data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '.'],
 		};
 
@@ -602,8 +555,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about missing option value', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code'],
 		};
 
@@ -614,8 +566,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about unrecognized option value type', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', '--test', 'test'],
 		};
 
@@ -626,8 +577,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about unrecognized data type', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', 'test'],
 		};
 
@@ -638,8 +588,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about unrecognized flag', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--fake'],
 		};
 
@@ -650,8 +599,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about non-permitted data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'abc', '123'],
 		};
 
@@ -662,8 +610,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about option value not in "values"', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'fake'],
 		};
 
@@ -674,8 +621,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about data not in "values"', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', 'fake'],
 		};
 
@@ -686,8 +632,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about option value not being integer', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '123.4'],
 		};
 
@@ -696,8 +641,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', 'abc'],
 		};
 
@@ -708,8 +652,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about option value not being float', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', 'abc'],
 		};
 
@@ -718,8 +661,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.4.5'],
 		};
 
@@ -728,8 +670,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '.'],
 		};
 
@@ -738,8 +679,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', ''],
 		};
 
@@ -750,8 +690,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about data not being integer', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '123.4'],
 		};
 
@@ -760,8 +699,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', 'abc'],
 		};
 
@@ -772,8 +710,7 @@ describe('#organizeArguments()', () => {
 
 	test('Complains about data not being float', () => {
 		let settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', 'abc'],
 		};
 
@@ -782,8 +719,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.4.5'],
 		};
 
@@ -792,8 +728,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '.'],
 		};
 
@@ -802,8 +737,7 @@ describe('#organizeArguments()', () => {
 		}).toThrow(Error);
 
 		settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', ''],
 		};
 
@@ -816,8 +750,7 @@ describe('#organizeArguments()', () => {
 describe('#constructInputObject()', () => {
 	test('Handles combination of input', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: [
 				'list',
 				'--delivery-zip-code',
@@ -850,8 +783,7 @@ describe('#constructInputObject()', () => {
 
 	test('Complains about missing required option', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
 		};
 
@@ -864,8 +796,7 @@ describe('#constructInputObject()', () => {
 
 	test('Complains about missing required data', () => {
 		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'popularity'],
 		};
 
@@ -879,12 +810,7 @@ describe('#constructInputObject()', () => {
 
 describe('#getAllProgramCommands()', () => {
 	test('Gets all commands', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-
-		expect(utils(settings).getAllProgramCommands()).toStrictEqual([
+		expect(utils(settingsPizzaOrdering).getAllProgramCommands()).toStrictEqual([
 			'list',
 			'order',
 			'order dine-in',
@@ -897,85 +823,65 @@ describe('#getAllProgramCommands()', () => {
 
 describe('#convertDashesToCamelCase()', () => {
 	test('Normal string', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-		expect(utils(settings).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual(
-			'aaaAaaAaa'
-		);
+		expect(
+			utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-aaa-aaa')
+		).toEqual('aaaAaaAaa');
 	});
 
 	test('With numbers', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-		expect(utils(settings).convertDashesToCamelCase('aaa-123-aaa')).toEqual(
-			'aaa123Aaa'
-		);
+		expect(
+			utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-123-aaa')
+		).toEqual('aaa123Aaa');
 	});
 });
 
 describe('#files', () => {
 	test('Detects directory is directory', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.isDirectory(`${__dirname}/file-tree/directory1`)
+			utils(settingsPizzaOrdering).files.isDirectory(
+				`${__dirname}/file-tree/directory1`
+			)
 		).toEqual(true);
 	});
 
 	test('Detects file is not directory', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.isDirectory(`${__dirname}/file-tree/file1.js`)
+			utils(settingsPizzaOrdering).files.isDirectory(
+				`${__dirname}/file-tree/file1.js`
+			)
 		).toEqual(false);
 	});
 
 	test('Detects file is file', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.isFile(`${__dirname}/file-tree/file1.js`)
+			utils(settingsPizzaOrdering).files.isFile(
+				`${__dirname}/file-tree/file1.js`
+			)
 		).toEqual(true);
 	});
 
 	test('Detects directory is not file', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.isFile(`${__dirname}/file-tree/directory1`)
+			utils(settingsPizzaOrdering).files.isFile(
+				`${__dirname}/file-tree/directory1`
+			)
 		).toEqual(false);
 	});
 
 	test('Retrieves first level files', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-		expect(utils(settings).files.getFiles(`${__dirname}/file-tree`)).toEqual([
+		expect(
+			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-tree`)
+		).toEqual([
 			`${__dirname}/file-tree/file1.js`,
 			`${__dirname}/file-tree/file2.js`,
 		]);
 	});
 
 	test('Retrieves first level directories', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.getDirectories(`${__dirname}/file-tree`)
+			utils(settingsPizzaOrdering).files.getDirectories(
+				`${__dirname}/file-tree`
+			)
 		).toEqual([
 			`${__dirname}/file-tree/directory1`,
 			`${__dirname}/file-tree/directory2`,
@@ -983,12 +889,10 @@ describe('#files', () => {
 	});
 
 	test('Retrieves all directories', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.getAllDirectories(`${__dirname}/file-tree`)
+			utils(settingsPizzaOrdering).files.getAllDirectories(
+				`${__dirname}/file-tree`
+			)
 		).toStrictEqual([
 			`${__dirname}/file-tree/directory1`,
 			`${__dirname}/file-tree/directory1/directory1`,
@@ -998,32 +902,20 @@ describe('#files', () => {
 	});
 
 	test('GetFiles() returns empty array if path not found', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
-		expect(utils(settings).files.getFiles(`${__dirname}/fake`)).toStrictEqual(
-			[]
-		);
+		expect(
+			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
+		).toStrictEqual([]);
 	});
 
 	test('GetDirectories() returns empty array if path not found', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.getDirectories(`${__dirname}/fake`)
+			utils(settingsPizzaOrdering).files.getDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 
 	test('GetAllDirectories() returns empty array if path not found', () => {
-		const settings = {
-			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
-		};
 		expect(
-			utils(settings).files.getAllDirectories(`${__dirname}/fake`)
+			utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 });

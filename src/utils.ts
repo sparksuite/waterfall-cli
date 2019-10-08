@@ -101,35 +101,31 @@ export default function utils(currentSettings: Settings) {
 				...settings.app,
 			};
 
-			if (settings.mainFilename) {
-				// Build path to package.json file
-				const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
-					settings.packageFilePath
-				}`;
+			// Build path to package.json file
+			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
+				settings.packageFilePath
+			}`;
 
-				// Handle if a package.json file exists
-				if (fs.existsSync(pathToPackageFile)) {
-					// Verbose output
-					utils(settings).verboseLog(
-						`Found package.json at: ${pathToPackageFile}`
-					);
+			// Handle if a package.json file exists
+			if (fs.existsSync(pathToPackageFile)) {
+				// Verbose output
+				utils(settings).verboseLog(
+					`Found package.json at: ${pathToPackageFile}`
+				);
 
-					// Get package
-					const packageInfo = JSON.parse(
-						fs.readFileSync(pathToPackageFile).toString()
-					);
+				// Get package
+				const packageInfo = JSON.parse(
+					fs.readFileSync(pathToPackageFile).toString()
+				);
 
-					// Store information
-					app.name = app.name || packageInfo.name;
-					app.packageName = packageInfo.name;
-					app.version = app.version || packageInfo.version;
-				} else {
-					utils(settings).verboseLog(
-						`Could not find package.json at: ${pathToPackageFile}`
-					);
-				}
+				// Store information
+				app.name = app.name || packageInfo.name;
+				app.packageName = packageInfo.name;
+				app.version = app.version || packageInfo.version;
 			} else {
-				utils(settings).verboseLog('Could not determine package.json location');
+				utils(settings).verboseLog(
+					`Could not find package.json at: ${pathToPackageFile}`
+				);
 			}
 
 			// Return info

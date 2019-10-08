@@ -21,9 +21,7 @@ function screens(currentSettings: Settings) {
 			}
 
 			// Add version and a newline
-			if (settings.app.version) {
-				outputString += `${settings.app.version}\n`;
-			}
+			outputString += `${settings.app.version}\n`;
 
 			// Add spacing after
 			for (let i = 0; i < settings.spacing.after; i += 1) {

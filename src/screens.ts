@@ -4,7 +4,7 @@ import Table from 'cli-table';
 import utils, { OrganizedArguments, Settings, CommandSpec } from './utils';
 
 // Default export
-export function screens(currentSettings: Settings) {
+function screens(currentSettings: Settings) {
 	// Store an internal copy of the current settings
 	const settings: Settings = { ...currentSettings };
 

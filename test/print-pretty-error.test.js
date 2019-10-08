@@ -39,7 +39,7 @@ describe('#printPrettyError()', () => {
 		expect(consoleResult).toContain('> ');
 	});
 
-	test('Has the message text', () => {
+	test('Displays the message text', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('Error message content');

@@ -1,6 +1,6 @@
 // Process arguments
-module.exports = function processArguments(argv) {
-	const processedArguments = [];
+export default function processArguments(argv: string[]) {
+	const processedArguments: string[] = [];
 
 	argv.forEach(argument => {
 		if (argument.substr(0, 2) === '--') {
@@ -15,4 +15,4 @@ module.exports = function processArguments(argv) {
 	});
 
 	return processedArguments.slice(2);
-};
+}

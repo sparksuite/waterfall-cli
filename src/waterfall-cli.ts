@@ -9,7 +9,7 @@ import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
 import utils, { Settings, CommandSpec } from './utils';
-import printPrettyError from './pretty-print-errors';
+import printPrettyError from './print-pretty-error';
 
 // Handle exceptions
 process.on('uncaughtException', (error: Error) => {

@@ -68,7 +68,7 @@ export interface Settings {
 
 export interface OrganizedArguments {
 	command: string;
-	data: string | number | null;
+	data?: string | number;
 	flags: string[];
 	options: (string | number)[];
 	values: (string | number)[];
@@ -226,7 +226,6 @@ export default function utils(currentSettings: Settings) {
 				flags: [],
 				options: [],
 				values: [],
-				data: null,
 				command: '',
 			};
 
@@ -473,7 +472,9 @@ export default function utils(currentSettings: Settings) {
 
 					// Form error message
 					let errorMessage = `You provided ${chalk.bold(
-						organizedArguments.data.toString()
+						organizedArguments.data
+							? organizedArguments.data.toString()
+							: '{nothing}'
 					)} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch && settings.usageCommand) {
@@ -496,9 +497,11 @@ export default function utils(currentSettings: Settings) {
 				if (mergedSpec.data.accepts) {
 					if (
 						!mergedSpec.data.accepts.includes(
-							typeof organizedArguments.data === 'string'
-								? organizedArguments.data
-								: organizedArguments.data.toString()
+							organizedArguments.data
+								? typeof organizedArguments.data == 'string'
+									? organizedArguments.data
+									: organizedArguments.data.toString()
+								: ''
 						)
 					) {
 						throw new ErrorWithoutStack(

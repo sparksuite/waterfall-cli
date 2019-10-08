@@ -1,7 +1,7 @@
 // Dependencies
 import path from 'path';
-import utils from './utils';
 import { Settings } from './index';
+import processArguments from './process-arguments';
 
 // Default Settings
 const settings: Settings = {
@@ -10,7 +10,7 @@ const settings: Settings = {
 		packageName: null,
 		version: null,
 	},
-	arguments: utils({}).processArguments(process.argv),
+	arguments: processArguments(process.argv),
 	mainFilename: process.argv[1],
 	newVersionWarning: {
 		enabled: true,

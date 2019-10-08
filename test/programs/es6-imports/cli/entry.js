@@ -1,6 +1,6 @@
 // Import and initialize Waterfall CLI
 import waterfallCLI from '../../../../dist/index.js';
 
-waterfallCLI.cli({
+waterfallCLI.default({
 	verbose: true,
 });

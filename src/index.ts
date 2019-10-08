@@ -3,5 +3,5 @@ import { cli, command, error } from './waterfall-cli';
 
 // Exports
 export default cli;
-export { command, error, cli };
+export { command, error };
 export { Settings } from './utils';

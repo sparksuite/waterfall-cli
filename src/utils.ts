@@ -53,7 +53,7 @@ export interface Settings {
 	app: AppSettings;
 	arguments?: string[];
 	mainFilename: string;
-	newVersionWarning?: {
+	newVersionWarning: {
 		enabled: boolean;
 		installedGlobally: boolean;
 	};

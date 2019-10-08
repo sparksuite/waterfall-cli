@@ -82,7 +82,6 @@ export function cli(customSettings: Partial<Settings>) {
 
 	// Handle new version warning
 	if (
-		settings.newVersionWarning &&
 		settings.newVersionWarning.enabled &&
 		settings.app.packageName
 	) {

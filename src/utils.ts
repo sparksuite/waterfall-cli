@@ -140,7 +140,7 @@ export default function utils(currentSettings: Settings) {
 			// Initialize
 			const mergedSpec: CommandSpec = {
 				data: {
-					description: 'mmm',
+					description: '',
 				},
 				flags: {
 					version: {

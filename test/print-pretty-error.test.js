@@ -3,28 +3,26 @@
 // Dependencies
 const printPrettyError = require('../dist/print-pretty-error.js');
 const chalk = require('chalk');
-const mockConsole = require('jest-mock-console').default;
 
-// Prepare to capture console error output
-let restoreConsole;
+// Holders for capturing console.error output
+let spy;
 let consoleResult;
 
+// Ask Jest to capture console.error output
 beforeEach(() => {
 	// Reset captured output
 	consoleResult = '';
 
 	// Configure capture of console.error output
-	restoreConsole = mockConsole();
-	mockConsole({
-		error: string => {
-			consoleResult += string;
-		},
-	});
+	spy = jest
+		.spyOn(console, 'error')
+		.mockImplementation(text => (consoleResult += text));
 });
 
+// Ask Jest to restore original console.error handler
 afterEach(() => {
 	// Revert console back to normal
-	restoreConsole();
+	spy.mockRestore();
 });
 
 // Tests

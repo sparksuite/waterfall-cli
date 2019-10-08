@@ -9,7 +9,7 @@ import ErrorWithoutStack from './error-without-stack';
 interface InputObject {
 	command: string;
 	data?: string | number;
-	[propName: string]: boolean | string | number | undefined;
+	[index: string]: boolean | string | number | undefined;
 }
 
 // Interface declarations
@@ -17,7 +17,7 @@ export interface AppSettings {
 	name: string | null;
 	packageName: string | null;
 	version: string | null;
-	//[propName: string]: string | number | null;
+	//[index: string]: string | number | null;
 }
 
 export interface CommandSpec {
@@ -30,14 +30,14 @@ export interface CommandSpec {
 	};
 	description?: string;
 	flags: {
-		[propName: string]: {
+		[index: string]: {
 			cascades?: boolean;
 			description?: string;
 			shorthand?: string;
 		};
 	};
 	options: {
-		[propName: string]: {
+		[index: string]: {
 			accepts?: string[];
 			cascades?: boolean;
 			description?: string;
@@ -575,7 +575,7 @@ export default function utils(currentSettings: Settings) {
 
 			// Holder for additional arguments
 			const extraDetails: {
-				[propName: string]: boolean | string | number | undefined | null;
+				[index: string]: boolean | string | number | undefined | null;
 			} = {};
 
 			// Loop over each component and store

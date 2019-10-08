@@ -51,14 +51,14 @@ export interface CommandSpec {
 
 export interface Settings {
 	app: AppSettings;
-	arguments?: string[];
+	arguments: string[];
 	mainFilename: string;
 	newVersionWarning: {
 		enabled: boolean;
 		installedGlobally: boolean;
 	};
 	onStart?: string | Function | null;
-	packageFilePath?: string;
+	packageFilePath: string;
 	spacing: {
 		after: number;
 		before: number;

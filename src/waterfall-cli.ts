@@ -67,7 +67,6 @@ export function cli(customSettings: Partial<Settings>) {
 	// Handle --help
 	if (
 		organizedArguments.flags.includes('help') ||
-		!settings.arguments ||
 		settings.arguments.length === 0
 	) {
 		// Output

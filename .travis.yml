@@ -10,16 +10,13 @@ branches:
 jobs:
   include:
     - stage: test
-      if: type = pull_request OR tag IS present
       name: Lint code
       node_js: lts/*
       script: npm run lint
     - stage: test
-      if: type = pull_request OR tag IS present
       name: Run tests (Node.js Current)
       node_js: node
     - stage: test
-      if: type = pull_request OR tag IS present
       name: Run tests (Node.js LTS)
       node_js: lts/*
       script:

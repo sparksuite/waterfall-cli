@@ -6,10 +6,6 @@ import processArguments from './process-arguments';
 // Default Settings
 const settings: Settings = {
 	app: {},
-		name: null,
-		packageName: null,
-		version: null,
-	},
 	arguments: processArguments(process.argv),
 	mainFilename: process.argv[1],
 	newVersionWarning: {

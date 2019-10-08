@@ -33,7 +33,7 @@ describe('#printPrettyError()', () => {
 		expect(consoleResult).toContain(chalk.inverse.red.bold(' ERROR '));
 	});
 
-	test('Has the indent of the message', () => {
+	test('Has the indent marker (">")', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('> ');

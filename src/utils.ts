@@ -56,7 +56,7 @@ export interface Settings {
 		enabled: boolean;
 		installedGlobally: boolean;
 	};
-	onStart?: string | Function | null;
+	onStart?: string | Function;
 	packageFilePath: string;
 	spacing: {
 		after: number;

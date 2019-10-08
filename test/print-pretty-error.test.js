@@ -27,7 +27,7 @@ afterEach(() => {
 
 // Tests
 describe('#printPrettyError()', () => {
-	test('Has the ERROR indicator', () => {
+	test('Has the "ERROR" title', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain(chalk.inverse.red.bold(' ERROR '));

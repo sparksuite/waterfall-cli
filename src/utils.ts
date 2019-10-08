@@ -76,17 +76,9 @@ export interface OrganizedArguments {
 }
 
 // Helpful utility functions
-export default function utils(currentSettings: Partial<Settings>) {
+export default function utils(currentSettings: Settings) {
 	// Store an internal copy of the current settings
-	const settings: Settings = {
-		app: {
-			name: null,
-			packageName: null,
-			version: null,
-		},
-		mainFilename: '',
-		verbose: false,
-		spacing: { after: 1, before: 1 },
+	const settings = {
 		...currentSettings,
 	};
 

@@ -81,10 +81,7 @@ export function cli(customSettings: Partial<Settings>) {
 	}
 
 	// Handle new version warning
-	if (
-		settings.newVersionWarning.enabled &&
-		settings.app.packageName
-	) {
+	if (settings.newVersionWarning.enabled && settings.app.packageName) {
 		// Determine where to store the version
 		const pathToLatestVersion = path.join(
 			__dirname,

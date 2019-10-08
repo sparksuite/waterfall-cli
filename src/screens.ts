@@ -20,8 +20,8 @@ function screens(currentSettings: Settings) {
 				outputString += chalk.bold(`${settings.app.name}: `);
 			}
 
-			// Add version and a newline
-			outputString += `${settings.app.version}\n`;
+			// Add version (if we have one) and a newline
+			outputString += `${settings.app.version ? settings.app.version : ''}\n`;
 
 			// Add spacing after
 			for (let i = 0; i < settings.spacing.after; i += 1) {

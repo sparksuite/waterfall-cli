@@ -14,9 +14,9 @@ interface InputObject {
 
 // Interface declarations
 export interface AppSettings {
-	name: string | null;
-	packageName: string | null;
-	version: string | null;
+	name?: string;
+	packageName?: string;
+	version?: string;
 }
 
 export interface CommandSpec {
@@ -94,9 +94,6 @@ export default function utils(currentSettings: Settings) {
 		retrieveAppInformation(): AppSettings {
 			// Initialize
 			const app: AppSettings = {
-				name: null,
-				packageName: null,
-				version: null,
 				...settings.app,
 			};
 

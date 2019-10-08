@@ -5,7 +5,7 @@ import processArguments from './process-arguments';
 
 // Default Settings
 const settings: Settings = {
-	app: {
+	app: {},
 		name: null,
 		packageName: null,
 		version: null,

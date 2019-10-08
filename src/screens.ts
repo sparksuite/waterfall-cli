@@ -1,7 +1,7 @@
 // Dependencies
 import chalk from 'chalk';
 import Table from 'cli-table';
-import utils, { OrganizedArguments, Settings, CommandSpec } from './utils';
+import utils, { Settings } from './utils';
 
 // Default export
 function screens(currentSettings: Settings) {
@@ -38,12 +38,10 @@ function screens(currentSettings: Settings) {
 			let outputString = '';
 
 			// Organize the arguments
-			const organizedArguments: OrganizedArguments = utils(
-				settings
-			).organizeArguments();
+			const organizedArguments = utils(settings).organizeArguments();
 
 			// Get all commands in this program
-			let commands: string[] = utils(settings).getAllProgramCommands();
+			let commands = utils(settings).getAllProgramCommands();
 
 			// Verbose output
 			utils(settings).verboseLog(`Found commands: ${commands.join(' | ')}`);
@@ -75,7 +73,7 @@ function screens(currentSettings: Settings) {
 			utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
 
 			// Get merged spec for this command
-			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+			const mergedSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
 			);
 

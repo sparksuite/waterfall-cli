@@ -243,5 +243,3 @@ export default function screens(currentSettings: Settings) {
 		},
 	};
 }
-
-export default screens;

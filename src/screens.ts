@@ -4,7 +4,7 @@ import Table from 'cli-table';
 import { Settings } from './types';
 import utils from './utils';
 
-// Default export
+// A collection of built-in screens that can be displayed
 export default function screens(currentSettings: Settings) {
 	// Store an internal copy of the current settings
 	const settings = { ...currentSettings };

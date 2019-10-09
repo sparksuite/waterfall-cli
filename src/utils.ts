@@ -28,14 +28,14 @@ export interface CommandSpec {
 		type?: string;
 	};
 	description?: string;
-	flags: {
+	flags?: {
 		[index: string]: {
 			cascades?: boolean;
 			description?: string;
 			shorthand?: string;
 		};
 	};
-	options: {
+	options?: {
 		[index: string]: {
 			accepts?: string[];
 			cascades?: boolean;
@@ -196,6 +196,9 @@ export default function utils(currentSettings: Settings) {
 				if (typeof spec.flags === 'object') {
 					Object.entries(spec.flags).forEach(([flag, details]) => {
 						if (index === pieces.length - 1 || details.cascades === true) {
+							if (mergedSpec.flags === undefined) {
+								mergedSpec.flags = {};
+							}
 							mergedSpec.flags[flag] = details;
 						}
 					});
@@ -204,6 +207,9 @@ export default function utils(currentSettings: Settings) {
 				if (typeof spec.options === 'object') {
 					Object.entries(spec.options).forEach(([option, details]) => {
 						if (index === pieces.length - 1 || details.cascades === true) {
+							if (mergedSpec.options === undefined) {
+								mergedSpec.options = {};
+							}
 							mergedSpec.options[option] = details;
 						}
 					});
@@ -587,25 +593,30 @@ export default function utils(currentSettings: Settings) {
 			} = {};
 
 			// Loop over each component and store
-			Object.entries(mergedSpec.flags).forEach(([flag]) => {
-				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-					flag
-				);
+			mergedSpec.flags &&
+				Object.entries(mergedSpec.flags).forEach(([flag]) => {
+					const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+						flag
+					);
 
-				extraDetails[camelCaseKey] = organizedArguments.flags.includes(flag);
-			});
+					extraDetails[camelCaseKey] = organizedArguments.flags.includes(flag);
+				});
 
-			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-					option
-				);
-				const optionIndex = organizedArguments.options.indexOf(option);
-				extraDetails[camelCaseKey] = organizedArguments.values[optionIndex];
+			mergedSpec.options &&
+				Object.entries(mergedSpec.options).forEach(([option, details]) => {
+					const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
+						option
+					);
+					const optionIndex = organizedArguments.options.indexOf(option);
+					extraDetails[camelCaseKey] = organizedArguments.values[optionIndex];
 
-				if (details.required && !organizedArguments.options.includes(option)) {
-					throw new ErrorWithoutStack(`The --${option} option is required`);
-				}
-			});
+					if (
+						details.required &&
+						!organizedArguments.options.includes(option)
+					) {
+						throw new ErrorWithoutStack(`The --${option} option is required`);
+					}
+				});
 
 			// Return
 			return {

@@ -80,14 +80,14 @@ function screens(currentSettings: Settings) {
 			// Determine if there are flags
 			let hasFlags = false;
 
-			if (Object.entries(mergedSpec.flags).length) {
+			if (mergedSpec.flags && Object.entries(mergedSpec.flags).length) {
 				hasFlags = true;
 			}
 
 			// Determine if there are options
 			let hasOptions = false;
 
-			if (Object.entries(mergedSpec.options).length) {
+			if (mergedSpec.options && Object.entries(mergedSpec.options).length) {
 				hasOptions = true;
 			}
 
@@ -149,7 +149,7 @@ function screens(currentSettings: Settings) {
 			});
 
 			// Handle flags
-			if (hasFlags) {
+			if (hasFlags && mergedSpec.flags) {
 				// Add header
 				table.push(['\nFLAGS:']);
 
@@ -163,7 +163,7 @@ function screens(currentSettings: Settings) {
 			}
 
 			// Handle options
-			if (hasOptions) {
+			if (hasOptions && mergedSpec.options) {
 				// Add header
 				table.push(['\nOPTIONS:']);
 

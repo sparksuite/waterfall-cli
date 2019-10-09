@@ -5,7 +5,7 @@ import path from 'path';
 import Fuse from 'fuse.js';
 import ErrorWithoutStack from './error-without-stack';
 import {
-	AppSettings,
+	AppInformation,
 	CommandSpec,
 	InputObject,
 	OrganizedArguments,
@@ -29,9 +29,9 @@ export default function utils(currentSettings: Settings) {
 		},
 
 		// Retrieve app information
-		retrieveAppInformation(): AppSettings {
+		retrieveAppInformation(): AppInformation {
 			// Initialize
-			const app: AppSettings = {
+			const app: AppInformation = {
 				...settings.app,
 			};
 

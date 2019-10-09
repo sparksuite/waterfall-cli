@@ -1,7 +1,3 @@
-// Imports
-import { cli, command, error } from './waterfall-cli';
-
 // Exports
-export default cli;
-export { command, error };
+export { init, command, error } from './waterfall-cli';
 export { Settings } from './types';

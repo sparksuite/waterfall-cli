@@ -1,6 +1,4 @@
-// Interface declarations
-
-export interface AppSettings {
+export interface AppInformation {
 	name?: string;
 	packageName?: string;
 	version?: string;
@@ -9,15 +7,15 @@ export interface AppSettings {
 export interface CommandSpec {
 	data?: {
 		accepts?: string[];
-		description: string;
-		ignoreFlagsAndOptions?: boolean;
-		required?: boolean;
+		description?: string;
+		ignoreFlagsAndOptions?: true;
+		required?: true;
 		type?: 'integer' | 'float';
 	};
 	description?: string;
 	flags?: {
 		[index: string]: {
-			cascades?: boolean;
+			cascades?: true;
 			description?: string;
 			shorthand?: string;
 		};
@@ -25,14 +23,14 @@ export interface CommandSpec {
 	options?: {
 		[index: string]: {
 			accepts?: string[];
-			cascades?: boolean;
+			cascades?: true;
 			description?: string;
-			required?: boolean;
+			required?: true;
 			shorthand?: string;
 			type?: 'integer' | 'float';
 		};
 	};
-	executeOnCascade?: boolean;
+	executeOnCascade?: true;
 }
 
 export interface InputObject {
@@ -45,24 +43,24 @@ export interface OrganizedArguments {
 	command: string;
 	data?: string | number;
 	flags: string[];
-	options: (string | number)[];
+	options: string[];
 	values: (string | number)[];
 }
 
 export interface Settings {
-	app: AppSettings;
+	app: AppInformation;
 	arguments: string[];
 	mainFilename: string;
 	newVersionWarning: {
 		enabled: boolean;
 		installedGlobally: boolean;
 	};
-	onStart?: string | Function;
+	onStart?: (inputObject: InputObject) => void;
 	packageFilePath: string;
 	spacing: {
 		after: number;
 		before: number;
 	};
 	usageCommand?: string;
-	verbose?: boolean;
+	verbose: boolean;
 }

@@ -1,10 +1,6 @@
-// Import and initialize Waterfall CLI for an es6 module importing a commonjs module
-// -> see: https://nodejs.org/api/modules.html#modules_module_createrequire_filename
-import { createRequire } from 'module';
-const require = createRequire(import.meta.url);
+// Import and initialize Waterfall CLI
+import waterfall from '../../../../dist/index.js';
 
-const waterfallCLI = require('../../../../dist/index.js').default;
-
-waterfallCLI({
+waterfall.init({
 	verbose: true,
 });

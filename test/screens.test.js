@@ -344,6 +344,27 @@ describe('#help()', () => {
 		).toBe(true);
 	});
 
+	test('Data - no description', () => {
+		const settings = {
+			...defaultSettings,
+			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			usageCommand: 'node entry.js',
+			arguments: ['order', 'descriptionless-data'],
+		};
+
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'DATA:'
+			)
+		).toBe(true);
+
+		expect(
+			removeFormatting(screens(settings).help()).includes(
+				'This command allows data to be passed in'
+			)
+		).toBe(true);
+	});
+
 	test('Data - description (required + accepts)', () => {
 		const settings = {
 			...defaultSettings,

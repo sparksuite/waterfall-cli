@@ -1,4 +1,8 @@
-// Parse command input
-const input = require('../../../../../dist/index.js').command();
+// Require Waterfall CLI
+const waterfall = require('../../../../../dist');
 
+// Parse command input
+const input = waterfall.command();
+
+// Output result
 console.log(input);

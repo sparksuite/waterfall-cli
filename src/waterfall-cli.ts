@@ -21,7 +21,7 @@ process.on('uncaughtException', (error: Error) => {
 });
 
 // The constructor, for use at the entry point
-export function cli(customSettings: Partial<Settings>) {
+export function init(customSettings: Partial<Settings>) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 

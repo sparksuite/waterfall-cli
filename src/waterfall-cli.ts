@@ -165,9 +165,7 @@ export function init(customSettings: Partial<Settings>) {
 		currentPathPrefix = path.join(currentPathPrefix, command);
 
 		// Get the files we care about
-		const commandFiles = utils(settings).files.getFiles(
-			currentPathPrefix
-		);
+		const commandFiles = utils(settings).files.getFiles(currentPathPrefix);
 
 		// Get the command path
 		const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];

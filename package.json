@@ -2,9 +2,10 @@
 	"name": "waterfall-cli",
 	"version": "0.2.0",
 	"description": "Effortlessly create CLIs powered by Node.js",
-	"main": "dist/src/index.js",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
 	"files": [
-		"/dist"
+		"dist"
 	],
 	"scripts": {
 		"test": "npm run compile && tsc --project test/programs/typescript && jest",
@@ -34,8 +35,10 @@
 		"semver": "^6.3.0"
 	},
 	"devDependencies": {
+		"@types/cli-table": "^0.3.0",
 		"@types/jest": "^24.0.18",
 		"@types/node": "^12.7.7",
+		"@types/semver": "^6.0.2",
 		"@typescript-eslint/eslint-plugin": "^2.3.1",
 		"@typescript-eslint/parser": "^2.3.1",
 		"eslint": "^6.4.0",

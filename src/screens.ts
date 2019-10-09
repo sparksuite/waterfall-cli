@@ -91,11 +91,11 @@ function screens(currentSettings: Settings) {
 				hasOptions = true;
 			}
 
-			// Determine if it accepts data
-			let acceptsData = false;
+			// Determine if it allows data
+			let allowsData = false;
 
-			if (mergedSpec.data && mergedSpec.data.description) {
-				acceptsData = true;
+			if (typeof mergedSpec.data === 'object') {
+				allowsData = true;
 			}
 
 			// Determine if there are commands
@@ -119,7 +119,7 @@ function screens(currentSettings: Settings) {
 			usageLine += chalk.gray(hasCommands ? ' [commands]' : '');
 			usageLine += chalk.gray(hasFlags ? ' [flags]' : '');
 			usageLine += chalk.gray(hasOptions ? ' [options]' : '');
-			usageLine += chalk.gray(acceptsData ? ' [data]' : '');
+			usageLine += chalk.gray(allowsData ? ' [data]' : '');
 
 			outputString += `${usageLine}\n`;
 
@@ -221,7 +221,7 @@ function screens(currentSettings: Settings) {
 			outputString += `${table.toString()}\n`;
 
 			// Handle data
-			if (acceptsData) {
+			if (allowsData) {
 				// Print header
 				outputString += '\nDATA:\n';
 
@@ -230,6 +230,8 @@ function screens(currentSettings: Settings) {
 
 				if (mergedSpec.data.description) {
 					fullDescription += mergedSpec.data.description;
+				} else {
+					fullDescription += 'This command allows data to be passed in';
 				}
 
 				if (mergedSpec.data.required) {

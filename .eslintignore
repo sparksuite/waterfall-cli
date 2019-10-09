@@ -1,1 +1,4 @@
-test/programs/typescript/cli/
+node_modules/**
+coverage/**
+dist/**
+test/programs/typescript/cli/**

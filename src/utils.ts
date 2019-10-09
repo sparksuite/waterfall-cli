@@ -451,8 +451,8 @@ export default function utils(currentSettings: Settings) {
 					organizedArguments.command
 				);
 
-				// Check if data is allowed
-				if (!mergedSpec.data || !mergedSpec.data.description) {
+				// Handle if data is not allowed
+				if (typeof mergedSpec.data !== 'object') {
 					// Get all commands in this program
 					const commands = utils(settings).getAllProgramCommands();
 

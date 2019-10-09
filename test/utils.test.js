@@ -794,6 +794,7 @@ describe('#getAllProgramCommands()', () => {
 		expect(utils(settingsPizzaOrdering).getAllProgramCommands()).toStrictEqual([
 			'list',
 			'order',
+			'order descriptionless-data',
 			'order dine-in',
 			'order float-data',
 			'order integer-data',

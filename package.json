@@ -9,8 +9,8 @@
 	],
 	"scripts": {
 		"test": "npm run compile && tsc --project test/programs/typescript && jest",
-		"lint": "eslint --ext .js,.ts src test && prettier --check '**/*.{ts,js,json}'",
-		"format": "eslint --fix --ext .js,.ts src test && prettier --write '**/*.{ts,js,json}'",
+		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json}'",
+		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json}'",
 		"compile": "tsc"
 	},
 	"repository": {

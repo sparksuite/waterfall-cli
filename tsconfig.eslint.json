@@ -1,5 +1,4 @@
 {
 	"extends": "./tsconfig.json",
-	"include": ["test/**/*"],
-	"exclude": ["test/programs/typescript/cli/**/*"]
+	"include": ["test/**/*"]
 }

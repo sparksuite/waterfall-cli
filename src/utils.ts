@@ -325,7 +325,7 @@ export default function utils(currentSettings: Settings) {
 				}
 
 				// Get the files we care about
-				const commandFiles: string[] = utils(settings).files.getFiles(
+				const commandFiles = utils(settings).files.getFiles(
 					`${currentPathPrefix}/${argument}`
 				);
 
@@ -553,7 +553,7 @@ export default function utils(currentSettings: Settings) {
 		getAllProgramCommands(): string[] {
 			// Get all directories
 			const mainDir = path.dirname(settings.mainFilename);
-			let commands: string[] = utils(settings).files.getAllDirectories(mainDir);
+			let commands = utils(settings).files.getAllDirectories(mainDir);
 
 			// Process into just commands
 			commands = commands.map(file => file.replace(`${mainDir}/`, ''));

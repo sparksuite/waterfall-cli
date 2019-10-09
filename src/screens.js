@@ -94,11 +94,11 @@ module.exports = function Constructor(currentSettings) {
 				hasOptions = true;
 			}
 
-			// Determine if it accepts data
-			let acceptsData = false;
+			// Determine if it allows data
+			let allowsData = false;
 
 			if (typeof mergedSpec.data === 'object') {
-				acceptsData = true;
+				allowsData = true;
 			}
 
 			// Determine if there are commands
@@ -122,7 +122,7 @@ module.exports = function Constructor(currentSettings) {
 			usageLine += chalk.gray(hasCommands ? ' [commands]' : '');
 			usageLine += chalk.gray(hasFlags ? ' [flags]' : '');
 			usageLine += chalk.gray(hasOptions ? ' [options]' : '');
-			usageLine += chalk.gray(acceptsData ? ' [data]' : '');
+			usageLine += chalk.gray(allowsData ? ' [data]' : '');
 
 			outputString += `${usageLine}\n`;
 
@@ -224,7 +224,7 @@ module.exports = function Constructor(currentSettings) {
 			outputString += `${table.toString()}\n`;
 
 			// Handle data
-			if (acceptsData) {
+			if (allowsData) {
 				// Print header
 				outputString += '\nDATA:\n';
 

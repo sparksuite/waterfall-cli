@@ -26,26 +26,16 @@ export function init(customSettings: Partial<Settings>) {
 	const settings = deepmerge(defaultSettings, customSettings);
 
 	// Add spacing before
-	if (settings && settings.spacing && settings.spacing.before) {
-		for (let i = 0; i < settings.spacing.before; i += 1) {
-			console.log();
-		}
+	for (let i = 0; i < settings.spacing.before; i += 1) {
+		console.log();
 	}
 
 	// Determine app information
 	settings.app = utils(settings).retrieveAppInformation();
 
 	// Verbose output
-	utils(settings).verboseLog(
-		settings.app.name
-			? `Set app name to: ${settings.app.name}`
-			: 'App name not set'
-	);
-	utils(settings).verboseLog(
-		settings.app.version
-			? `Set app version to: ${settings.app.version}`
-			: 'App version not set'
-	);
+	utils(settings).verboseLog(`Set app name to: ${settings.app.name}`);
+	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
 
 	// Organize the arguments
 	const organizedArguments = utils(settings).organizeArguments();

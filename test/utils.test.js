@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 // Dependencies
-const defaultSettings = require('../dist/default-settings.js').default;
+const defaultSettings = require('../dist/default-settings').default;
 const utils = require('../dist/utils.js').default;
 
 const settingsBadStructure = {

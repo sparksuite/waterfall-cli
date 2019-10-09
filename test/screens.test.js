@@ -2,7 +2,7 @@
 /* eslint no-control-regex: "off" */
 
 // Dependencies
-const defaultSettings = require('../dist/default-settings.js').default;
+const defaultSettings = require('../dist/default-settings').default;
 const screens = require('../dist/screens.js').default;
 
 // Remove ANSI formatting

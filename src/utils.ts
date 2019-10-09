@@ -15,9 +15,7 @@ import {
 // Helpful utility functions
 export default function utils(currentSettings: Settings) {
 	// Store an internal copy of the current settings
-	const settings = {
-		...currentSettings,
-	};
+	const settings = { ...currentSettings };
 
 	// Return the functions
 	return {
@@ -31,9 +29,7 @@ export default function utils(currentSettings: Settings) {
 		// Retrieve app information
 		retrieveAppInformation(): AppInformation {
 			// Initialize
-			const app: AppInformation = {
-				...settings.app,
-			};
+			const app: AppInformation = { ...settings.app };
 
 			// Build path to package.json file
 			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
@@ -165,210 +161,208 @@ export default function utils(currentSettings: Settings) {
 			};
 
 			let previousOption: string | null = null;
-			let nextIsOptionValue = 0;
+			let nextIsOptionValue = false;
 			let nextValueType: string | null = null;
 			let nextValueAccepts: string[] | null = null;
-			let reachedData: boolean | null = false;
+			let reachedData = false;
 
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 
-			if (settings.arguments) {
-				for (const argument of settings.arguments) {
+			for (const argument of settings.arguments) {
+				// Verbose output
+				utils(settings).verboseLog(`Inspecting argument: ${argument}`);
+
+				// Skip option values
+				if (nextIsOptionValue) {
 					// Verbose output
-					utils(settings).verboseLog(`Inspecting argument: ${argument}`);
-
-					// Skip option values
-					if (nextIsOptionValue === 1) {
-						// Verbose output
-						utils(settings).verboseLog(
-							`...Is value for previous option (${previousOption})`
-						);
-
-						// Initialize
-						let value: string | number = argument;
-
-						// Validate value, if necessary
-						if (Array.isArray(nextValueAccepts)) {
-							const accepts: string[] = nextValueAccepts;
-							if (accepts.includes(value) === false) {
-								throw new ErrorWithoutStack(
-									`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${accepts.join(
-										', '
-									)}`
-								);
-							}
-						}
-
-						if (nextValueType) {
-							if (nextValueType === 'integer') {
-								if (value.match(/^[0-9]+$/) !== null) {
-									value = parseInt(value, 10);
-								} else {
-									throw new ErrorWithoutStack(
-										`The option ${previousOption} expects an integer\nProvided: ${value}`
-									);
-								}
-							} else if (nextValueType === 'float') {
-								if (
-									value.match(/^[0-9]*[.]*[0-9]*$/) !== null &&
-									value !== '.' &&
-									value !== ''
-								) {
-									value = parseFloat(value);
-								} else {
-									throw new ErrorWithoutStack(
-										`The option ${previousOption} expects a float\nProvided: ${value}`
-									);
-								}
-							} else {
-								throw new ErrorWithoutStack(
-									`Unrecognized "type": ${nextValueType}`
-								);
-							}
-						}
-
-						// Store and continue
-						nextIsOptionValue = 0;
-						organizedArguments.values.push(value);
-						continue;
-					}
-
-					// Get merged spec for this command
-					const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
-						organizedArguments.command
+					utils(settings).verboseLog(
+						`...Is value for previous option (${previousOption})`
 					);
 
-					// Handle if we're supposed to ignore anything that looks like flags/options
-					if (
-						reachedData &&
-						mergedSpec.data &&
-						mergedSpec.data.ignoreFlagsAndOptions === true
-					) {
-						// Verbose output
-						utils(settings).verboseLog('...Is data');
+					// Initialize
+					let value: string | number = argument;
 
-						// Append onto data
-						if (!organizedArguments.data) {
-							organizedArguments.data = ` ${argument}`;
-						} else {
-							organizedArguments.data += ` ${argument}`;
-						}
-
-						// Skip further processing
-						continue;
-					}
-
-					// Skip options/flags
-					if (argument.startsWith('-')) {
-						// Check if this is an option
-						if (typeof mergedSpec.options === 'object') {
-							Object.entries(mergedSpec.options).forEach(
-								([option, details]) => {
-									// Check for a match
-									const matchesFullOption =
-										argument === `--${option.trim().toLowerCase()}`;
-									const matchesShorthandOption =
-										details.shorthand &&
-										argument === `-${details.shorthand.trim().toLowerCase()}`;
-
-									// Handle a match
-									if (matchesFullOption || matchesShorthandOption) {
-										// Verbose output
-										utils(settings).verboseLog('...Is an option');
-
-										// Store details
-										previousOption = argument;
-										nextIsOptionValue = 1;
-										nextValueAccepts = details.accepts ? details.accepts : null;
-										nextValueType = details.type ? details.type : null;
-										organizedArguments.options.push(option);
-									}
-								}
+					// Validate value, if necessary
+					if (Array.isArray(nextValueAccepts)) {
+						const accepts: string[] = nextValueAccepts;
+						if (accepts.includes(value) === false) {
+							throw new ErrorWithoutStack(
+								`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${accepts.join(
+									', '
+								)}`
 							);
 						}
-
-						// Handle flags
-						if (nextIsOptionValue === 0) {
-							// Initialize
-							let matchedFlag = false;
-
-							// Check if this is a valid flag
-							if (typeof mergedSpec.flags === 'object') {
-								Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
-									if (argument === `--${flag.trim().toLowerCase()}`) {
-										// Verbose output
-										utils(settings).verboseLog('...Is a flag');
-
-										// Store details
-										matchedFlag = true;
-										organizedArguments.flags.push(flag);
-									} else if (
-										details.shorthand &&
-										argument === `-${details.shorthand.trim().toLowerCase()}`
-									) {
-										// Verbose output
-										utils(settings).verboseLog('...Is a flag');
-
-										// Store details
-										matchedFlag = true;
-										organizedArguments.flags.push(flag);
-									}
-								});
-							}
-
-							// Handle no match
-							if (!matchedFlag) {
-								throw new ErrorWithoutStack(
-									`Unrecognized argument: ${argument}`
-								);
-							}
-						}
-
-						// Skip further processing
-						continue;
 					}
 
-					// Get the files we care about
-					const commandFiles: string[] = utils(settings).files.getFiles(
-						`${currentPathPrefix}/${argument}`
-					);
-
-					// Get the command path
-					const commandPath = commandFiles.filter(path =>
-						path.match(/\.js$/)
-					)[0];
-
-					// Check if that file exists
-					if (
-						!reachedData &&
-						fs.existsSync(commandPath) &&
-						argument.replace(/[/\\?%*:|"<>.]/g, '') !== ''
-					) {
-						// Verbose output
-						utils(settings).verboseLog('...Is a command');
-
-						// Add to currents
-						currentPathPrefix += `/${argument}`;
-						organizedArguments.command += ` ${argument}`;
-					} else {
-						// Verbose output
-						utils(settings).verboseLog('...Is data');
-
-						// Store details
-						reachedData = true;
-
-						if (!organizedArguments.data) {
-							organizedArguments.data = ` ${argument}`;
+					if (nextValueType) {
+						if (nextValueType === 'integer') {
+							if (value.match(/^[0-9]+$/) !== null) {
+								value = parseInt(value, 10);
+							} else {
+								throw new ErrorWithoutStack(
+									`The option ${previousOption} expects an integer\nProvided: ${value}`
+								);
+							}
+						} else if (nextValueType === 'float') {
+							if (
+								value.match(/^[0-9]*[.]*[0-9]*$/) !== null &&
+								value !== '.' &&
+								value !== ''
+							) {
+								value = parseFloat(value);
+							} else {
+								throw new ErrorWithoutStack(
+									`The option ${previousOption} expects a float\nProvided: ${value}`
+								);
+							}
 						} else {
-							organizedArguments.data += ` ${argument}`;
+							throw new ErrorWithoutStack(
+								`Unrecognized "type": ${nextValueType}`
+							);
 						}
+					}
+
+					// Store and continue
+					nextIsOptionValue = false;
+					organizedArguments.values.push(value);
+					continue;
+				}
+
+				// Get merged spec for this command
+				const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+					organizedArguments.command
+				);
+
+				// Handle if we're supposed to ignore anything that looks like flags/options
+				if (
+					reachedData &&
+					mergedSpec.data &&
+					mergedSpec.data.ignoreFlagsAndOptions === true
+				) {
+					// Verbose output
+					utils(settings).verboseLog('...Is data');
+
+					// Append onto data
+					if (!organizedArguments.data) {
+						organizedArguments.data = ` ${argument}`;
+					} else {
+						organizedArguments.data += ` ${argument}`;
+					}
+
+					// Skip further processing
+					continue;
+				}
+
+				// Skip options/flags
+				if (argument.startsWith('-')) {
+					// Check if this is an option
+					if (typeof mergedSpec.options === 'object') {
+						Object.entries(mergedSpec.options).forEach(
+							([option, details]) => {
+								// Check for a match
+								const matchesFullOption =
+									argument === `--${option.trim().toLowerCase()}`;
+								const matchesShorthandOption =
+									details.shorthand &&
+									argument === `-${details.shorthand.trim().toLowerCase()}`;
+
+								// Handle a match
+								if (matchesFullOption || matchesShorthandOption) {
+									// Verbose output
+									utils(settings).verboseLog('...Is an option');
+
+									// Store details
+									previousOption = argument;
+									nextIsOptionValue = true;
+									nextValueAccepts = details.accepts ? details.accepts : null;
+									nextValueType = details.type ? details.type : null;
+									organizedArguments.options.push(option);
+								}
+							}
+						);
+					}
+
+					// Handle flags
+					if (!nextIsOptionValue) {
+						// Initialize
+						let matchedFlag = false;
+
+						// Check if this is a valid flag
+						if (typeof mergedSpec.flags === 'object') {
+							Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+								if (argument === `--${flag.trim().toLowerCase()}`) {
+									// Verbose output
+									utils(settings).verboseLog('...Is a flag');
+
+									// Store details
+									matchedFlag = true;
+									organizedArguments.flags.push(flag);
+								} else if (
+									details.shorthand &&
+									argument === `-${details.shorthand.trim().toLowerCase()}`
+								) {
+									// Verbose output
+									utils(settings).verboseLog('...Is a flag');
+
+									// Store details
+									matchedFlag = true;
+									organizedArguments.flags.push(flag);
+								}
+							});
+						}
+
+						// Handle no match
+						if (!matchedFlag) {
+							throw new ErrorWithoutStack(
+								`Unrecognized argument: ${argument}`
+							);
+						}
+					}
+
+					// Skip further processing
+					continue;
+				}
+
+				// Get the files we care about
+				const commandFiles: string[] = utils(settings).files.getFiles(
+					`${currentPathPrefix}/${argument}`
+				);
+
+				// Get the command path
+				const commandPath = commandFiles.filter(path =>
+					path.match(/\.js$/)
+				)[0];
+
+				// Check if that file exists
+				if (
+					!reachedData &&
+					fs.existsSync(commandPath) &&
+					argument.replace(/[/\\?%*:|"<>.]/g, '') !== ''
+				) {
+					// Verbose output
+					utils(settings).verboseLog('...Is a command');
+
+					// Add to currents
+					currentPathPrefix += `/${argument}`;
+					organizedArguments.command += ` ${argument}`;
+				} else {
+					// Verbose output
+					utils(settings).verboseLog('...Is data');
+
+					// Store details
+					reachedData = true;
+
+					if (!organizedArguments.data) {
+						organizedArguments.data = ` ${argument}`;
+					} else {
+						organizedArguments.data += ` ${argument}`;
 					}
 				}
 			}
 
 			// Error if we're missing an expected value
-			if (nextIsOptionValue === 1) {
+			if (nextIsOptionValue) {
 				throw new ErrorWithoutStack(
 					`No value provided for ${previousOption}, which is an option, not a flag`
 				);

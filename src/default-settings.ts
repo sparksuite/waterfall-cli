@@ -1,21 +1,17 @@
 // Dependencies
-const path = require('path');
-const processArguments = require('./process-arguments.js');
+import path from 'path';
+import { Settings } from './index';
+import processArguments from './process-arguments';
 
-// Default settings
-module.exports = {
-	app: {
-		name: null,
-		packageName: null,
-		version: null,
-	},
+// Default Settings
+const settings: Settings = {
+	app: {},
 	arguments: processArguments(process.argv),
 	mainFilename: process.argv[1],
 	newVersionWarning: {
 		enabled: true,
 		installedGlobally: true,
 	},
-	onStart: null,
 	packageFilePath: '../package.json',
 	spacing: {
 		before: 1,
@@ -24,3 +20,6 @@ module.exports = {
 	usageCommand: `node ${path.basename(process.argv[1])}`,
 	verbose: false,
 };
+
+// Export
+export default settings;

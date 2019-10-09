@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 // Dependencies
-const defaultSettings = require('../dist/default-settings.js');
+const defaultSettings = require('../dist/default-settings').default;
 const utils = require('../dist/utils.js');
 
 const settingsBadStructure = {
@@ -32,11 +32,7 @@ describe('#retrieveAppInformation()', () => {
 			packageFilePath: '../fake.json',
 		};
 
-		expect(utils(settings).retrieveAppInformation()).toStrictEqual({
-			name: null,
-			packageName: null,
-			version: null,
-		});
+		expect(utils(settings).retrieveAppInformation()).toStrictEqual({});
 	});
 });
 

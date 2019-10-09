@@ -233,6 +233,8 @@ module.exports = function Constructor(currentSettings) {
 
 				if (mergedSpec.data.description) {
 					fullDescription += mergedSpec.data.description;
+				} else {
+					fullDescription += 'This command allows data to be passed in';
 				}
 
 				if (mergedSpec.data.required) {

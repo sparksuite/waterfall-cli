@@ -25,7 +25,7 @@ export interface CommandSpec {
 		description: string;
 		ignoreFlagsAndOptions?: boolean;
 		required?: boolean;
-		type?: string;
+		type?: 'integer' | 'float';
 	};
 	description?: string;
 	flags?: {
@@ -42,7 +42,7 @@ export interface CommandSpec {
 			description?: string;
 			required?: boolean;
 			shorthand?: string;
-			type?: string;
+			type?: 'integer' | 'float';
 		};
 	};
 	executeOnCascade?: boolean;

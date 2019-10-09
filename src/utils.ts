@@ -471,10 +471,31 @@ export default function utils(currentSettings: Settings) {
 
 		// Construct a full input object
 		constructInputObject(organizedArguments: OrganizedArguments): InputObject {
+			// Initialize
+			const inputObject: InputObject = {
+				command: '',
+			};
+
 			// Get merged spec for this command
-			const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+			const mergedSpec = utils(settings).getMergedSpec(
 				organizedArguments.command
 			);
+
+			// Loop over each component and store
+			Object.entries(mergedSpec.flags).forEach(([flag]) => {
+				const camelCaseKey = utils(settings).convertDashesToCamelCase(flag);
+				inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
+			});
+
+			Object.entries(mergedSpec.options).forEach(([option, details]) => {
+				const camelCaseKey = utils(settings).convertDashesToCamelCase(option);
+				const optionIndex = organizedArguments.options.indexOf(option);
+				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
+
+				if (details.required && !organizedArguments.options.includes(option)) {
+					throw new ErrorWithoutStack(`The --${option} option is required`);
+				}
+			});
 
 			// Handle missing required data
 			if (
@@ -485,43 +506,14 @@ export default function utils(currentSettings: Settings) {
 				throw new ErrorWithoutStack('Data is required');
 			}
 
-			// Holder for additional arguments
-			const extraDetails: {
-				[index: string]: boolean | string | number | undefined | null;
-			} = {};
+			// Store data
+			inputObject.data = organizedArguments.data;
 
-			// Loop over each component and store
-			mergedSpec.flags &&
-				Object.entries(mergedSpec.flags).forEach(([flag]) => {
-					const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-						flag
-					);
-
-					extraDetails[camelCaseKey] = organizedArguments.flags.includes(flag);
-				});
-
-			mergedSpec.options &&
-				Object.entries(mergedSpec.options).forEach(([option, details]) => {
-					const camelCaseKey: string = utils(settings).convertDashesToCamelCase(
-						option
-					);
-					const optionIndex = organizedArguments.options.indexOf(option);
-					extraDetails[camelCaseKey] = organizedArguments.values[optionIndex];
-
-					if (
-						details.required &&
-						!organizedArguments.options.includes(option)
-					) {
-						throw new ErrorWithoutStack(`The --${option} option is required`);
-					}
-				});
+			// Store command
+			inputObject.command = organizedArguments.command;
 
 			// Return
-			return {
-				...extraDetails,
-				command: organizedArguments.command,
-				...(organizedArguments.data && { data: organizedArguments.data }),
-			};
+			return inputObject;
 		},
 
 		// Get all commands in program

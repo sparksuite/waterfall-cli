@@ -20,7 +20,7 @@ export interface AppSettings {
 }
 
 export interface CommandSpec {
-	data: {
+	data?: {
 		accepts?: string[];
 		description: string;
 		ignoreFlagsAndOptions?: boolean;

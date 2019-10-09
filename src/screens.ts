@@ -228,21 +228,21 @@ function screens(currentSettings: Settings) {
 				// Form full description
 				let fullDescription = '';
 
-				if (mergedSpec.data.description) {
+				if (mergedSpec.data && mergedSpec.data.description) {
 					fullDescription += mergedSpec.data.description;
 				} else {
 					fullDescription += 'This command allows data to be passed in';
 				}
 
-				if (mergedSpec.data.required) {
+				if (mergedSpec.data && mergedSpec.data.required) {
 					fullDescription += chalk.gray.italic(' (required)');
 				}
 
-				if (mergedSpec.data.type) {
+				if (mergedSpec.data && mergedSpec.data.type) {
 					fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
 				}
 
-				if (mergedSpec.data.accepts) {
+				if (mergedSpec.data && mergedSpec.data.accepts) {
 					fullDescription += chalk.gray.italic(
 						` (accepts: ${mergedSpec.data.accepts.join(', ')})`
 					);

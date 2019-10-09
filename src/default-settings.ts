@@ -1,7 +1,7 @@
 // Dependencies
 import path from 'path';
-import { Settings } from './index';
 import processArguments from './process-arguments';
+import { Settings } from './types';
 
 // Default Settings
 const settings: Settings = {

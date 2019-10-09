@@ -20,17 +20,6 @@ process.on('uncaughtException', (error: Error) => {
 	process.exit(1);
 });
 
-// The function used to kick off commands
-export function command() {
-	return JSON.parse(process.argv[2]);
-}
-
-// A helper function provided to commands to keep error messages consistent
-export function error(message: string) {
-	printPrettyError(message);
-	process.exit(255);
-}
-
 // The constructor, for use at the entry point
 export function cli(customSettings: Partial<Settings>) {
 	// Merge custom settings into default settings
@@ -281,4 +270,15 @@ export function cli(customSettings: Partial<Settings>) {
 	};
 
 	executePath(executionPaths);
+}
+
+// The function used to kick off commands
+export function command() {
+	return JSON.parse(process.argv[2]);
+}
+
+// A helper function provided to commands to keep error messages consistent
+export function error(message: string) {
+	printPrettyError(message);
+	process.exit(255);
 }

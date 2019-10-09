@@ -158,14 +158,14 @@ export function init(customSettings: Partial<Settings>) {
 	// Form execution paths
 	const executionPaths: string[] = [];
 	let currentPathPrefix = path.dirname(settings.mainFilename);
-	const commandPieces: string[] = organizedArguments.command.trim().split(' ');
+	const commandPieces = organizedArguments.command.trim().split(' ');
 
 	commandPieces.forEach((command, index) => {
 		// Update current path prefix
 		currentPathPrefix = path.join(currentPathPrefix, command);
 
 		// Get the files we care about
-		const commandFiles: string[] = utils(settings).files.getFiles(
+		const commandFiles = utils(settings).files.getFiles(
 			currentPathPrefix
 		);
 
@@ -197,7 +197,7 @@ export function init(customSettings: Partial<Settings>) {
 	);
 
 	// Call onStart() function, if any
-	if (settings.onStart && typeof settings.onStart === 'function') {
+	if (typeof settings.onStart === 'function') {
 		settings.onStart(inputObject);
 	}
 
@@ -240,11 +240,9 @@ export function init(customSettings: Partial<Settings>) {
 			if (paths[1]) {
 				executePath(paths.slice(1));
 			} else {
-				if (settings.spacing && settings.spacing.after) {
-					// Add spacing after
-					for (let i = 0; i < settings.spacing.after; i += 1) {
-						console.log();
-					}
+				// Add spacing after
+				for (let i = 0; i < settings.spacing.after; i += 1) {
+					console.log();
 				}
 			}
 		});

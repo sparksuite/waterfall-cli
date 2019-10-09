@@ -67,12 +67,12 @@ export default function utils(currentSettings: Settings) {
 		},
 
 		// Get specs for a command
-		getMergedSpec(command: string): CommandSpec & { flags: {}, options: {} } {
+		getMergedSpec(command: string): CommandSpec & { flags: {}; options: {} } {
 			// Break into pieces, with entry point
 			const pieces = `. ${command}`.trim().split(' ');
 
 			// Initialize
-			const mergedSpec: CommandSpec & { flags: {}, options: {} } = {
+			const mergedSpec: CommandSpec & { flags: {}; options: {} } = {
 				flags: {
 					version: {
 						shorthand: 'v',

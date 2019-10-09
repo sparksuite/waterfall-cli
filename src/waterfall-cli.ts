@@ -92,51 +92,47 @@ export function init(customSettings: Partial<Settings>) {
 			const latestVersion = semver.clean(
 				`${fs.readFileSync(pathToLatestVersion)}`
 			);
-			const currentVersion = settings.app.version
-				? semver.clean(settings.app.version)
-				: null;
-			const bothVersionsAreValid =
-				latestVersion &&
-				semver.valid(latestVersion) &&
-				currentVersion &&
-				semver.valid(currentVersion);
+			const currentVersion = semver.clean(settings.app.version || '');
 
-			// Verbose ouput
-			utils(settings).verboseLog(
-				`Previously retrieved latest app version: ${latestVersion}`
-			);
-			utils(settings).verboseLog(
-				`Cleaned-up current app version: ${currentVersion}`
-			);
-			utils(settings).verboseLog(
-				`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`
-			);
+			// Only continue if we have both
+			if (latestVersion && currentVersion) {
+				const bothVersionsAreValid =
+					semver.valid(latestVersion) && semver.valid(currentVersion);
 
-			// Determine if warning is needed
-			if (
-				bothVersionsAreValid &&
-				latestVersion &&
-				currentVersion &&
-				semver.gt(latestVersion, currentVersion)
-			) {
-				console.log(
-					chalk.yellow(
-						`You're using an outdated version ${
-							settings.app.name ? `of ${settings.app.name}` : ''
-						} (${currentVersion}). The latest version is ${chalk.bold(
-							latestVersion
-						)}`
-					)
+				// Verbose ouput
+				utils(settings).verboseLog(
+					`Previously retrieved latest app version: ${latestVersion}`
 				);
-				console.log(
-					`${chalk.yellow(
-						`  > Upgrade by running: ${chalk.bold(
-							`npm install ${
-								settings.newVersionWarning.installedGlobally ? '--global ' : ''
-							}${settings.app.packageName}@${latestVersion}`
-						)}`
-					)}\n`
+				utils(settings).verboseLog(
+					`Cleaned-up current app version: ${currentVersion}`
 				);
+				utils(settings).verboseLog(
+					`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`
+				);
+
+				// Determine if warning is needed
+				if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
+					console.log(
+						chalk.yellow(
+							`You're using an outdated version of ${
+								settings.app.name
+							} (${currentVersion}). The latest version is ${chalk.bold(
+								latestVersion
+							)}`
+						)
+					);
+					console.log(
+						`${chalk.yellow(
+							`  > Upgrade by running: ${chalk.bold(
+								`npm install ${
+									settings.newVersionWarning.installedGlobally
+										? '--global '
+										: ''
+								}${settings.app.packageName}@${latestVersion}`
+							)}`
+						)}\n`
+					);
+				}
 			}
 		}
 

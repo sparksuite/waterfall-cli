@@ -2,7 +2,7 @@
 
 // Dependencies
 const defaultSettings = require('../dist/default-settings').default;
-const utils = require('../dist/utils');
+const utils = require('../dist/utils').default;
 
 const settingsBadStructure = {
 	...defaultSettings,
@@ -119,6 +119,38 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
+	test('Gets another merged spec', () => {
+		expect(utils(settingsPizzaOrdering).getMergedSpec('order')).toStrictEqual({
+			data: undefined,
+			description: 'Order a pizza',
+			flags: {
+				'gluten-free': {
+					description: "Let the kitchen know you're gluten free",
+				},
+				help: {
+					shorthand: 'h',
+					description: 'Show help',
+				},
+				quiet: {
+					cascades: true,
+					description: 'Disable interactivity, rely on default values instead',
+					shorthand: 'q',
+				},
+				version: {
+					shorthand: 'v',
+					description: 'Show version',
+				},
+			},
+			options: {
+				'delivery-zip-code': {
+					cascades: true,
+					description: 'The delivery ZIP code, for context',
+					shorthand: 'z',
+				},
+			},
+		});
+	});
+
 	test('Complains about multiple .js files', () => {
 		expect(() => {
 			utils(settingsBadStructure).getMergedSpec('multiple-js');
@@ -149,7 +181,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: '',
 		});
 	});
@@ -164,7 +195,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -359,7 +389,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: 'order dine-in',
 		});
 	});
@@ -374,7 +403,6 @@ describe('#organizeArguments()', () => {
 			flags: ['vegetarian'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -389,7 +417,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -404,7 +431,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -419,7 +445,6 @@ describe('#organizeArguments()', () => {
 			flags: ['vegetarian', 'quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -434,7 +459,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet', 'vegetarian'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -449,7 +473,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['limit'],
 			values: [10],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -464,7 +487,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123.4],
-			data: null,
 			command: 'list',
 		});
 
@@ -477,7 +499,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123],
-			data: null,
 			command: 'list',
 		});
 
@@ -490,7 +511,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123],
-			data: null,
 			command: 'list',
 		});
 
@@ -503,7 +523,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [0.123],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -518,7 +537,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -533,7 +551,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
-			data: null,
 			command: 'list',
 		});
 	});

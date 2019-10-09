@@ -1,24 +1,27 @@
 // Dependencies
-const chalk = require('chalk');
-const { spawn } = require('child_process');
-const fs = require('fs');
-const path = require('path');
-const semver = require('semver');
-const deepmerge = require('deepmerge');
-const defaultSettings = require('./default-settings').default;
-const ErrorWithoutStack = require('./error-without-stack');
-const screens = require('./screens');
-const utils = require('./utils');
-const printPrettyError = require('./print-pretty-error');
+import chalk from 'chalk';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
+import semver from 'semver';
+import deepmerge from 'deepmerge';
+import defaultSettings from './default-settings';
+import ErrorWithoutStack from './error-without-stack';
+import screens from './screens';
+import { CommandSpec, Settings } from './types';
+import utils from './utils';
+import printPrettyError from './print-pretty-error';
 
 // Handle exceptions
-process.on('uncaughtException', error => {
-	printPrettyError(error.stack);
+process.on('uncaughtException', (error: Error) => {
+	if (error.stack) {
+		printPrettyError(error.stack);
+	}
 	process.exit(1);
 });
 
 // The constructor, for use at the entry point
-module.exports.init = function init(customSettings) {
+export function init(customSettings: Partial<Settings>) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 
@@ -89,41 +92,47 @@ module.exports.init = function init(customSettings) {
 			const latestVersion = semver.clean(
 				`${fs.readFileSync(pathToLatestVersion)}`
 			);
-			const currentVersion = semver.clean(settings.app.version);
-			const bothVersionsAreValid =
-				semver.valid(latestVersion) && semver.valid(currentVersion);
+			const currentVersion = semver.clean(settings.app.version || '');
 
-			// Verbose ouput
-			utils(settings).verboseLog(
-				`Previously retrieved latest app version: ${latestVersion}`
-			);
-			utils(settings).verboseLog(
-				`Cleaned-up current app version: ${currentVersion}`
-			);
-			utils(settings).verboseLog(
-				`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`
-			);
+			// Only continue if we have both
+			if (latestVersion && currentVersion) {
+				const bothVersionsAreValid =
+					semver.valid(latestVersion) && semver.valid(currentVersion);
 
-			// Determine if warning is needed
-			if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
-				console.log(
-					chalk.yellow(
-						`You're using an outdated version of ${
-							settings.app.name
-						} (${currentVersion}). The latest version is ${chalk.bold(
-							latestVersion
-						)}`
-					)
+				// Verbose ouput
+				utils(settings).verboseLog(
+					`Previously retrieved latest app version: ${latestVersion}`
 				);
-				console.log(
-					`${chalk.yellow(
-						`  > Upgrade by running: ${chalk.bold(
-							`npm install ${
-								settings.newVersionWarning.installedGlobally ? '--global ' : ''
-							}${settings.app.packageName}@${latestVersion}`
-						)}`
-					)}\n`
+				utils(settings).verboseLog(
+					`Cleaned-up current app version: ${currentVersion}`
 				);
+				utils(settings).verboseLog(
+					`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`
+				);
+
+				// Determine if warning is needed
+				if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
+					console.log(
+						chalk.yellow(
+							`You're using an outdated version of ${
+								settings.app.name
+							} (${currentVersion}). The latest version is ${chalk.bold(
+								latestVersion
+							)}`
+						)
+					);
+					console.log(
+						`${chalk.yellow(
+							`  > Upgrade by running: ${chalk.bold(
+								`npm install ${
+									settings.newVersionWarning.installedGlobally
+										? '--global '
+										: ''
+								}${settings.app.packageName}@${latestVersion}`
+							)}`
+						)}\n`
+					);
+				}
 			}
 		}
 
@@ -134,7 +143,7 @@ module.exports.init = function init(customSettings) {
 			'version',
 		]);
 
-		versionCheck.stdout.on('data', stdout => {
+		versionCheck.stdout.on('data', (stdout: string) => {
 			fs.writeFile(
 				pathToLatestVersion,
 				semver.clean(`${stdout}`),
@@ -147,7 +156,7 @@ module.exports.init = function init(customSettings) {
 	}
 
 	// Form execution paths
-	const executionPaths = [];
+	const executionPaths: string[] = [];
 	let currentPathPrefix = path.dirname(settings.mainFilename);
 	const commandPieces = organizedArguments.command.trim().split(' ');
 
@@ -163,10 +172,10 @@ module.exports.init = function init(customSettings) {
 
 		// Get spec
 		const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
-		let spec = {};
+		let spec: CommandSpec = {};
 
 		try {
-			spec = JSON.parse(fs.readFileSync(specFilePath));
+			spec = JSON.parse(fs.readFileSync(specFilePath).toString());
 		} catch (error) {
 			throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
 		}
@@ -191,7 +200,7 @@ module.exports.init = function init(customSettings) {
 	}
 
 	// Execute each path sequentially, starting with the first
-	const executePath = paths => {
+	const executePath = (paths: string[]) => {
 		// Stop if none
 		if (paths.length === 0) {
 			return;
@@ -206,7 +215,7 @@ module.exports.init = function init(customSettings) {
 		});
 
 		// Wait for exit
-		child.on('exit', code => {
+		child.on('exit', (code: number) => {
 			// Handle a SIGKILL
 			if (code === null) {
 				console.log(); // Ensure it goes to the next line
@@ -237,21 +246,21 @@ module.exports.init = function init(customSettings) {
 		});
 
 		// Handle error
-		child.on('error', error => {
+		child.on('error', (error: Error) => {
 			throw new Error(error.toString().replace(/^Error: /i, ''));
 		});
 	};
 
 	executePath(executionPaths);
-};
+}
 
 // The function used to kick off commands
-module.exports.command = function command() {
+export function command() {
 	return JSON.parse(process.argv[2]);
-};
+}
 
 // A helper function provided to commands to keep error messages consistent
-module.exports.error = function error(message) {
+export function error(message: string) {
 	printPrettyError(message);
 	process.exit(255);
-};
+}

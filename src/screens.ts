@@ -1,10 +1,11 @@
 // Dependencies
-const chalk = require('chalk');
-const Table = require('cli-table');
-const utils = require('./utils');
+import chalk from 'chalk';
+import Table from 'cli-table';
+import { Settings } from './types';
+import utils from './utils';
 
-// Helpful utility functions
-module.exports = function Constructor(currentSettings) {
+// A collection of built-in screens that can be displayed
+export default function screens(currentSettings: Settings) {
 	// Store an internal copy of the current settings
 	const settings = { ...currentSettings };
 
@@ -20,8 +21,8 @@ module.exports = function Constructor(currentSettings) {
 				outputString += chalk.bold(`${settings.app.name}: `);
 			}
 
-			// Add version and a newline
-			outputString += `${settings.app.version}\n`;
+			// Add version (if we have one) and a newline
+			outputString += `${settings.app.version || ''}\n`;
 
 			// Add spacing after
 			for (let i = 0; i < settings.spacing.after; i += 1) {
@@ -54,10 +55,7 @@ module.exports = function Constructor(currentSettings) {
 			);
 
 			// Filter out any unnecessary commands, which are...
-			commands = commands.filter(
-				command =>
-					command.substring(0, preppedCommand.length) === `${preppedCommand}`
-			); // Not related to current command
+			commands = commands.filter(command => command.startsWith(preppedCommand)); // Not related to current command
 			commands = commands.filter(
 				command =>
 					(command.match(/ /g) || []).length ===
@@ -80,33 +78,11 @@ module.exports = function Constructor(currentSettings) {
 				organizedArguments.command
 			);
 
-			// Determine if there are flags
-			let hasFlags = false;
-
-			if (Object.entries(mergedSpec.flags).length) {
-				hasFlags = true;
-			}
-
-			// Determine if there are options
-			let hasOptions = false;
-
-			if (Object.entries(mergedSpec.options).length) {
-				hasOptions = true;
-			}
-
-			// Determine if it allows data
-			let allowsData = false;
-
-			if (typeof mergedSpec.data === 'object') {
-				allowsData = true;
-			}
-
-			// Determine if there are commands
-			let hasCommands = false;
-
-			if (commands.length) {
-				hasCommands = true;
-			}
+			// Determine if certain features are available
+			const hasFlags = !!Object.entries(mergedSpec.flags).length;
+			const hasOptions = !!Object.entries(mergedSpec.options).length;
+			const allowsData = typeof mergedSpec.data === 'object';
+			const hasCommands = !!commands.length;
 
 			// Output description
 			if (mergedSpec.description) {
@@ -224,7 +200,9 @@ module.exports = function Constructor(currentSettings) {
 			outputString += `${table.toString()}\n`;
 
 			// Handle data
-			if (allowsData) {
+			// Note: `typeof mergedSpec.data === 'object'` has to be repeated,
+			//       because the TypeScript compiler is not smart enough
+			if (allowsData && typeof mergedSpec.data === 'object') {
 				// Print header
 				outputString += '\nDATA:\n';
 
@@ -264,4 +242,4 @@ module.exports = function Constructor(currentSettings) {
 			return outputString;
 		},
 	};
-};
+}

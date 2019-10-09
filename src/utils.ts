@@ -1,28 +1,35 @@
 // Dependencies
-const chalk = require('chalk');
-const fs = require('fs');
-const Fuse = require('fuse.js');
-const path = require('path');
-const ErrorWithoutStack = require('./error-without-stack');
+import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
+import Fuse from 'fuse.js';
+import ErrorWithoutStack from './error-without-stack';
+import {
+	AppInformation,
+	CommandSpec,
+	InputObject,
+	OrganizedArguments,
+	Settings,
+} from './types';
 
 // Helpful utility functions
-module.exports = function Constructor(currentSettings) {
+export default function utils(currentSettings: Settings) {
 	// Store an internal copy of the current settings
 	const settings = { ...currentSettings };
 
 	// Return the functions
 	return {
 		// Verbose log output helper function
-		verboseLog(message) {
+		verboseLog(message: string): void {
 			if (settings.verbose) {
 				console.log(chalk.dim.italic(`[VERBOSE] ${message}`));
 			}
 		},
 
 		// Retrieve app information
-		retrieveAppInformation() {
+		retrieveAppInformation(): AppInformation {
 			// Initialize
-			const app = { ...settings.app };
+			const app: AppInformation = { ...settings.app };
 
 			// Build path to package.json file
 			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
@@ -32,21 +39,23 @@ module.exports = function Constructor(currentSettings) {
 			// Handle if a package.json file exists
 			if (fs.existsSync(pathToPackageFile)) {
 				// Verbose output
-				module
-					.exports(settings)
-					.verboseLog(`Found package.json at: ${pathToPackageFile}`);
+				utils(settings).verboseLog(
+					`Found package.json at: ${pathToPackageFile}`
+				);
 
 				// Get package
-				const packageInfo = JSON.parse(fs.readFileSync(pathToPackageFile));
+				const packageInfo = JSON.parse(
+					fs.readFileSync(pathToPackageFile).toString()
+				);
 
 				// Store information
 				app.name = app.name || packageInfo.name;
 				app.packageName = packageInfo.name;
 				app.version = app.version || packageInfo.version;
 			} else {
-				module
-					.exports(settings)
-					.verboseLog(`Could not find package.json at: ${pathToPackageFile}`);
+				utils(settings).verboseLog(
+					`Could not find package.json at: ${pathToPackageFile}`
+				);
 			}
 
 			// Return info
@@ -54,14 +63,12 @@ module.exports = function Constructor(currentSettings) {
 		},
 
 		// Get specs for a command
-		getMergedSpec(command) {
+		getMergedSpec(command: string): CommandSpec & { flags: {}; options: {} } {
 			// Break into pieces, with entry point
 			const pieces = `. ${command}`.trim().split(' ');
 
 			// Initialize
-			const mergedSpec = {
-				description: null,
-				data: {},
+			const mergedSpec: CommandSpec & { flags: {}; options: {} } = {
 				flags: {
 					version: {
 						shorthand: 'v',
@@ -85,9 +92,9 @@ module.exports = function Constructor(currentSettings) {
 				}
 
 				// Get the files we care about
-				const commandFiles = module
-					.exports(settings)
-					.files.getFiles(currentPathPrefix);
+				const commandFiles: string[] = utils(settings).files.getFiles(
+					currentPathPrefix
+				);
 
 				// Error if not exactly one .js and one .json file
 				if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
@@ -106,15 +113,15 @@ module.exports = function Constructor(currentSettings) {
 				const specFilePath = commandFiles.filter(path =>
 					path.match(/\.json$/)
 				)[0];
-				let spec = {};
-
-				try {
-					spec = JSON.parse(fs.readFileSync(specFilePath));
-				} catch (error) {
-					throw new ErrorWithoutStack(
-						`This file has bad JSON: ${specFilePath}`
-					);
-				}
+				const spec: CommandSpec = (() => {
+					try {
+						return JSON.parse(fs.readFileSync(specFilePath).toString());
+					} catch (error) {
+						throw new ErrorWithoutStack(
+							`This file has bad JSON: ${specFilePath}`
+						);
+					}
+				})();
 
 				// Build onto spec
 				if (typeof spec.flags === 'object') {
@@ -144,44 +151,44 @@ module.exports = function Constructor(currentSettings) {
 		},
 
 		// Organize arguments into categories
-		organizeArguments() {
+		organizeArguments(): OrganizedArguments {
 			// Initialize
-			const organizedArguments = {
+			const organizedArguments: OrganizedArguments = {
 				flags: [],
 				options: [],
 				values: [],
-				data: null,
 				command: '',
 			};
 
-			let previousOption = null;
+			let previousOption: string | null = null;
 			let nextIsOptionValue = false;
-			let nextValueType = null;
-			let nextValueAccepts = null;
+			let nextValueType: string | null = null;
+			let nextValueAccepts: string[] | null = null;
 			let reachedData = false;
 
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 
-			settings.arguments.forEach(argument => {
+			for (const argument of settings.arguments) {
 				// Verbose output
-				module.exports(settings).verboseLog(`Inspecting argument: ${argument}`);
+				utils(settings).verboseLog(`Inspecting argument: ${argument}`);
 
 				// Skip option values
 				if (nextIsOptionValue) {
 					// Verbose output
-					module
-						.exports(settings)
-						.verboseLog(`...Is value for previous option (${previousOption})`);
+					utils(settings).verboseLog(
+						`...Is value for previous option (${previousOption})`
+					);
 
 					// Initialize
-					let value = argument;
+					let value: string | number = argument;
 
 					// Validate value, if necessary
-					if (nextValueAccepts) {
-						if (!nextValueAccepts.includes(value)) {
+					if (Array.isArray(nextValueAccepts)) {
+						const accepts: string[] = nextValueAccepts;
+						if (accepts.includes(value) === false) {
 							throw new ErrorWithoutStack(
-								`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${nextValueAccepts.join(
+								`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${accepts.join(
 									', '
 								)}`
 							);
@@ -219,13 +226,13 @@ module.exports = function Constructor(currentSettings) {
 					// Store and continue
 					nextIsOptionValue = false;
 					organizedArguments.values.push(value);
-					return;
+					continue;
 				}
 
 				// Get merged spec for this command
-				const mergedSpec = module
-					.exports(settings)
-					.getMergedSpec(organizedArguments.command);
+				const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
+					organizedArguments.command
+				);
 
 				// Handle if we're supposed to ignore anything that looks like flags/options
 				if (
@@ -234,17 +241,21 @@ module.exports = function Constructor(currentSettings) {
 					mergedSpec.data.ignoreFlagsAndOptions === true
 				) {
 					// Verbose output
-					module.exports(settings).verboseLog('...Is data');
+					utils(settings).verboseLog('...Is data');
 
 					// Append onto data
-					organizedArguments.data += ` ${argument}`;
+					if (!organizedArguments.data) {
+						organizedArguments.data = ` ${argument}`;
+					} else {
+						organizedArguments.data += ` ${argument}`;
+					}
 
 					// Skip further processing
-					return;
+					continue;
 				}
 
 				// Skip options/flags
-				if (argument[0] === '-') {
+				if (argument.startsWith('-')) {
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
@@ -258,20 +269,20 @@ module.exports = function Constructor(currentSettings) {
 							// Handle a match
 							if (matchesFullOption || matchesShorthandOption) {
 								// Verbose output
-								module.exports(settings).verboseLog('...Is an option');
+								utils(settings).verboseLog('...Is an option');
 
 								// Store details
 								previousOption = argument;
 								nextIsOptionValue = true;
-								nextValueAccepts = details.accepts;
-								nextValueType = details.type;
+								nextValueAccepts = details.accepts || null;
+								nextValueType = details.type || null;
 								organizedArguments.options.push(option);
 							}
 						});
 					}
 
 					// Handle flags
-					if (nextIsOptionValue === false) {
+					if (!nextIsOptionValue) {
 						// Initialize
 						let matchedFlag = false;
 
@@ -280,7 +291,7 @@ module.exports = function Constructor(currentSettings) {
 							Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
 								if (argument === `--${flag.trim().toLowerCase()}`) {
 									// Verbose output
-									module.exports(settings).verboseLog('...Is a flag');
+									utils(settings).verboseLog('...Is a flag');
 
 									// Store details
 									matchedFlag = true;
@@ -290,7 +301,7 @@ module.exports = function Constructor(currentSettings) {
 									argument === `-${details.shorthand.trim().toLowerCase()}`
 								) {
 									// Verbose output
-									module.exports(settings).verboseLog('...Is a flag');
+									utils(settings).verboseLog('...Is a flag');
 
 									// Store details
 									matchedFlag = true;
@@ -306,13 +317,13 @@ module.exports = function Constructor(currentSettings) {
 					}
 
 					// Skip further processing
-					return;
+					continue;
 				}
 
 				// Get the files we care about
-				const commandFiles = module
-					.exports(settings)
-					.files.getFiles(`${currentPathPrefix}/${argument}`);
+				const commandFiles = utils(settings).files.getFiles(
+					`${currentPathPrefix}/${argument}`
+				);
 
 				// Get the command path
 				const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
@@ -324,44 +335,44 @@ module.exports = function Constructor(currentSettings) {
 					argument.replace(/[/\\?%*:|"<>.]/g, '') !== ''
 				) {
 					// Verbose output
-					module.exports(settings).verboseLog('...Is a command');
+					utils(settings).verboseLog('...Is a command');
 
 					// Add to currents
 					currentPathPrefix += `/${argument}`;
 					organizedArguments.command += ` ${argument}`;
 				} else {
 					// Verbose output
-					module.exports(settings).verboseLog('...Is data');
+					utils(settings).verboseLog('...Is data');
 
 					// Store details
 					reachedData = true;
 
-					if (organizedArguments.data === null) {
+					if (!organizedArguments.data) {
 						organizedArguments.data = argument;
 					} else {
 						organizedArguments.data += ` ${argument}`;
 					}
 				}
-			});
+			}
 
 			// Error if we're missing an expected value
-			if (nextIsOptionValue === true) {
+			if (nextIsOptionValue) {
 				throw new ErrorWithoutStack(
 					`No value provided for ${previousOption}, which is an option, not a flag`
 				);
 			}
 
 			// Handle if there's any data
-			if (organizedArguments.data !== null) {
+			if (typeof organizedArguments.data === 'string') {
 				// Get merged spec for this command
-				const mergedSpec = module
-					.exports(settings)
-					.getMergedSpec(organizedArguments.command);
+				const mergedSpec = utils(settings).getMergedSpec(
+					organizedArguments.command
+				);
 
 				// Handle if data is not allowed
 				if (typeof mergedSpec.data !== 'object') {
 					// Get all commands in this program
-					const commands = module.exports(settings).getAllProgramCommands();
+					const commands = utils(settings).getAllProgramCommands();
 
 					// Search for the best match
 					const fuse = new Fuse(commands, {
@@ -379,7 +390,7 @@ module.exports = function Constructor(currentSettings) {
 					);
 					let bestMatch = null;
 
-					if (results.length && results[0].score < 0.6) {
+					if (results.length && results[0].score && results[0].score < 0.6) {
 						bestMatch = results[0].matches[0].value;
 					}
 
@@ -459,27 +470,25 @@ module.exports = function Constructor(currentSettings) {
 		},
 
 		// Construct a full input object
-		constructInputObject(organizedArguments) {
+		constructInputObject(organizedArguments: OrganizedArguments): InputObject {
 			// Initialize
-			const inputObject = {};
+			const inputObject: InputObject = {
+				command: '',
+			};
 
 			// Get merged spec for this command
-			const mergedSpec = module
-				.exports(settings)
-				.getMergedSpec(organizedArguments.command);
+			const mergedSpec = utils(settings).getMergedSpec(
+				organizedArguments.command
+			);
 
 			// Loop over each component and store
 			Object.entries(mergedSpec.flags).forEach(([flag]) => {
-				const camelCaseKey = module
-					.exports(settings)
-					.convertDashesToCamelCase(flag);
+				const camelCaseKey = utils(settings).convertDashesToCamelCase(flag);
 				inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
 			});
 
 			Object.entries(mergedSpec.options).forEach(([option, details]) => {
-				const camelCaseKey = module
-					.exports(settings)
-					.convertDashesToCamelCase(option);
+				const camelCaseKey = utils(settings).convertDashesToCamelCase(option);
 				const optionIndex = organizedArguments.options.indexOf(option);
 				inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
 
@@ -488,9 +497,7 @@ module.exports = function Constructor(currentSettings) {
 				}
 			});
 
-			// Store data
-			inputObject.data = organizedArguments.data;
-
+			// Handle missing required data
 			if (
 				mergedSpec.data &&
 				mergedSpec.data.required &&
@@ -498,6 +505,9 @@ module.exports = function Constructor(currentSettings) {
 			) {
 				throw new ErrorWithoutStack('Data is required');
 			}
+
+			// Store data
+			inputObject.data = organizedArguments.data;
 
 			// Store command
 			inputObject.command = organizedArguments.command;
@@ -507,10 +517,10 @@ module.exports = function Constructor(currentSettings) {
 		},
 
 		// Get all commands in program
-		getAllProgramCommands() {
+		getAllProgramCommands(): string[] {
 			// Get all directories
 			const mainDir = path.dirname(settings.mainFilename);
-			let commands = module.exports(settings).files.getAllDirectories(mainDir);
+			let commands = utils(settings).files.getAllDirectories(mainDir);
 
 			// Process into just commands
 			commands = commands.map(file => file.replace(`${mainDir}/`, ''));
@@ -522,68 +532,70 @@ module.exports = function Constructor(currentSettings) {
 		},
 
 		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
-		convertDashesToCamelCase(string) {
+		convertDashesToCamelCase(string: string): string {
 			return string.replace(/-(.)/g, g => g[1].toUpperCase());
 		},
 
 		// File functions
 		files: {
 			// Return true if this path is a directory
-			isDirectory(path) {
+			isDirectory(path: string): boolean {
 				return fs.lstatSync(path).isDirectory();
 			},
 
 			// Return true if this path is a file
-			isFile(path) {
+			isFile(path: string): boolean {
 				return fs.lstatSync(path).isFile();
 			},
 
 			// Get child files of a parent directory
-			getFiles(directory) {
+			getFiles(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}
 
 				const allItems = fs
 					.readdirSync(directory)
-					.map(name => path.join(directory, name));
+					.map((name: string) => path.join(directory, name));
 
-				return allItems.filter(module.exports(settings).files.isFile);
+				return allItems.filter(utils(settings).files.isFile);
 			},
 
 			// Get child directories of a parent directory
-			getDirectories(directory) {
+			getDirectories(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}
 
 				const allItems = fs
 					.readdirSync(directory)
-					.map(name => path.join(directory, name));
+					.map((name: string) => path.join(directory, name));
 
-				return allItems.filter(module.exports(settings).files.isDirectory);
+				return allItems.filter(utils(settings).files.isDirectory);
 			},
 
 			// Get child directories of a parent directory, recursively & synchronously
-			getAllDirectories(directory) {
+			getAllDirectories(directory: string): string[] {
 				if (!fs.existsSync(directory)) {
 					return [];
 				}
 
-				return fs.readdirSync(directory).reduce((files, file) => {
-					const name = path.join(directory, file);
+				return fs
+					.readdirSync(directory)
+					.reduce((files: string[], file: string) => {
+						const name = path.join(directory, file);
 
-					if (module.exports(settings).files.isDirectory(name)) {
-						return [
-							...files,
-							name,
-							...module.exports(settings).files.getAllDirectories(name),
-						];
-					}
+						if (utils(settings).files.isDirectory(name)) {
+							return [
+								...files,
+								name,
+								...utils(settings).files.getAllDirectories(name),
+							];
+						}
 
-					return [...files];
-				}, []);
+						return [...files];
+					}, []);
 			},
 		},
 	};
-};
+}

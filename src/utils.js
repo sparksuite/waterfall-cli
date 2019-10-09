@@ -358,8 +358,8 @@ module.exports = function Constructor(currentSettings) {
 					.exports(settings)
 					.getMergedSpec(organizedArguments.command);
 
-				// Check if data is allowed
-				if (!mergedSpec.data || !mergedSpec.data.description) {
+				// Handle if data is not allowed
+				if (typeof mergedSpec.data !== 'object') {
 					// Get all commands in this program
 					const commands = module.exports(settings).getAllProgramCommands();
 

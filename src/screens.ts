@@ -79,10 +79,10 @@ function screens(currentSettings: Settings) {
 			);
 
 			// Determine if certain features are available
-			let hasFlags = !!Object.entries(mergedSpec.flags).length;
-			let hasOptions = !!Object.entries(mergedSpec.options).length;
-			let allowsData = typeof mergedSpec.data === 'object';
-			let hasCommands = !!commands.length;
+			const hasFlags = !!Object.entries(mergedSpec.flags).length;
+			const hasOptions = !!Object.entries(mergedSpec.options).length;
+			const allowsData = typeof mergedSpec.data === 'object';
+			const hasCommands = !!commands.length;
 
 			// Output description
 			if (mergedSpec.description) {
@@ -128,7 +128,7 @@ function screens(currentSettings: Settings) {
 			});
 
 			// Handle flags
-			if (hasFlags && mergedSpec.flags) {
+			if (hasFlags) {
 				// Add header
 				table.push(['\nFLAGS:']);
 
@@ -142,7 +142,7 @@ function screens(currentSettings: Settings) {
 			}
 
 			// Handle options
-			if (hasOptions && mergedSpec.options) {
+			if (hasOptions) {
 				// Add header
 				table.push(['\nOPTIONS:']);
 
@@ -200,28 +200,30 @@ function screens(currentSettings: Settings) {
 			outputString += `${table.toString()}\n`;
 
 			// Handle data
-			if (allowsData) {
+			// Note: `typeof mergedSpec.data === 'object'` has to be repeated,
+			//       because the TypeScript compiler is not smart enough
+			if (allowsData && typeof mergedSpec.data === 'object') {
 				// Print header
 				outputString += '\nDATA:\n';
 
 				// Form full description
 				let fullDescription = '';
 
-				if (mergedSpec.data && mergedSpec.data.description) {
+				if (mergedSpec.data.description) {
 					fullDescription += mergedSpec.data.description;
 				} else {
 					fullDescription += 'This command allows data to be passed in';
 				}
 
-				if (mergedSpec.data && mergedSpec.data.required) {
+				if (mergedSpec.data.required) {
 					fullDescription += chalk.gray.italic(' (required)');
 				}
 
-				if (mergedSpec.data && mergedSpec.data.type) {
+				if (mergedSpec.data.type) {
 					fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
 				}
 
-				if (mergedSpec.data && mergedSpec.data.accepts) {
+				if (mergedSpec.data.accepts) {
 					fullDescription += chalk.gray.italic(
 						` (accepts: ${mergedSpec.data.accepts.join(', ')})`
 					);

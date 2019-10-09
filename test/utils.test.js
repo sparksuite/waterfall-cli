@@ -119,6 +119,38 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
+	test('Gets another merged spec', () => {
+		expect(utils(settingsPizzaOrdering).getMergedSpec('order')).toStrictEqual({
+			data: undefined,
+			description: 'Order a pizza',
+			flags: {
+				'gluten-free': {
+					description: 'Let the kitchen know you\'re gluten free',
+				},
+				help: {
+					shorthand: 'h',
+					description: 'Show help',
+				},
+				quiet: {
+					cascades: true,
+					description: 'Disable interactivity, rely on default values instead',
+					shorthand: 'q',
+				},
+				version: {
+					shorthand: 'v',
+					description: 'Show version',
+				},
+			},
+			options: {
+				'delivery-zip-code': {
+					cascades: true,
+					description: 'The delivery ZIP code, for context',
+					shorthand: 'z',
+				},
+			},
+		});
+	});
+
 	test('Complains about multiple .js files', () => {
 		expect(() => {
 			utils(settingsBadStructure).getMergedSpec('multiple-js');

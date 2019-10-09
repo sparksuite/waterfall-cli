@@ -3,7 +3,7 @@
 
 // Dependencies
 const defaultSettings = require('../dist/default-settings').default;
-const screens = require('../dist/screens.js').default;
+const screens = require('../dist/screens').default;
 
 // Remove ANSI formatting
 function removeFormatting(text) {

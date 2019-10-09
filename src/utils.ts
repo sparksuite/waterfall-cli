@@ -348,7 +348,7 @@ export default function utils(currentSettings: Settings) {
 					reachedData = true;
 
 					if (!organizedArguments.data) {
-						organizedArguments.data = ` ${argument}`;
+						organizedArguments.data = argument;
 					} else {
 						organizedArguments.data += ` ${argument}`;
 					}
@@ -363,12 +363,7 @@ export default function utils(currentSettings: Settings) {
 			}
 
 			// Handle if there's any data
-			if (organizedArguments.data) {
-				// Trim the data if it's a string
-				if (typeof organizedArguments.data === 'string') {
-					organizedArguments.data = organizedArguments.data.trim();
-				}
-
+			if (typeof organizedArguments.data === 'string') {
 				// Get merged spec for this command
 				const mergedSpec = utils(settings).getMergedSpec(
 					organizedArguments.command
@@ -405,15 +400,13 @@ export default function utils(currentSettings: Settings) {
 					// Form error message
 					let errorMessage = `You provided ${chalk.bold(
 						organizedArguments.data
-							? organizedArguments.data.toString()
-							: '{nothing}'
 					)} to ${chalk.bold(command)}\n`;
 
-					if (bestMatch && settings.usageCommand) {
+					if (bestMatch) {
 						errorMessage +=
 							'If you were trying to pass in data, this command does not accept data\n';
 						errorMessage += `If you were trying to use a command, did you mean ${chalk.bold(
-							settings.usageCommand.toString()
+							settings.usageCommand
 						)} ${chalk.bold(bestMatch)}?\n`;
 					} else {
 						errorMessage += 'However, this command does not accept data\n';
@@ -427,15 +420,7 @@ export default function utils(currentSettings: Settings) {
 
 				// Validate data, if necessary
 				if (mergedSpec.data.accepts) {
-					if (
-						!mergedSpec.data.accepts.includes(
-							organizedArguments.data
-								? typeof organizedArguments.data == 'string'
-									? organizedArguments.data
-									: organizedArguments.data.toString()
-								: ''
-						)
-					) {
+					if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
 						throw new ErrorWithoutStack(
 							`Unrecognized data for "${organizedArguments.command.trim()}": ${
 								organizedArguments.data
@@ -446,10 +431,7 @@ export default function utils(currentSettings: Settings) {
 
 				if (mergedSpec.data.type) {
 					if (mergedSpec.data.type === 'integer') {
-						if (
-							typeof organizedArguments.data === 'string' &&
-							organizedArguments.data.match(/^[0-9]+$/) !== null
-						) {
+						if (organizedArguments.data.match(/^[0-9]+$/) !== null) {
 							organizedArguments.data = parseInt(organizedArguments.data, 10);
 						} else {
 							throw new ErrorWithoutStack(
@@ -460,7 +442,6 @@ export default function utils(currentSettings: Settings) {
 						}
 					} else if (mergedSpec.data.type === 'float') {
 						if (
-							typeof organizedArguments.data === 'string' &&
 							organizedArguments.data.match(/^[0-9]*[.]*[0-9]*$/) !== null &&
 							organizedArguments.data !== '.' &&
 							organizedArguments.data !== ''
@@ -561,12 +542,6 @@ export default function utils(currentSettings: Settings) {
 		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
 		convertDashesToCamelCase(string: string): string {
 			return string.replace(/-(.)/g, g => g[1].toUpperCase());
-		},
-
-		// Print a pretty error message
-		printPrettyError(message: string): void {
-			console.error(`${chalk.inverse.red.bold(' ERROR ')}\n`);
-			console.error(chalk.red(`> ${message.split('\n').join('\n> ')}\n`));
 		},
 
 		// File functions

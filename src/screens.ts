@@ -1,7 +1,8 @@
 // Dependencies
 import chalk from 'chalk';
 import Table from 'cli-table';
-import utils, { Settings } from './utils';
+import { Settings } from './types';
+import utils from './utils';
 
 // Default export
 function screens(currentSettings: Settings) {

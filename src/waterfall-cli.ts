@@ -8,7 +8,8 @@ import deepmerge from 'deepmerge';
 import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
-import utils, { Settings, CommandSpec } from './utils';
+import { CommandSpec, Settings } from './types';
+import utils from './utils';
 import printPrettyError from './print-pretty-error';
 
 // Handle exceptions

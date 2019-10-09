@@ -3,7 +3,7 @@ const chalk = require('chalk');
 const fs = require('fs');
 const Fuse = require('fuse.js');
 const path = require('path');
-const ErrorWithoutStack = require('./error-without-stack.js');
+const ErrorWithoutStack = require('./error-without-stack');
 
 // Helpful utility functions
 module.exports = function Constructor(currentSettings) {

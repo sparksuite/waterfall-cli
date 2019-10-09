@@ -5,7 +5,7 @@ import { Settings } from './types';
 import utils from './utils';
 
 // Default export
-function screens(currentSettings: Settings) {
+export default function screens(currentSettings: Settings) {
 	// Store an internal copy of the current settings
 	const settings = { ...currentSettings };
 

@@ -274,8 +274,8 @@ export default function utils(currentSettings: Settings) {
 								// Store details
 								previousOption = argument;
 								nextIsOptionValue = true;
-								nextValueAccepts = details.accepts ? details.accepts : null;
-								nextValueType = details.type ? details.type : null;
+								nextValueAccepts = details.accepts || null;
+								nextValueType = details.type || null;
 								organizedArguments.options.push(option);
 							}
 						});

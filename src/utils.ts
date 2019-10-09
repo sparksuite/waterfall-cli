@@ -258,29 +258,27 @@ export default function utils(currentSettings: Settings) {
 				if (argument.startsWith('-')) {
 					// Check if this is an option
 					if (typeof mergedSpec.options === 'object') {
-						Object.entries(mergedSpec.options).forEach(
-							([option, details]) => {
-								// Check for a match
-								const matchesFullOption =
-									argument === `--${option.trim().toLowerCase()}`;
-								const matchesShorthandOption =
-									details.shorthand &&
-									argument === `-${details.shorthand.trim().toLowerCase()}`;
+						Object.entries(mergedSpec.options).forEach(([option, details]) => {
+							// Check for a match
+							const matchesFullOption =
+								argument === `--${option.trim().toLowerCase()}`;
+							const matchesShorthandOption =
+								details.shorthand &&
+								argument === `-${details.shorthand.trim().toLowerCase()}`;
 
-								// Handle a match
-								if (matchesFullOption || matchesShorthandOption) {
-									// Verbose output
-									utils(settings).verboseLog('...Is an option');
+							// Handle a match
+							if (matchesFullOption || matchesShorthandOption) {
+								// Verbose output
+								utils(settings).verboseLog('...Is an option');
 
-									// Store details
-									previousOption = argument;
-									nextIsOptionValue = true;
-									nextValueAccepts = details.accepts ? details.accepts : null;
-									nextValueType = details.type ? details.type : null;
-									organizedArguments.options.push(option);
-								}
+								// Store details
+								previousOption = argument;
+								nextIsOptionValue = true;
+								nextValueAccepts = details.accepts ? details.accepts : null;
+								nextValueType = details.type ? details.type : null;
+								organizedArguments.options.push(option);
 							}
-						);
+						});
 					}
 
 					// Handle flags
@@ -314,9 +312,7 @@ export default function utils(currentSettings: Settings) {
 
 						// Handle no match
 						if (!matchedFlag) {
-							throw new ErrorWithoutStack(
-								`Unrecognized argument: ${argument}`
-							);
+							throw new ErrorWithoutStack(`Unrecognized argument: ${argument}`);
 						}
 					}
 
@@ -330,9 +326,7 @@ export default function utils(currentSettings: Settings) {
 				);
 
 				// Get the command path
-				const commandPath = commandFiles.filter(path =>
-					path.match(/\.js$/)
-				)[0];
+				const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
 
 				// Check if that file exists
 				if (

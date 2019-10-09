@@ -97,7 +97,7 @@ module.exports = function Constructor(currentSettings) {
 			// Determine if it accepts data
 			let acceptsData = false;
 
-			if (mergedSpec.data && mergedSpec.data.description) {
+			if (typeof mergedSpec.data === 'object') {
 				acceptsData = true;
 			}
 

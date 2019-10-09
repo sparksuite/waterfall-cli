@@ -2,7 +2,7 @@
 
 // Dependencies
 const defaultSettings = require('../dist/default-settings').default;
-const utils = require('../dist/utils.js');
+const utils = require('../dist/utils');
 
 const settingsBadStructure = {
 	...defaultSettings,

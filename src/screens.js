@@ -1,7 +1,7 @@
 // Dependencies
 const chalk = require('chalk');
 const Table = require('cli-table');
-const utils = require('./utils.js');
+const utils = require('./utils');
 
 // Helpful utility functions
 module.exports = function Constructor(currentSettings) {

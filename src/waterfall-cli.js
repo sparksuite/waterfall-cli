@@ -6,10 +6,10 @@ const path = require('path');
 const semver = require('semver');
 const deepmerge = require('deepmerge');
 const defaultSettings = require('./default-settings').default;
-const ErrorWithoutStack = require('./error-without-stack.js');
-const screens = require('./screens.js');
-const utils = require('./utils.js');
-const printPrettyError = require('./print-pretty-error.js');
+const ErrorWithoutStack = require('./error-without-stack');
+const screens = require('./screens');
+const utils = require('./utils');
+const printPrettyError = require('./print-pretty-error');
 
 // Handle exceptions
 process.on('uncaughtException', error => {

@@ -32,11 +32,7 @@ describe('#retrieveAppInformation()', () => {
 			packageFilePath: '../fake.json',
 		};
 
-		expect(utils(settings).retrieveAppInformation()).toStrictEqual({
-			name: null,
-			packageName: null,
-			version: null,
-		});
+		expect(utils(settings).retrieveAppInformation()).toStrictEqual({});
 	});
 });
 
@@ -153,7 +149,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: '',
 		});
 	});
@@ -168,7 +163,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -363,7 +357,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: null,
 			command: 'order dine-in',
 		});
 	});
@@ -378,7 +371,6 @@ describe('#organizeArguments()', () => {
 			flags: ['vegetarian'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -393,7 +385,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -408,7 +399,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -423,7 +413,6 @@ describe('#organizeArguments()', () => {
 			flags: ['vegetarian', 'quiet'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -438,7 +427,6 @@ describe('#organizeArguments()', () => {
 			flags: ['quiet', 'vegetarian'],
 			options: [],
 			values: [],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -453,7 +441,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['limit'],
 			values: [10],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -468,7 +455,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123.4],
-			data: null,
 			command: 'list',
 		});
 
@@ -481,7 +467,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123],
-			data: null,
 			command: 'list',
 		});
 
@@ -494,7 +479,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [123],
-			data: null,
 			command: 'list',
 		});
 
@@ -507,7 +491,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['max-price'],
 			values: [0.123],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -522,7 +505,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
-			data: null,
 			command: 'list',
 		});
 	});
@@ -537,7 +519,6 @@ describe('#organizeArguments()', () => {
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
-			data: null,
 			command: 'list',
 		});
 	});

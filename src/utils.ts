@@ -314,7 +314,11 @@ export default function utils(currentSettings: Settings) {
 						utils(settings).verboseLog('...Is data');
 
 						// Append onto data
-						organizedArguments.data += ` ${argument}`;
+						if (!organizedArguments.data) {
+							organizedArguments.data = ` ${argument}`;
+						} else {
+							organizedArguments.data += ` ${argument}`;
+						}
 
 						// Skip further processing
 						continue;
@@ -419,8 +423,8 @@ export default function utils(currentSettings: Settings) {
 						// Store details
 						reachedData = true;
 
-						if (organizedArguments.data === null) {
-							organizedArguments.data = argument;
+						if (!organizedArguments.data) {
+							organizedArguments.data = ` ${argument}`;
 						} else {
 							organizedArguments.data += ` ${argument}`;
 						}
@@ -436,7 +440,12 @@ export default function utils(currentSettings: Settings) {
 			}
 
 			// Handle if there's any data
-			if (organizedArguments.data !== null) {
+			if (organizedArguments.data) {
+				// Trim the data if it's a string
+				if (typeof organizedArguments.data === 'string') {
+					organizedArguments.data = organizedArguments.data.trim();
+				}
+
 				// Get merged spec for this command
 				const mergedSpec = utils(settings).getMergedSpec(
 					organizedArguments.command

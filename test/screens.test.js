@@ -352,11 +352,9 @@ describe('#help()', () => {
 			arguments: ['order', 'descriptionless-data'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'DATA:'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
+			true
+		);
 
 		expect(
 			removeFormatting(screens(settings).help()).includes(

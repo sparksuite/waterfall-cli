@@ -1,4 +1,6 @@
-// Initialize Waterfall CLI
-require('../../../../dist/index.js')({
+// Import and initialize Waterfall CLI
+const waterfall = require('../../../../dist/index.js');
+
+waterfall.init({
 	verbose: true,
 });

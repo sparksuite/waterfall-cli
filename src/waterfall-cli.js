@@ -18,7 +18,7 @@ process.on('uncaughtException', error => {
 });
 
 // The constructor, for use at the entry point
-module.exports = function Constructor(customSettings) {
+module.exports.init = function init(customSettings) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 

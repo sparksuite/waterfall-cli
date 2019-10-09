@@ -22,7 +22,7 @@ export default function screens(currentSettings: Settings) {
 			}
 
 			// Add version (if we have one) and a newline
-			outputString += `${settings.app.version ? settings.app.version : ''}\n`;
+			outputString += `${settings.app.version || ''}\n`;
 
 			// Add spacing after
 			for (let i = 0; i < settings.spacing.after; i += 1) {

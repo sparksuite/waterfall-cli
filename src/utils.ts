@@ -67,15 +67,12 @@ export default function utils(currentSettings: Settings) {
 		},
 
 		// Get specs for a command
-		getMergedSpec(command: string): CommandSpec {
+		getMergedSpec(command: string): CommandSpec & { flags: {}, options: {} } {
 			// Break into pieces, with entry point
 			const pieces = `. ${command}`.trim().split(' ');
 
 			// Initialize
-			const mergedSpec: CommandSpec = {
-				data: {
-					description: '',
-				},
+			const mergedSpec: CommandSpec & { flags: {}, options: {} } = {
 				flags: {
 					version: {
 						shorthand: 'v',
@@ -134,9 +131,6 @@ export default function utils(currentSettings: Settings) {
 				if (typeof spec.flags === 'object') {
 					Object.entries(spec.flags).forEach(([flag, details]) => {
 						if (index === pieces.length - 1 || details.cascades === true) {
-							if (mergedSpec.flags === undefined) {
-								mergedSpec.flags = {};
-							}
 							mergedSpec.flags[flag] = details;
 						}
 					});
@@ -145,9 +139,6 @@ export default function utils(currentSettings: Settings) {
 				if (typeof spec.options === 'object') {
 					Object.entries(spec.options).forEach(([option, details]) => {
 						if (index === pieces.length - 1 || details.cascades === true) {
-							if (mergedSpec.options === undefined) {
-								mergedSpec.options = {};
-							}
 							mergedSpec.options[option] = details;
 						}
 					});

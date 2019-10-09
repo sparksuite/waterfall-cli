@@ -78,33 +78,11 @@ function screens(currentSettings: Settings) {
 				organizedArguments.command
 			);
 
-			// Determine if there are flags
-			let hasFlags = false;
-
-			if (mergedSpec.flags && Object.entries(mergedSpec.flags).length) {
-				hasFlags = true;
-			}
-
-			// Determine if there are options
-			let hasOptions = false;
-
-			if (mergedSpec.options && Object.entries(mergedSpec.options).length) {
-				hasOptions = true;
-			}
-
-			// Determine if it allows data
-			let allowsData = false;
-
-			if (typeof mergedSpec.data === 'object') {
-				allowsData = true;
-			}
-
-			// Determine if there are commands
-			let hasCommands = false;
-
-			if (commands.length) {
-				hasCommands = true;
-			}
+			// Determine if certain features are available
+			let hasFlags = !!Object.entries(mergedSpec.flags).length;
+			let hasOptions = !!Object.entries(mergedSpec.options).length;
+			let allowsData = typeof mergedSpec.data === 'object';
+			let hasCommands = !!commands.length;
 
 			// Output description
 			if (mergedSpec.description) {

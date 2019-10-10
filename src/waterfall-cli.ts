@@ -195,7 +195,7 @@ export function init(customSettings: Partial<Settings>) {
 	);
 
 	// Call onStart() function, if any
-	if (typeof settings.onStart === 'function') {
+	if (settings.onStart) {
 		settings.onStart(inputObject);
 	}
 

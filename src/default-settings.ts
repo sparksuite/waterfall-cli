@@ -9,7 +9,7 @@ const settings: Settings = {
 	arguments: processArguments(process.argv),
 	mainFilename: process.argv[1],
 	newVersionWarning: {
-		enabled: true,
+		enabled: false,
 		installedGlobally: true,
 	},
 	packageFilePath: '../package.json',

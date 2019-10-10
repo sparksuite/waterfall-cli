@@ -1,5 +1,5 @@
 // Require Waterfall CLI
-const waterfall = require('../../../../../../dist/index');
+const waterfall = require('../../../../../dist/index');
 
 // Parse command input
 const input = waterfall.command();

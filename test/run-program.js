@@ -29,25 +29,22 @@ module.exports = function runProgram(
 		allArguments = allArguments.filter(element => element !== '');
 
 		// Launch the program
-		exec(
-			allArguments.join(' '),
-			(error, stdout, stderr) => {
-				// Handle an issue
-				if (error) {
-					reject({
-						error: error,
-						stdout: removeFormatting(stdout),
-						stderr: removeFormatting(stderr),
-						result: `Program exited with code: ${error.code}. See details:\n\n${error}`,
-					});
-				}
-
-				// Resolve and hand back stdout/stderr
-				resolve({
+		exec(allArguments.join(' '), (error, stdout, stderr) => {
+			// Handle an issue
+			if (error) {
+				reject({
+					error: error,
 					stdout: removeFormatting(stdout),
 					stderr: removeFormatting(stderr),
+					result: `Program exited with code: ${error.code}. See details:\n\n${error}`,
 				});
 			}
-		);
+
+			// Resolve and hand back stdout/stderr
+			resolve({
+				stdout: removeFormatting(stdout),
+				stderr: removeFormatting(stderr),
+			});
+		});
 	});
 };

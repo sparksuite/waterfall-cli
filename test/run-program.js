@@ -13,12 +13,15 @@ function removeFormatting(text) {
 module.exports = function runProgram(
 	entryFile,
 	programArguments = '',
-	nodeArguments = ''
+	nodeArguments = '',
+	preArguments = ''
 ) {
 	// Return a promise
 	return new Promise((resolve, reject) => {
 		// Build the array of all arguments
 		let allArguments = [
+			...preArguments.split(' '),
+			'node',
 			...nodeArguments.split(' '),
 			entryFile,
 			...programArguments.split(' '),
@@ -26,22 +29,25 @@ module.exports = function runProgram(
 		allArguments = allArguments.filter(element => element !== '');
 
 		// Launch the program
-		exec('node ' + allArguments.join(' '), (error, stdout, stderr) => {
-			// Handle an issue
-			if (error) {
-				reject({
-					error: error,
+		exec(
+			allArguments.join(' '),
+			(error, stdout, stderr) => {
+				// Handle an issue
+				if (error) {
+					reject({
+						error: error,
+						stdout: removeFormatting(stdout),
+						stderr: removeFormatting(stderr),
+						result: `Program exited with code: ${error.code}. See details:\n\n${error}`,
+					});
+				}
+
+				// Resolve and hand back stdout/stderr
+				resolve({
 					stdout: removeFormatting(stdout),
 					stderr: removeFormatting(stderr),
-					result: `Program exited with code: ${error.code}. See details:\n\n${error}`,
 				});
 			}
-
-			// Resolve and hand back stdout/stderr
-			resolve({
-				stdout: removeFormatting(stdout),
-				stderr: removeFormatting(stderr),
-			});
-		});
+		);
 	});
 };

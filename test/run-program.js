@@ -16,7 +16,7 @@ module.exports = function runProgram(
 	nodeArguments = ''
 ) {
 	// Return a promise
-	return new Promise(resolve => {
+	return new Promise((resolve, reject) => {
 		// Build the array of all arguments
 		let allArguments = [
 			...nodeArguments.split(' '),
@@ -29,9 +29,13 @@ module.exports = function runProgram(
 		exec('node ' + allArguments.join(' '), (error, stdout, stderr) => {
 			// Handle an issue
 			if (error) {
-				throw new Error(
-					`Program exited with code: ${error.code}. See details:\n\n${error}`
-				);
+				reject({
+					error: error,
+					stdout: removeFormatting(stdout),
+					stderr: removeFormatting(stderr),
+				});
+
+				return;
 			}
 
 			// Resolve and hand back stdout/stderr

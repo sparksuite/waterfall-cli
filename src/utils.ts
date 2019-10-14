@@ -527,19 +527,6 @@ export default function utils(currentSettings: Settings) {
 				return allItems.filter(utils(settings).files.isFile);
 			},
 
-			// Get child directories of a parent directory
-			getDirectories(directory: string): string[] {
-				if (!fs.existsSync(directory)) {
-					return [];
-				}
-
-				const allItems = fs
-					.readdirSync(directory)
-					.map((name: string) => path.join(directory, name));
-
-				return allItems.filter(utils(settings).files.isDirectory);
-			},
-
 			// Get child directories of a parent directory, recursively & synchronously
 			getAllDirectories(directory: string): string[] {
 				if (!fs.existsSync(directory)) {

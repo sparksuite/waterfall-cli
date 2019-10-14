@@ -34,6 +34,8 @@ module.exports = function runProgram(
 					stdout: removeFormatting(stdout),
 					stderr: removeFormatting(stderr),
 				});
+				
+				return;
 			}
 
 			// Resolve and hand back stdout/stderr

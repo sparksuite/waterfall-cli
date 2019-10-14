@@ -909,19 +909,19 @@ describe('#files', () => {
 		]);
 	});
 
-	test('GetFiles() returns empty array if path not found', () => {
+	test('getFiles() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 
-	test('GetDirectories() returns empty array if path not found', () => {
+	test('getDirectories() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 
-	test('GetAllDirectories() returns empty array if path not found', () => {
+	test('getAllDirectories() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);

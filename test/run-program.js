@@ -33,7 +33,6 @@ module.exports = function runProgram(
 					error: error,
 					stdout: removeFormatting(stdout),
 					stderr: removeFormatting(stderr),
-					result: `Program exited with code: ${error.code}. See details:\n\n${error}`,
 				});
 			}
 

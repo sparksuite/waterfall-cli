@@ -4,13 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import Fuse from 'fuse.js';
 import ErrorWithoutStack from './error-without-stack';
-import {
-	AppInformation,
-	CommandSpec,
-	InputObject,
-	OrganizedArguments,
-	Settings,
-} from './types';
+import { AppInformation, CommandSpec, InputObject, OrganizedArguments, Settings } from './types';
 
 // Helpful utility functions
 export default function utils(currentSettings: Settings) {
@@ -32,30 +26,22 @@ export default function utils(currentSettings: Settings) {
 			const app: AppInformation = { ...settings.app };
 
 			// Build path to package.json file
-			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${
-				settings.packageFilePath
-			}`;
+			const pathToPackageFile = `${path.dirname(settings.mainFilename)}/${settings.packageFilePath}`;
 
 			// Handle if a package.json file exists
 			if (fs.existsSync(pathToPackageFile)) {
 				// Verbose output
-				utils(settings).verboseLog(
-					`Found package.json at: ${pathToPackageFile}`
-				);
+				utils(settings).verboseLog(`Found package.json at: ${pathToPackageFile}`);
 
 				// Get package
-				const packageInfo = JSON.parse(
-					fs.readFileSync(pathToPackageFile).toString()
-				);
+				const packageInfo = JSON.parse(fs.readFileSync(pathToPackageFile).toString());
 
 				// Store information
 				app.name = app.name || packageInfo.name;
 				app.packageName = packageInfo.name;
 				app.version = app.version || packageInfo.version;
 			} else {
-				utils(settings).verboseLog(
-					`Could not find package.json at: ${pathToPackageFile}`
-				);
+				utils(settings).verboseLog(`Could not find package.json at: ${pathToPackageFile}`);
 			}
 
 			// Return info
@@ -147,9 +133,7 @@ export default function utils(currentSettings: Settings) {
 				// Skip option values
 				if (nextIsOptionValue) {
 					// Verbose output
-					utils(settings).verboseLog(
-						`...Is value for previous option (${previousOption})`
-					);
+					utils(settings).verboseLog(`...Is value for previous option (${previousOption})`);
 
 					// Initialize
 					let value: string | number = argument;
@@ -159,9 +143,7 @@ export default function utils(currentSettings: Settings) {
 						const accepts: string[] = nextValueAccepts;
 						if (accepts.includes(value) === false) {
 							throw new ErrorWithoutStack(
-								`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${accepts.join(
-									', '
-								)}`
+								`Unrecognized value for ${previousOption}: ${value}\nAccepts: ${accepts.join(', ')}`
 							);
 						}
 					}
@@ -171,26 +153,16 @@ export default function utils(currentSettings: Settings) {
 							if (value.match(/^[0-9]+$/) !== null) {
 								value = parseInt(value, 10);
 							} else {
-								throw new ErrorWithoutStack(
-									`The option ${previousOption} expects an integer\nProvided: ${value}`
-								);
+								throw new ErrorWithoutStack(`The option ${previousOption} expects an integer\nProvided: ${value}`);
 							}
 						} else if (nextValueType === 'float') {
-							if (
-								value.match(/^[0-9]*[.]*[0-9]*$/) !== null &&
-								value !== '.' &&
-								value !== ''
-							) {
+							if (value.match(/^[0-9]*[.]*[0-9]*$/) !== null && value !== '.' && value !== '') {
 								value = parseFloat(value);
 							} else {
-								throw new ErrorWithoutStack(
-									`The option ${previousOption} expects a float\nProvided: ${value}`
-								);
+								throw new ErrorWithoutStack(`The option ${previousOption} expects a float\nProvided: ${value}`);
 							}
 						} else {
-							throw new ErrorWithoutStack(
-								`Unrecognized "type": ${nextValueType}`
-							);
+							throw new ErrorWithoutStack(`Unrecognized "type": ${nextValueType}`);
 						}
 					}
 
@@ -201,16 +173,10 @@ export default function utils(currentSettings: Settings) {
 				}
 
 				// Get merged spec for this command
-				const mergedSpec: CommandSpec = utils(settings).getMergedSpec(
-					organizedArguments.command
-				);
+				const mergedSpec: CommandSpec = utils(settings).getMergedSpec(organizedArguments.command);
 
 				// Handle if we're supposed to ignore anything that looks like flags/options
-				if (
-					reachedData &&
-					mergedSpec.data &&
-					mergedSpec.data.ignoreFlagsAndOptions === true
-				) {
+				if (reachedData && mergedSpec.data && mergedSpec.data.ignoreFlagsAndOptions === true) {
 					// Verbose output
 					utils(settings).verboseLog('...Is data');
 
@@ -231,11 +197,9 @@ export default function utils(currentSettings: Settings) {
 					if (typeof mergedSpec.options === 'object') {
 						Object.entries(mergedSpec.options).forEach(([option, details]) => {
 							// Check for a match
-							const matchesFullOption =
-								argument === `--${option.trim().toLowerCase()}`;
+							const matchesFullOption = argument === `--${option.trim().toLowerCase()}`;
 							const matchesShorthandOption =
-								details.shorthand &&
-								argument === `-${details.shorthand.trim().toLowerCase()}`;
+								details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`;
 
 							// Handle a match
 							if (matchesFullOption || matchesShorthandOption) {
@@ -267,10 +231,7 @@ export default function utils(currentSettings: Settings) {
 									// Store details
 									matchedFlag = true;
 									organizedArguments.flags.push(flag);
-								} else if (
-									details.shorthand &&
-									argument === `-${details.shorthand.trim().toLowerCase()}`
-								) {
+								} else if (details.shorthand && argument === `-${details.shorthand.trim().toLowerCase()}`) {
 									// Verbose output
 									utils(settings).verboseLog('...Is a flag');
 
@@ -295,11 +256,7 @@ export default function utils(currentSettings: Settings) {
 				const commandPath = path.join(currentPathPrefix, argument);
 
 				// Check if that file exists
-				if (
-					!reachedData &&
-					fs.existsSync(commandPath) &&
-					argument.replace(/[/\\?%*:|"<>.]/g, '') !== ''
-				) {
+				if (!reachedData && fs.existsSync(commandPath) && argument.replace(/[/\\?%*:|"<>.]/g, '') !== '') {
 					// Verbose output
 					utils(settings).verboseLog('...Is a command');
 
@@ -323,17 +280,13 @@ export default function utils(currentSettings: Settings) {
 
 			// Error if we're missing an expected value
 			if (nextIsOptionValue) {
-				throw new ErrorWithoutStack(
-					`No value provided for ${previousOption}, which is an option, not a flag`
-				);
+				throw new ErrorWithoutStack(`No value provided for ${previousOption}, which is an option, not a flag`);
 			}
 
 			// Handle if there's any data
 			if (typeof organizedArguments.data === 'string') {
 				// Get merged spec for this command
-				const mergedSpec = utils(settings).getMergedSpec(
-					organizedArguments.command
-				);
+				const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
 
 				// Handle if data is not allowed
 				if (typeof mergedSpec.data !== 'object') {
@@ -351,9 +304,7 @@ export default function utils(currentSettings: Settings) {
 						minMatchCharLength: 1,
 					});
 
-					const results = fuse.search(
-						`${organizedArguments.command} ${organizedArguments.data}`.trim()
-					);
+					const results = fuse.search(`${organizedArguments.command} ${organizedArguments.data}`.trim());
 					let bestMatch = null;
 
 					if (results.length && results[0].score && results[0].score < 0.6) {
@@ -364,13 +315,10 @@ export default function utils(currentSettings: Settings) {
 					const command = `${settings.usageCommand}${organizedArguments.command}`;
 
 					// Form error message
-					let errorMessage = `You provided ${chalk.bold(
-						organizedArguments.data
-					)} to ${chalk.bold(command)}\n`;
+					let errorMessage = `You provided ${chalk.bold(organizedArguments.data)} to ${chalk.bold(command)}\n`;
 
 					if (bestMatch) {
-						errorMessage +=
-							'If you were trying to pass in data, this command does not accept data\n';
+						errorMessage += 'If you were trying to pass in data, this command does not accept data\n';
 						errorMessage += `If you were trying to use a command, did you mean ${chalk.bold(
 							settings.usageCommand
 						)} ${chalk.bold(bestMatch)}?\n`;
@@ -421,9 +369,7 @@ export default function utils(currentSettings: Settings) {
 							);
 						}
 					} else {
-						throw new ErrorWithoutStack(
-							`Unrecognized "type": ${mergedSpec.data.type}`
-						);
+						throw new ErrorWithoutStack(`Unrecognized "type": ${mergedSpec.data.type}`);
 					}
 				}
 			}
@@ -443,9 +389,7 @@ export default function utils(currentSettings: Settings) {
 			};
 
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(
-				organizedArguments.command
-			);
+			const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
 
 			// Loop over each component and store
 			Object.entries(mergedSpec.flags).forEach(([flag]) => {
@@ -464,11 +408,7 @@ export default function utils(currentSettings: Settings) {
 			});
 
 			// Handle missing required data
-			if (
-				mergedSpec.data &&
-				mergedSpec.data.required &&
-				!organizedArguments.data
-			) {
+			if (mergedSpec.data && mergedSpec.data.required && !organizedArguments.data) {
 				throw new ErrorWithoutStack('Data is required');
 			}
 
@@ -520,9 +460,7 @@ export default function utils(currentSettings: Settings) {
 					return [];
 				}
 
-				const allItems = fs
-					.readdirSync(directory)
-					.map((name: string) => path.join(directory, name));
+				const allItems = fs.readdirSync(directory).map((name: string) => path.join(directory, name));
 
 				return allItems.filter(utils(settings).files.isFile);
 			},
@@ -533,21 +471,15 @@ export default function utils(currentSettings: Settings) {
 					return [];
 				}
 
-				return fs
-					.readdirSync(directory)
-					.reduce((files: string[], file: string) => {
-						const name = path.join(directory, file);
+				return fs.readdirSync(directory).reduce((files: string[], file: string) => {
+					const name = path.join(directory, file);
 
-						if (utils(settings).files.isDirectory(name)) {
-							return [
-								...files,
-								name,
-								...utils(settings).files.getAllDirectories(name),
-							];
-						}
+					if (utils(settings).files.isDirectory(name)) {
+						return [...files, name, ...utils(settings).files.getAllDirectories(name)];
+					}
 
-						return [...files];
-					}, []);
+					return [...files];
+				}, []);
 			},
 
 			// Get a command's spec
@@ -558,34 +490,24 @@ export default function utils(currentSettings: Settings) {
 				}
 
 				// List the files in this directory
-				const commandFiles: string[] = utils(settings).files.getFiles(
-					directory
-				);
+				const commandFiles: string[] = utils(settings).files.getFiles(directory);
 
 				// Error if not exactly one spec file
-				if (
-					commandFiles.filter(path => path.match(/\.spec.c?js$/)).length !== 1
-				) {
+				if (commandFiles.filter(path => path.match(/\.spec.c?js$/)).length !== 1) {
 					throw new ErrorWithoutStack(
-						`There should be exactly one ${chalk.bold(
-							'.spec.js'
-						)} or ${chalk.bold('.spec.cjs')} file in: ${directory}`
+						`There should be exactly one ${chalk.bold('.spec.js')} or ${chalk.bold('.spec.cjs')} file in: ${directory}`
 					);
 				}
 
 				// Get the file path
-				const specFilePath = commandFiles.filter(path =>
-					path.match(/\.spec.c?js$/)
-				)[0];
+				const specFilePath = commandFiles.filter(path => path.match(/\.spec.c?js$/))[0];
 
 				// Return
 				try {
 					return require(specFilePath);
 				} catch (error) {
 					throw new ErrorWithoutStack(
-						`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold(
-							'JS Error: '
-						)}${error}`
+						`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold('JS Error: ')}${error}`
 					);
 				}
 			},

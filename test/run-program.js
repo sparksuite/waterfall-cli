@@ -10,19 +10,11 @@ function removeFormatting(text) {
 }
 
 // Test runner
-module.exports = function runProgram(
-	entryFile,
-	programArguments = '',
-	nodeArguments = ''
-) {
+module.exports = function runProgram(entryFile, programArguments = '', nodeArguments = '') {
 	// Return a promise
 	return new Promise((resolve, reject) => {
 		// Build the array of all arguments
-		let allArguments = [
-			...nodeArguments.split(' '),
-			entryFile,
-			...programArguments.split(' '),
-		];
+		let allArguments = [...nodeArguments.split(' '), entryFile, ...programArguments.split(' ')];
 		allArguments = allArguments.filter(element => element !== '');
 
 		// Launch the program

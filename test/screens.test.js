@@ -7,10 +7,7 @@ const screens = require('../dist/screens').default;
 
 // Remove ANSI formatting
 function removeFormatting(text) {
-	return text.replace(
-		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g,
-		''
-	);
+	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 }
 
 // Tests
@@ -24,9 +21,7 @@ describe('#version()', () => {
 			},
 		};
 
-		expect(removeFormatting(screens(settings).version())).toContain(
-			'Example program: 1.2.3'
-		);
+		expect(removeFormatting(screens(settings).version())).toContain('Example program: 1.2.3');
 	});
 
 	test('Missing name', () => {
@@ -52,9 +47,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'Description: List something'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('Description: List something');
 	});
 
 	test('Usage line (commands + flags + options)', () => {
@@ -64,9 +57,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'Usage: node entry.js [commands] [flags] [options]'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('Usage: node entry.js [commands] [flags] [options]');
 	});
 
 	test('Usage line (flags + options + data)', () => {
@@ -77,9 +68,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'Usage: node entry.js list [flags] [options] [data]'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('Usage: node entry.js list [flags] [options] [data]');
 	});
 
 	test('Flags - header', () => {
@@ -99,9 +88,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'--non-cascading'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--non-cascading');
 
 		settings = {
 			...defaultSettings,
@@ -110,9 +97,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).not.toContain(
-			'--non-cascading'
-		);
+		expect(removeFormatting(screens(settings).help())).not.toContain('--non-cascading');
 	});
 
 	test('Flags - cascading', () => {
@@ -173,9 +158,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'--delivery-zip-code'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--delivery-zip-code');
 
 		settings = {
 			...defaultSettings,
@@ -184,9 +167,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'--delivery-zip-code'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--delivery-zip-code');
 	});
 
 	test('Options - shorthand', () => {
@@ -196,9 +177,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'--delivery-zip-code, -z'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--delivery-zip-code, -z');
 	});
 
 	test('Options - description', () => {
@@ -208,9 +187,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'The delivery ZIP code, for context'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('The delivery ZIP code, for context');
 	});
 
 	test('Options - description (type)', () => {
@@ -221,9 +198,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'The maximum price of the items to list (float)'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('The maximum price of the items to list (float)');
 	});
 
 	test('Options - description (required + accepts)', () => {
@@ -255,9 +230,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).not.toContain(
-			'COMMANDS:'
-		);
+		expect(removeFormatting(screens(settings).help())).not.toContain('COMMANDS:');
 	});
 
 	test('Commands - description', () => {
@@ -267,9 +240,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'Order a pizza'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('Order a pizza');
 	});
 
 	test('Data - header', () => {
@@ -299,9 +270,7 @@ describe('#help()', () => {
 			arguments: ['order', 'dine-in'],
 		};
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'What type of pizza to order'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('What type of pizza to order');
 	});
 
 	test('Data - no description', () => {
@@ -314,9 +283,7 @@ describe('#help()', () => {
 
 		expect(removeFormatting(screens(settings).help())).toContain('DATA:');
 
-		expect(removeFormatting(screens(settings).help())).toContain(
-			'This command allows data to be passed in'
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('This command allows data to be passed in');
 	});
 
 	test('Data - description (required + accepts)', () => {

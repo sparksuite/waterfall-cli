@@ -14,3 +14,11 @@ describe('Built-in abilities', () => {
 		});
 	});
 });
+
+describe('Commands', () => {
+	test('Runs a simple command successfully', () => {
+		return runProgram(entryFile, 'example').then(({ stdout }) => {
+			expect(stdout.includes('Ran example command')).toBe(true);
+		});
+	});
+});

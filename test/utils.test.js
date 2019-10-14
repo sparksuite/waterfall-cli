@@ -151,22 +151,16 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Complains about multiple .js files', () => {
+	test('Complains about multiple spec files', () => {
 		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('multiple-js');
-		}).toThrow(Error);
+			utils(settingsBadStructure).getMergedSpec('multiple-specs');
+		}).toThrow();
 	});
 
-	test('Complains about multiple .json files', () => {
+	test('Complains about invalid spec JS', () => {
 		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('multiple-json');
-		}).toThrow(Error);
-	});
-
-	test('Complains about bad JSON', () => {
-		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('bad json');
-		}).toThrow(Error);
+			utils(settingsBadStructure).getMergedSpec('invalid-spec-js');
+		}).toThrow();
 	});
 });
 
@@ -563,7 +557,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about missing option value', () => {
@@ -574,7 +568,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about unrecognized option value type', () => {
@@ -585,7 +579,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about unrecognized data type', () => {
@@ -596,7 +590,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about unrecognized flag', () => {
@@ -607,7 +601,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about non-permitted data', () => {
@@ -618,7 +612,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about option value not in "values"', () => {
@@ -629,7 +623,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about data not in "values"', () => {
@@ -640,7 +634,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about option value not being integer', () => {
@@ -651,7 +645,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -660,7 +654,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about option value not being float', () => {
@@ -671,7 +665,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -680,7 +674,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -689,7 +683,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -698,7 +692,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about data not being integer', () => {
@@ -709,7 +703,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -718,7 +712,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about data not being float', () => {
@@ -729,7 +723,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -738,7 +732,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -747,7 +741,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
@@ -756,7 +750,7 @@ describe('#organizeArguments()', () => {
 
 		expect(() => {
 			utils(settings).organizeArguments();
-		}).toThrow(Error);
+		}).toThrow();
 	});
 });
 
@@ -804,7 +798,7 @@ describe('#constructInputObject()', () => {
 
 		expect(() => {
 			utils(settings).constructInputObject(organizedArguments);
-		}).toThrow(Error);
+		}).toThrow();
 	});
 
 	test('Complains about missing required data', () => {
@@ -817,7 +811,7 @@ describe('#constructInputObject()', () => {
 
 		expect(() => {
 			utils(settings).constructInputObject(organizedArguments);
-		}).toThrow(Error);
+		}).toThrow();
 	});
 });
 
@@ -915,21 +909,61 @@ describe('#files', () => {
 		]);
 	});
 
-	test('GetFiles() returns empty array if path not found', () => {
+	test('Retrieves command spec', () => {
+		expect(
+			utils(settingsPizzaOrdering).files.getCommandSpec(
+				`${__dirname}/programs/pizza-ordering/cli`
+			)
+		).toStrictEqual({
+			flags: {
+				'non-cascading': {
+					description: 'Just used for testing',
+				},
+				quiet: {
+					cascades: true,
+					description: 'Disable interactivity, rely on default values instead',
+					shorthand: 'q',
+				},
+			},
+			options: {
+				'delivery-zip-code': {
+					cascades: true,
+					description: 'The delivery ZIP code, for context',
+					shorthand: 'z',
+				},
+			},
+		});
+	});
+
+	test('getFiles() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 
-	test('GetDirectories() returns empty array if path not found', () => {
+	test('getDirectories() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 
-	test('GetAllDirectories() returns empty array if path not found', () => {
+	test('getAllDirectories() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
+	});
+
+	test('getCommandSpec() throws an error if path not found', () => {
+		expect(() => {
+			utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/fake`);
+		}).toThrow();
+	});
+
+	test('getCommandSpec() throws an error if there are multiple spec files', () => {
+		expect(() => {
+			utils(settingsBadStructure).files.getCommandSpec(
+				`${__dirname}/programs/bad-structure/cli/multiple-specs`
+			);
+		}).toThrow();
 	});
 });

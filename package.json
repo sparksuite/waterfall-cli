@@ -8,10 +8,10 @@
 		"dist"
 	],
 	"scripts": {
-		"test": "for directory in ./test/programs/*/ ; do (cd \"$directory\" && npm install); done && npm run compile && tsc --project test/programs/typescript && jest",
+		"test": "for directory in ./test/programs/*/ ; do (cd \"$directory\" && npm install); done && npm run compile && rm -rf test/programs/typescript/cli/ && tsc --project test/programs/typescript && jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json}'",
-		"compile": "tsc"
+		"compile": "rm -rf dist/ && tsc"
 	},
 	"repository": {
 		"type": "git",

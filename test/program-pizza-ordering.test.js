@@ -39,7 +39,6 @@ describe('Built-in abilities', () => {
 	});
 });
 
-// Tests
 describe('Commands', () => {
 	test('Runs a simple command successfully', () => {
 		return runProgram(entryFile, 'order dine-in').then(({ stdout }) => {

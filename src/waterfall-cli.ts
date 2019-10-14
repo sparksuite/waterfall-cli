@@ -8,7 +8,7 @@ import deepmerge from 'deepmerge';
 import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
-import { CommandSpec, Settings } from './types';
+import { Settings } from './types';
 import utils from './utils';
 import printPrettyError from './print-pretty-error';
 
@@ -164,27 +164,11 @@ export function init(customSettings: Partial<Settings>) {
 		// Update current path prefix
 		currentPathPrefix = path.join(currentPathPrefix, command);
 
-		// Get the files we care about
-		const commandFiles = utils(settings).files.getFiles(currentPathPrefix);
-
 		// Get the command path
 		const commandPath = path.join(currentPathPrefix, `${command}.js`);
 
-		// Get spec
-		const specFilePath = commandFiles.filter(path =>
-			path.match(/\.spec.c?js$/)
-		)[0];
-		let spec: CommandSpec = {};
-
-		try {
-			spec = require(specFilePath);
-		} catch (error) {
-			throw new ErrorWithoutStack(
-				`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold(
-					'JS Error: '
-				)}${error}`
-			);
-		}
+		// Get the command spec
+		const spec = utils(settings).files.getCommandSpec(currentPathPrefix);
 
 		// Push onto array, if needed
 		if (index === commandPieces.length - 1 || spec.executeOnCascade === true) {

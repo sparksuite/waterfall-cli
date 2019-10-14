@@ -909,6 +909,32 @@ describe('#files', () => {
 		]);
 	});
 
+	test('Retrieves command spec', () => {
+		expect(
+			utils(settingsPizzaOrdering).files.getCommandSpec(
+				`${__dirname}/programs/pizza-ordering/cli`
+			)
+		).toStrictEqual({
+			flags: {
+				'non-cascading': {
+					description: 'Just used for testing',
+				},
+				quiet: {
+					cascades: true,
+					description: 'Disable interactivity, rely on default values instead',
+					shorthand: 'q',
+				},
+			},
+			options: {
+				'delivery-zip-code': {
+					cascades: true,
+					description: 'The delivery ZIP code, for context',
+					shorthand: 'z',
+				},
+			},
+		});
+	});
+
 	test('getFiles() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
@@ -925,5 +951,17 @@ describe('#files', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
+	});
+
+	test('getCommandSpec() throws an error if path not found', () => {
+		expect(() => {
+			utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/fake`);
+		}).toThrow();
+	});
+	
+	test('getCommandSpec() throws an error if there are multiple spec files', () => {
+		expect(() => {
+			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`);
+		}).toThrow();
 	});
 });

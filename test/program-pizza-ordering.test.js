@@ -37,4 +37,10 @@ describe('Built-in abilities', () => {
 			expect(stdout.includes('Usage: node entry.js [commands]')).toBe(true);
 		});
 	});
+
+	test('Runs a command', () => {
+		return runProgram(entryFile, 'order dine-in').then(({ stdout }) => {
+			expect(stdout.includes('Ordered for dining in')).toBe(true);
+		});
+	});
 });

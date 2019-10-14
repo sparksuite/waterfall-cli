@@ -885,17 +885,6 @@ describe('#files', () => {
 		]);
 	});
 
-	test('Retrieves first level directories', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getDirectories(
-				`${__dirname}/file-tree`
-			)
-		).toEqual([
-			`${__dirname}/file-tree/directory1`,
-			`${__dirname}/file-tree/directory2`,
-		]);
-	});
-
 	test('Retrieves all directories', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getAllDirectories(
@@ -938,12 +927,6 @@ describe('#files', () => {
 	test('getFiles() returns empty array if path not found', () => {
 		expect(
 			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
-		).toStrictEqual([]);
-	});
-
-	test('getDirectories() returns empty array if path not found', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getDirectories(`${__dirname}/fake`)
 		).toStrictEqual([]);
 	});
 

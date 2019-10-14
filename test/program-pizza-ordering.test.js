@@ -46,3 +46,11 @@ describe('Commands', () => {
 		});
 	});
 });
+
+describe('Init settings', () => {
+	test('Calls the `onStart` function', () => {
+		return runProgram(entryFile, 'order dine-in').then(({ stdout }) => {
+			expect(stdout.includes('This is the onStart function')).toBe(true);
+		});
+	});
+});

@@ -15,9 +15,7 @@ describe('Settings', () => {
 			})
 			.catch(({ error, stderr }) => {
 				expect(error.code).toBe(1);
-				expect(stderr.includes('settings.onStart is not a function')).toBe(
-					true
-				);
+				expect(stderr).toContain('settings.onStart is not a function');
 			});
 	});
 });

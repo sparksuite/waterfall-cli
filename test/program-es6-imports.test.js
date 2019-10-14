@@ -18,7 +18,7 @@ if (semver.lt(semver.clean(process.version), '12.0.0')) {
 		test('Displays version', () => {
 			return runProgram(entryFile, '--version', '--experimental-modules').then(
 				({ stdout }) => {
-					expect(stdout.includes('es6-imports: 1.2.3')).toBe(true);
+					expect(stdout).toContain('es6-imports: 1.2.3');
 				}
 			);
 		});

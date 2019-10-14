@@ -24,11 +24,9 @@ describe('#version()', () => {
 			},
 		};
 
-		expect(
-			removeFormatting(screens(settings).version()).includes(
-				'Example program: 1.2.3'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).version())).toContain(
+			'Example program: 1.2.3'
+		);
 	});
 
 	test('Missing name', () => {
@@ -40,12 +38,8 @@ describe('#version()', () => {
 			},
 		};
 
-		expect(
-			removeFormatting(screens(settings).version()).includes('1.2.3')
-		).toBe(true);
-		expect(removeFormatting(screens(settings).version()).includes(':')).toBe(
-			false
-		);
+		expect(removeFormatting(screens(settings).version())).toContain('1.2.3');
+		expect(removeFormatting(screens(settings).version())).not.toContain(':');
 	});
 });
 
@@ -58,11 +52,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'Description: List something'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'Description: List something'
+		);
 	});
 
 	test('Usage line (commands + flags + options)', () => {
@@ -72,11 +64,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'Usage: node entry.js [commands] [flags] [options]'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'Usage: node entry.js [commands] [flags] [options]'
+		);
 	});
 
 	test('Usage line (flags + options + data)', () => {
@@ -87,11 +77,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'Usage: node entry.js list [flags] [options] [data]'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'Usage: node entry.js list [flags] [options] [data]'
+		);
 	});
 
 	test('Flags - header', () => {
@@ -101,9 +89,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('FLAGS:')).toBe(
-			true
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('FLAGS:');
 	});
 
 	test('Flags - non-cascading', () => {
@@ -113,9 +99,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--non-cascading')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'--non-cascading'
+		);
 
 		settings = {
 			...defaultSettings,
@@ -124,9 +110,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--non-cascading')
-		).toBe(false);
+		expect(removeFormatting(screens(settings).help())).not.toContain(
+			'--non-cascading'
+		);
 	});
 
 	test('Flags - cascading', () => {
@@ -136,9 +122,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
-			true
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--quiet');
 
 		settings = {
 			...defaultSettings,
@@ -147,9 +131,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('--quiet')).toBe(
-			true
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('--quiet');
 	});
 
 	test('Flags - shorthand', () => {
@@ -159,9 +141,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--quiet, -q')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain('--quiet, -q');
 	});
 
 	test('Flags - description', () => {
@@ -171,11 +151,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'Disable interactivity, rely on default values instead'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'Disable interactivity, rely on default values instead'
+		);
 	});
 
 	test('Options - header', () => {
@@ -185,9 +163,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('OPTIONS:')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain('OPTIONS:');
 	});
 
 	test('Options - cascading', () => {
@@ -197,9 +173,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'--delivery-zip-code'
+		);
 
 		settings = {
 			...defaultSettings,
@@ -208,9 +184,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('--delivery-zip-code')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'--delivery-zip-code'
+		);
 	});
 
 	test('Options - shorthand', () => {
@@ -220,11 +196,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'--delivery-zip-code, -z'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'--delivery-zip-code, -z'
+		);
 	});
 
 	test('Options - description', () => {
@@ -234,11 +208,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'The delivery ZIP code, for context'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'The delivery ZIP code, for context'
+		);
 	});
 
 	test('Options - description (type)', () => {
@@ -249,11 +221,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'The maximum price of the items to list (float)'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'The maximum price of the items to list (float)'
+		);
 	});
 
 	test('Options - description (required + accepts)', () => {
@@ -264,11 +234,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'How to sort the list (required) (accepts: popularity, alphabetical)'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'How to sort the list (required) (accepts: popularity, alphabetical)'
+		);
 	});
 
 	test('Commands - header', () => {
@@ -278,9 +246,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('COMMANDS:')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain('COMMANDS:');
 
 		settings = {
 			...defaultSettings,
@@ -289,9 +255,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('COMMANDS:')
-		).toBe(false);
+		expect(removeFormatting(screens(settings).help())).not.toContain(
+			'COMMANDS:'
+		);
 	});
 
 	test('Commands - description', () => {
@@ -301,9 +267,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes('Order a pizza')
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'Order a pizza'
+		);
 	});
 
 	test('Data - header', () => {
@@ -314,9 +280,7 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
-			true
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('DATA:');
 
 		settings = {
 			...defaultSettings,
@@ -324,9 +288,7 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
-			false
-		);
+		expect(removeFormatting(screens(settings).help())).not.toContain('DATA:');
 	});
 
 	test('Data - description', () => {
@@ -337,11 +299,9 @@ describe('#help()', () => {
 			arguments: ['order', 'dine-in'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'What type of pizza to order'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'What type of pizza to order'
+		);
 	});
 
 	test('Data - no description', () => {
@@ -352,15 +312,11 @@ describe('#help()', () => {
 			arguments: ['order', 'descriptionless-data'],
 		};
 
-		expect(removeFormatting(screens(settings).help()).includes('DATA:')).toBe(
-			true
-		);
+		expect(removeFormatting(screens(settings).help())).toContain('DATA:');
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'This command allows data to be passed in'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'This command allows data to be passed in'
+		);
 	});
 
 	test('Data - description (required + accepts)', () => {
@@ -371,10 +327,8 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(
-			removeFormatting(screens(settings).help()).includes(
-				'What you want to list (required) (accepts: toppings, crusts, two words)'
-			)
-		).toBe(true);
+		expect(removeFormatting(screens(settings).help())).toContain(
+			'What you want to list (required) (accepts: toppings, crusts, two words)'
+		);
 	});
 });

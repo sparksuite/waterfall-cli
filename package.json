@@ -49,8 +49,15 @@
 		"typescript": "^3.6.3"
 	},
 	"jest": {
-		"verbose": true,
+		"collectCoverage": true,
 		"coverageDirectory": "./coverage/",
-		"collectCoverage": true
+		"coveragePathIgnorePatterns": [
+			"/node_modules/",
+			"<rootDir>/test/"
+		],
+		"testMatch": [
+			"**/*.test.[jt]s"
+		],
+		"verbose": true
 	}
 }

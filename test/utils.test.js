@@ -17,13 +17,11 @@ const settingsPizzaOrdering = {
 // Tests
 describe('#retrieveAppInformation()', () => {
 	test('Retrieves app info', () => {
-		expect(utils(settingsPizzaOrdering).retrieveAppInformation()).toStrictEqual(
-			{
-				name: 'pizza-ordering',
-				packageName: 'pizza-ordering',
-				version: '1.2.3',
-			}
-		);
+		expect(utils(settingsPizzaOrdering).retrieveAppInformation()).toStrictEqual({
+			name: 'pizza-ordering',
+			packageName: 'pizza-ordering',
+			version: '1.2.3',
+		});
 	});
 
 	test('Cannot find package.json', () => {
@@ -256,13 +254,7 @@ describe('#organizeArguments()', () => {
 	test('Ignores options in data', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: [
-				'order',
-				'dine-in',
-				'something',
-				'--delivery-zip-code',
-				'55555',
-			],
+			arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
 		};
 
 		expect(utils(settings).organizeArguments()).toStrictEqual({
@@ -758,23 +750,12 @@ describe('#constructInputObject()', () => {
 	test('Handles combination of input', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: [
-				'list',
-				'--delivery-zip-code',
-				'55555',
-				'--sort',
-				'popularity',
-				'-q',
-				'--vegetarian',
-				'toppings',
-			],
+			arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
 		};
 
 		const organizedArguments = utils(settings).organizeArguments();
 
-		expect(
-			utils(settings).constructInputObject(organizedArguments)
-		).toStrictEqual({
+		expect(utils(settings).constructInputObject(organizedArguments)).toStrictEqual({
 			command: 'list',
 			data: 'toppings',
 			deliveryZipCode: '55555',
@@ -831,66 +812,40 @@ describe('#getAllProgramCommands()', () => {
 
 describe('#convertDashesToCamelCase()', () => {
 	test('Normal string', () => {
-		expect(
-			utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-aaa-aaa')
-		).toEqual('aaaAaaAaa');
+		expect(utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual('aaaAaaAaa');
 	});
 
 	test('With numbers', () => {
-		expect(
-			utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-123-aaa')
-		).toEqual('aaa123Aaa');
+		expect(utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-123-aaa')).toEqual('aaa123Aaa');
 	});
 });
 
 describe('#files', () => {
 	test('Detects directory is directory', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.isDirectory(
-				`${__dirname}/file-tree/directory1`
-			)
-		).toEqual(true);
+		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-tree/directory1`)).toEqual(true);
 	});
 
 	test('Detects file is not directory', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.isDirectory(
-				`${__dirname}/file-tree/file1.js`
-			)
-		).toEqual(false);
+		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-tree/file1.js`)).toEqual(false);
 	});
 
 	test('Detects file is file', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.isFile(
-				`${__dirname}/file-tree/file1.js`
-			)
-		).toEqual(true);
+		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-tree/file1.js`)).toEqual(true);
 	});
 
 	test('Detects directory is not file', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.isFile(
-				`${__dirname}/file-tree/directory1`
-			)
-		).toEqual(false);
+		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-tree/directory1`)).toEqual(false);
 	});
 
 	test('Retrieves first level files', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-tree`)
-		).toEqual([
+		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-tree`)).toEqual([
 			`${__dirname}/file-tree/file1.js`,
 			`${__dirname}/file-tree/file2.js`,
 		]);
 	});
 
 	test('Retrieves all directories', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getAllDirectories(
-				`${__dirname}/file-tree`
-			)
-		).toStrictEqual([
+		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/file-tree`)).toStrictEqual([
 			`${__dirname}/file-tree/directory1`,
 			`${__dirname}/file-tree/directory1/directory1`,
 			`${__dirname}/file-tree/directory1/directory2`,
@@ -899,41 +854,35 @@ describe('#files', () => {
 	});
 
 	test('Retrieves command spec', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getCommandSpec(
-				`${__dirname}/programs/pizza-ordering/cli`
-			)
-		).toStrictEqual({
-			flags: {
-				'non-cascading': {
-					description: 'Just used for testing',
+		expect(utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)).toStrictEqual(
+			{
+				flags: {
+					'non-cascading': {
+						description: 'Just used for testing',
+					},
+					quiet: {
+						cascades: true,
+						description: 'Disable interactivity, rely on default values instead',
+						shorthand: 'q',
+					},
 				},
-				quiet: {
-					cascades: true,
-					description: 'Disable interactivity, rely on default values instead',
-					shorthand: 'q',
+				options: {
+					'delivery-zip-code': {
+						cascades: true,
+						description: 'The delivery ZIP code, for context',
+						shorthand: 'z',
+					},
 				},
-			},
-			options: {
-				'delivery-zip-code': {
-					cascades: true,
-					description: 'The delivery ZIP code, for context',
-					shorthand: 'z',
-				},
-			},
-		});
+			}
+		);
 	});
 
 	test('getFiles() returns empty array if path not found', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)
-		).toStrictEqual([]);
+		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)).toStrictEqual([]);
 	});
 
 	test('getAllDirectories() returns empty array if path not found', () => {
-		expect(
-			utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)
-		).toStrictEqual([]);
+		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)).toStrictEqual([]);
 	});
 
 	test('getCommandSpec() throws an error if path not found', () => {
@@ -944,9 +893,7 @@ describe('#files', () => {
 
 	test('getCommandSpec() throws an error if there are multiple spec files', () => {
 		expect(() => {
-			utils(settingsBadStructure).files.getCommandSpec(
-				`${__dirname}/programs/bad-structure/cli/multiple-specs`
-			);
+			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`);
 		}).toThrow();
 	});
 });

@@ -53,10 +53,7 @@ export function init(customSettings: Partial<Settings>) {
 	}
 
 	// Handle --help
-	if (
-		organizedArguments.flags.includes('help') ||
-		settings.arguments.length === 0
-	) {
+	if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
 		// Output
 		process.stdout.write(screens(settings).help());
 
@@ -72,10 +69,7 @@ export function init(customSettings: Partial<Settings>) {
 		// Determine where to store the version
 		const pathToLatestVersion = path.join(
 			__dirname,
-			`../app-versions/${settings.app.packageName.replace(
-				/[^a-zA-Z0-9-.]/g,
-				'='
-			)}`
+			`../app-versions/${settings.app.packageName.replace(/[^a-zA-Z0-9-.]/g, '=')}`
 		);
 
 		// Make the directory
@@ -89,26 +83,17 @@ export function init(customSettings: Partial<Settings>) {
 		// Warning message
 		if (fs.existsSync(pathToLatestVersion)) {
 			// Get values
-			const latestVersion = semver.clean(
-				`${fs.readFileSync(pathToLatestVersion)}`
-			);
+			const latestVersion = semver.clean(`${fs.readFileSync(pathToLatestVersion)}`);
 			const currentVersion = semver.clean(settings.app.version || '');
 
 			// Only continue if we have both
 			if (latestVersion && currentVersion) {
-				const bothVersionsAreValid =
-					semver.valid(latestVersion) && semver.valid(currentVersion);
+				const bothVersionsAreValid = semver.valid(latestVersion) && semver.valid(currentVersion);
 
 				// Verbose ouput
-				utils(settings).verboseLog(
-					`Previously retrieved latest app version: ${latestVersion}`
-				);
-				utils(settings).verboseLog(
-					`Cleaned-up current app version: ${currentVersion}`
-				);
-				utils(settings).verboseLog(
-					`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`
-				);
+				utils(settings).verboseLog(`Previously retrieved latest app version: ${latestVersion}`);
+				utils(settings).verboseLog(`Cleaned-up current app version: ${currentVersion}`);
+				utils(settings).verboseLog(`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`);
 
 				// Determine if warning is needed
 				if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
@@ -116,19 +101,15 @@ export function init(customSettings: Partial<Settings>) {
 						chalk.yellow(
 							`You're using an outdated version of ${
 								settings.app.name
-							} (${currentVersion}). The latest version is ${chalk.bold(
-								latestVersion
-							)}`
+							} (${currentVersion}). The latest version is ${chalk.bold(latestVersion)}`
 						)
 					);
 					console.log(
 						`${chalk.yellow(
 							`  > Upgrade by running: ${chalk.bold(
-								`npm install ${
-									settings.newVersionWarning.installedGlobally
-										? '--global '
-										: ''
-								}${settings.app.packageName}@${latestVersion}`
+								`npm install ${settings.newVersionWarning.installedGlobally ? '--global ' : ''}${
+									settings.app.packageName
+								}@${latestVersion}`
 							)}`
 						)}\n`
 					);
@@ -137,21 +118,12 @@ export function init(customSettings: Partial<Settings>) {
 		}
 
 		// Check asynchronously if there's a new published version
-		const versionCheck = spawn('npm', [
-			'view',
-			settings.app.packageName,
-			'version',
-		]);
+		const versionCheck = spawn('npm', ['view', settings.app.packageName, 'version']);
 
 		versionCheck.stdout.on('data', (stdout: string) => {
-			fs.writeFile(
-				pathToLatestVersion,
-				semver.clean(`${stdout}`),
-				'utf8',
-				() => {
-					// Do nothing
-				}
-			);
+			fs.writeFile(pathToLatestVersion, semver.clean(`${stdout}`), 'utf8', () => {
+				// Do nothing
+			});
 		});
 	}
 
@@ -180,9 +152,7 @@ export function init(customSettings: Partial<Settings>) {
 	const inputObject = utils(settings).constructInputObject(organizedArguments);
 
 	// Verbose output
-	utils(settings).verboseLog(
-		`Constructed input: ${JSON.stringify(inputObject)}`
-	);
+	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 
 	// Call onStart() function, if any
 	if (settings.onStart) {
@@ -219,9 +189,7 @@ export function init(customSettings: Partial<Settings>) {
 
 			// Handle an issue
 			if (code !== 0) {
-				throw new ErrorWithoutStack(
-					`Received exit code ${code} from: ${paths[0]}\nSee above output`
-				);
+				throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
 			}
 
 			// Run next path, if one exists

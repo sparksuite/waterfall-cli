@@ -16,11 +16,9 @@ if (semver.lt(semver.clean(process.version), '12.0.0')) {
 	// Tests
 	describe('Built-in abilities', () => {
 		test('Displays version', () => {
-			return runProgram(entryFile, '--version', '--experimental-modules').then(
-				({ stdout }) => {
-					expect(stdout).toContain('es6-imports: 1.2.3');
-				}
-			);
+			return runProgram(entryFile, '--version', '--experimental-modules').then(({ stdout }) => {
+				expect(stdout).toContain('es6-imports: 1.2.3');
+			});
 		});
 	});
 }

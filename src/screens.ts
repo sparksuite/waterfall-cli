@@ -49,23 +49,16 @@ export default function screens(currentSettings: Settings) {
 
 			// Add leading space to commands
 			commands = commands.map(command => ` ${command}`);
-			const preppedCommand = ` ${organizedArguments.command}`.replace(
-				/^ $/g,
-				''
-			);
+			const preppedCommand = ` ${organizedArguments.command}`.replace(/^ $/g, '');
 
 			// Filter out any unnecessary commands, which are...
 			commands = commands.filter(command => command.startsWith(preppedCommand)); // Not related to current command
 			commands = commands.filter(
-				command =>
-					(command.match(/ /g) || []).length ===
-					(preppedCommand.match(/ /g) || []).length + 1
+				command => (command.match(/ /g) || []).length === (preppedCommand.match(/ /g) || []).length + 1
 			); // Not a direct sub-command of the current command
 
 			// Strip current command off front
-			commands = commands.map(command =>
-				command.substring(preppedCommand.length + 1)
-			);
+			commands = commands.map(command => command.substring(preppedCommand.length + 1));
 
 			// Sort commands
 			commands.sort();
@@ -74,9 +67,7 @@ export default function screens(currentSettings: Settings) {
 			utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
 
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(
-				organizedArguments.command
-			);
+			const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
 
 			// Determine if certain features are available
 			const hasFlags = !!Object.entries(mergedSpec.flags).length;
@@ -86,9 +77,7 @@ export default function screens(currentSettings: Settings) {
 
 			// Output description
 			if (mergedSpec.description) {
-				outputString += `${chalk.bold('Description:')} ${
-					mergedSpec.description
-				}\n`;
+				outputString += `${chalk.bold('Description:')} ${mergedSpec.description}\n`;
 			}
 
 			// Form and output usage line
@@ -164,18 +153,11 @@ export default function screens(currentSettings: Settings) {
 					}
 
 					if (details.accepts) {
-						fullDescription += chalk.gray.italic(
-							` (accepts: ${details.accepts.join(', ')})`
-						);
+						fullDescription += chalk.gray.italic(` (accepts: ${details.accepts.join(', ')})`);
 					}
 
 					// Add to table
-					table.push([
-						`  --${option}${
-							details.shorthand ? `, -${details.shorthand}` : ''
-						}`,
-						fullDescription,
-					]);
+					table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, fullDescription]);
 				});
 			}
 
@@ -187,13 +169,8 @@ export default function screens(currentSettings: Settings) {
 
 			// Loop over and push each command
 			commands.forEach(command => {
-				const mergedSpec = utils(settings).getMergedSpec(
-					`${organizedArguments.command} ${command}`.trim()
-				);
-				table.push([
-					`  ${command}`,
-					mergedSpec.description ? mergedSpec.description : '',
-				]);
+				const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
+				table.push([`  ${command}`, mergedSpec.description ? mergedSpec.description : '']);
 			});
 
 			// Print table
@@ -224,9 +201,7 @@ export default function screens(currentSettings: Settings) {
 				}
 
 				if (mergedSpec.data.accepts) {
-					fullDescription += chalk.gray.italic(
-						` (accepts: ${mergedSpec.data.accepts.join(', ')})`
-					);
+					fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
 				}
 
 				// Print

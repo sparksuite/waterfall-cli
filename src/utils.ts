@@ -96,29 +96,27 @@ export default function utils(currentSettings: Settings) {
 					currentPathPrefix
 				);
 
-				// Error if not exactly one .js and one .json file
-				if (commandFiles.filter(path => path.match(/\.js$/)).length !== 1) {
+				// Error if not exactly one .spec.js file
+				if (
+					commandFiles.filter(path => path.match(/\.spec.c?js$/)).length !== 1
+				) {
 					throw new ErrorWithoutStack(
-						`There should be exactly one .js file in: ${currentPathPrefix}`
-					);
-				}
-
-				if (commandFiles.filter(path => path.match(/\.json$/)).length !== 1) {
-					throw new ErrorWithoutStack(
-						`There should be exactly one .json file in: ${currentPathPrefix}`
+						`There should be exactly one ${chalk.bold('.spec.js')} or ${chalk.bold('.spec.cjs')} file in: ${currentPathPrefix}`
 					);
 				}
 
 				// Get spec
 				const specFilePath = commandFiles.filter(path =>
-					path.match(/\.json$/)
+					path.match(/\.spec.c?js$/)
 				)[0];
 				const spec: CommandSpec = (() => {
 					try {
-						return JSON.parse(fs.readFileSync(specFilePath).toString());
+						return require(specFilePath);
 					} catch (error) {
 						throw new ErrorWithoutStack(
-							`This file has bad JSON: ${specFilePath}`
+							`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold(
+								'JS Error: '
+							)}${error}`
 						);
 					}
 				})();
@@ -320,13 +318,8 @@ export default function utils(currentSettings: Settings) {
 					continue;
 				}
 
-				// Get the files we care about
-				const commandFiles = utils(settings).files.getFiles(
-					`${currentPathPrefix}/${argument}`
-				);
-
 				// Get the command path
-				const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
+				const commandPath = path.join(currentPathPrefix, argument);
 
 				// Check if that file exists
 				if (

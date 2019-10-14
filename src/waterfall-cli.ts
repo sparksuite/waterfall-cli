@@ -168,16 +168,22 @@ export function init(customSettings: Partial<Settings>) {
 		const commandFiles = utils(settings).files.getFiles(currentPathPrefix);
 
 		// Get the command path
-		const commandPath = commandFiles.filter(path => path.match(/\.js$/))[0];
+		const commandPath = path.join(currentPathPrefix, `${command}.js`);
 
 		// Get spec
-		const specFilePath = commandFiles.filter(path => path.match(/\.json$/))[0];
+		const specFilePath = commandFiles.filter(path =>
+			path.match(/\.spec.c?js$/)
+		)[0];
 		let spec: CommandSpec = {};
 
 		try {
-			spec = JSON.parse(fs.readFileSync(specFilePath).toString());
+			spec = require(specFilePath);
 		} catch (error) {
-			throw new ErrorWithoutStack(`This file has bad JSON: ${specFilePath}`);
+			throw new ErrorWithoutStack(
+				`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold(
+					'JS Error: '
+				)}${error}`
+			);
 		}
 
 		// Push onto array, if needed

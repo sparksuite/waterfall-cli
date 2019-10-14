@@ -151,21 +151,15 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Complains about multiple .js files', () => {
+	test('Complains about multiple spec files', () => {
 		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('multiple-js');
+			utils(settingsBadStructure).getMergedSpec('multiple-specs');
 		}).toThrow(Error);
 	});
 
-	test('Complains about multiple .json files', () => {
+	test('Complains about invalid spec JS', () => {
 		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('multiple-json');
-		}).toThrow(Error);
-	});
-
-	test('Complains about bad JSON', () => {
-		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('bad json');
+			utils(settingsBadStructure).getMergedSpec('invalid-spec-js');
 		}).toThrow(Error);
 	});
 });

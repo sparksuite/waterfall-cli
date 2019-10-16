@@ -1,3 +1,3 @@
 // Exports
-export { init, command, error } from './waterfall-cli';
+export { init, parse, error } from './waterfall-cli';
 export { Settings, CommandSpec } from './types';

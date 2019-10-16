@@ -213,7 +213,7 @@ export function init(customSettings: Partial<Settings>) {
 }
 
 // The function used to kick off commands
-export function command() {
+export function parse() {
 	return JSON.parse(process.argv[2]);
 }
 

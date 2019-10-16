@@ -59,5 +59,9 @@
 			"**/*.test.[jt]s"
 		],
 		"verbose": true
+	},
+	"directories": {
+		"lib": "dist",
+		"example": "test"
 	}
 }

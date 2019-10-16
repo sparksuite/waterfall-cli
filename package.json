@@ -61,7 +61,6 @@
 		"verbose": true
 	},
 	"directories": {
-		"lib": "dist",
-		"example": "test"
+		"lib": "dist"
 	}
 }

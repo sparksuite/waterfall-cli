@@ -2,7 +2,7 @@
 const waterfall = require('waterfall-cli');
 
 // Parse command input
-const input = waterfall.command();
+const input = waterfall.parse();
 
 // Output result
 console.log(input);

@@ -33,6 +33,7 @@
 				"args": "after-used"
 			}
 		],
-		"eqeqeq": ["error"]
+		"eqeqeq": ["error"],
+		"prefer-template": ["error"]
 	}
 }

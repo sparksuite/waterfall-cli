@@ -1,12 +1,12 @@
 language: node_js
-cache: npm
-git:
-  depth: false
 branches:
   only:
     - master
     - /^greenkeeper.*$/
     - /^v\d+\.\d+(\.\d+)?(-\S*)?$/ # Allow vX.X.X tags
+stages:
+  - test
+  - deploy
 jobs:
   include:
     - stage: test

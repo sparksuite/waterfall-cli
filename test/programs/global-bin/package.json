@@ -1,0 +1,10 @@
+{
+	"name": "global-bin",
+	"version": "1.2.3",
+	"bin": {
+		"global-bin": "./cli/entry.js"
+	},
+	"dependencies": {
+		"waterfall-cli": "file:../../../"
+	}
+}

@@ -1,4 +1,5 @@
 // Dependencies
+import fs from 'fs';
 import path from 'path';
 import processArguments from './process-arguments';
 import { Settings } from './types';
@@ -7,7 +8,7 @@ import { Settings } from './types';
 const settings: Settings = {
 	app: {},
 	arguments: processArguments(process.argv),
-	mainFilename: process.argv[1],
+	mainFilename: fs.realpathSync(process.argv[1]),
 	newVersionWarning: {
 		enabled: false,
 		installedGlobally: true,
@@ -17,7 +18,7 @@ const settings: Settings = {
 		before: 1,
 		after: 1,
 	},
-	usageCommand: `node ${path.basename(process.argv[1])}`,
+	usageCommand: `node ${path.basename(fs.realpathSync(process.argv[1]))}`,
 	verbose: false,
 };
 

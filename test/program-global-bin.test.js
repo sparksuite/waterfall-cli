@@ -9,7 +9,7 @@ const { exec } = require('child_process');
 beforeAll(() => {
 	return new Promise((resolve, reject) => {
 		const programPath = path.join(__dirname, 'programs', 'global-bin');
-		
+
 		exec(`cd ${programPath} && npm link`, error => {
 			if (error) {
 				reject();
@@ -33,8 +33,6 @@ describe('Built-in abilities', () => {
 // Uninstall this program
 afterAll(() => {
 	return new Promise((resolve, reject) => {
-		const programPath = path.join(__dirname, 'programs', 'global-bin');
-
 		exec(`npm uninstall --global global-bin`, error => {
 			if (error) {
 				reject();

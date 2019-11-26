@@ -19,7 +19,7 @@ beforeAll(() => {
 			resolve();
 		});
 	});
-});
+}, 20000);
 
 // Tests
 describe('Built-in abilities', () => {
@@ -42,4 +42,4 @@ afterAll(() => {
 			resolve();
 		});
 	});
-});
+}, 20000);

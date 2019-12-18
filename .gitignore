@@ -2,4 +2,4 @@ node_modules/
 coverage/
 dist/
 test/programs/typescript/cli/
-test/programs/**/package-lock.json
+test/programs/**/yarn.lock

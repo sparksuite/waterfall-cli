@@ -8,7 +8,7 @@
 		"dist/"
 	],
 	"scripts": {
-		"test": "for directory in ./test/programs/*/ ; do (cd \"$directory\" && npm install); done && npm run compile && rm -rf test/programs/typescript/cli/ && tsc --project test/programs/typescript && jest",
+		"test": "for directory in ./test/programs/*/ ; do (cd \"$directory\" && yarn install); done && yarn compile && rm -rf test/programs/typescript/cli/ && tsc --project test/programs/typescript && jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json}'",
 		"compile": "rm -rf dist/ && tsc"
@@ -51,9 +51,8 @@
 	"jest": {
 		"collectCoverage": true,
 		"coverageDirectory": "./coverage/",
-		"coveragePathIgnorePatterns": [
-			"/node_modules/",
-			"<rootDir>/test/"
+		"collectCoverageFrom": [
+			"<rootDir>/src/**"
 		],
 		"testMatch": [
 			"**/*.test.[jt]s"

@@ -8,9 +8,11 @@
 		"dist/"
 	],
 	"scripts": {
-		"test": "for directory in ./test/programs/*/ ; do (cd \"$directory\" && yarn install); done && yarn compile && rm -rf test/programs/typescript/cli/ && tsc --project test/programs/typescript && jest",
+		"pretest": "yarn compile && yarn link && for directory in ./test/programs/*/ ; do (yarn --cwd \"$directory\" link waterfall-cli); done && yarn --cwd test/programs/typescript/ compile",
+		"test": "jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json}'",
+		"clean": "rm -rf node_modules/ coverage/ dist/ && for directory in ./test/programs/*/ ; do (cd \"$directory\" && rm -rf node_modules/); done",
 		"compile": "rm -rf dist/ && tsc"
 	},
 	"repository": {
@@ -35,6 +37,11 @@
 		"semver": "^7.0.0"
 	},
 	"devDependencies": {
+		"@babel/core": "^7.7.5",
+		"@babel/plugin-proposal-nullish-coalescing-operator": "^7.7.4",
+		"@babel/plugin-proposal-optional-chaining": "^7.7.5",
+		"@babel/preset-env": "^7.7.6",
+		"@babel/preset-typescript": "^7.7.4",
 		"@types/cli-table": "^0.3.0",
 		"@types/jest": "^24.0.18",
 		"@types/node": "^12.12.17",
@@ -55,7 +62,7 @@
 			"<rootDir>/src/**"
 		],
 		"testMatch": [
-			"**/*.test.[jt]s"
+			"<rootDir>/test/*.test.ts"
 		],
 		"verbose": true
 	}

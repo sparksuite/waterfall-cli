@@ -33,6 +33,8 @@ describe('Built-in abilities', () => {
 // Uninstall this program
 afterAll(() => {
 	return new Promise((resolve, reject) => {
+		const programPath = path.join(__dirname, 'programs', 'global-bin');
+
 		exec(`yarn --cwd "${programPath}" unlink`, error => {
 			if (error) {
 				reject();

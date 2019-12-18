@@ -1,0 +1,33 @@
+Arguments: 
+  /usr/local/Cellar/node/13.3.0/bin/node /usr/local/bin/yarn install
+
+PATH: 
+  /usr/local/sbin:/Users/wescossick/google-cloud-sdk/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin
+
+Yarn version: 
+  1.21.1
+
+Node version: 
+  13.3.0
+
+Platform: 
+  darwin x64
+
+Trace: 
+  Error: ENOENT: no such file or directory, copyfile '/Users/wescossick/Documents/Repositories/Sparksuite/waterfall-cli/waterfall-cli-v0.3.2.tgz' -> '/Users/wescossick/Library/Caches/Yarn/v6/npm-waterfall-cli-0.3.2-2a3b5247-d41a-4dea-99bf-4a31da23402c-1576683823238/node_modules/waterfall-cli/waterfall-cli-v0.3.2.tgz'
+
+npm manifest: 
+  {
+  	"name": "es6-imports",
+  	"version": "1.2.3",
+  	"type": "module",
+  	"dependencies": {
+  		"waterfall-cli": "file:../../../"
+  	}
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

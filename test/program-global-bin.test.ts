@@ -10,7 +10,7 @@ beforeAll(() => {
 	return new Promise((resolve, reject) => {
 		const programPath = path.join(__dirname, 'programs', 'global-bin');
 
-		exec(`yarn --cwd "${programPath}" link`, error => {
+		exec(`yarn --cwd "${programPath}" link`, (error) => {
 			if (error) {
 				reject();
 				return;
@@ -35,7 +35,7 @@ afterAll(() => {
 	return new Promise((resolve, reject) => {
 		const programPath = path.join(__dirname, 'programs', 'global-bin');
 
-		exec(`yarn --cwd "${programPath}" unlink`, error => {
+		exec(`yarn --cwd "${programPath}" unlink`, (error) => {
 			if (error) {
 				reject();
 				return;

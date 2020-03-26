@@ -14,7 +14,7 @@ beforeEach(() => {
 	consoleResult = '';
 
 	// Configure capture of console.error output
-	spy = jest.spyOn(console, 'error').mockImplementation(text => (consoleResult += text));
+	spy = jest.spyOn(console, 'error').mockImplementation((text) => (consoleResult += text));
 });
 
 // Ask Jest to restore original console.error handler

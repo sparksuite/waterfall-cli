@@ -429,9 +429,9 @@ export default function utils(currentSettings: Settings) {
 			let commands = utils(settings).files.getAllDirectories(mainDir);
 
 			// Process into just commands
-			commands = commands.map(file => file.replace(`${mainDir}/`, ''));
-			commands = commands.map(file => file.replace(/\.js$/, ''));
-			commands = commands.map(file => file.replace(/\//, ' '));
+			commands = commands.map((file) => file.replace(`${mainDir}/`, ''));
+			commands = commands.map((file) => file.replace(/\.js$/, ''));
+			commands = commands.map((file) => file.replace(/\//, ' '));
 
 			// Return
 			return commands;
@@ -439,7 +439,7 @@ export default function utils(currentSettings: Settings) {
 
 		// Convert a string from aaa-aaa-aaa to aaaAaaAaa
 		convertDashesToCamelCase(string: string): string {
-			return string.replace(/-(.)/g, g => g[1].toUpperCase());
+			return string.replace(/-(.)/g, (g) => g[1].toUpperCase());
 		},
 
 		// File functions
@@ -493,14 +493,14 @@ export default function utils(currentSettings: Settings) {
 				const commandFiles: string[] = utils(settings).files.getFiles(directory);
 
 				// Error if not exactly one spec file
-				if (commandFiles.filter(path => path.match(/\.spec.c?js$/)).length !== 1) {
+				if (commandFiles.filter((path) => path.match(/\.spec.c?js$/)).length !== 1) {
 					throw new ErrorWithoutStack(
 						`There should be exactly one ${chalk.bold('.spec.js')} or ${chalk.bold('.spec.cjs')} file in: ${directory}`
 					);
 				}
 
 				// Get the file path
-				const specFilePath = commandFiles.filter(path => path.match(/\.spec.c?js$/))[0];
+				const specFilePath = commandFiles.filter((path) => path.match(/\.spec.c?js$/))[0];
 
 				// Return
 				try {

@@ -48,17 +48,17 @@ export default function screens(currentSettings: Settings) {
 			utils(settings).verboseLog(`Found commands: ${commands.join(' | ')}`);
 
 			// Add leading space to commands
-			commands = commands.map(command => ` ${command}`);
+			commands = commands.map((command) => ` ${command}`);
 			const preppedCommand = ` ${organizedArguments.command}`.replace(/^ $/g, '');
 
 			// Filter out any unnecessary commands, which are...
-			commands = commands.filter(command => command.startsWith(preppedCommand)); // Not related to current command
+			commands = commands.filter((command) => command.startsWith(preppedCommand)); // Not related to current command
 			commands = commands.filter(
-				command => (command.match(/ /g) || []).length === (preppedCommand.match(/ /g) || []).length + 1
+				(command) => (command.match(/ /g) || []).length === (preppedCommand.match(/ /g) || []).length + 1
 			); // Not a direct sub-command of the current command
 
 			// Strip current command off front
-			commands = commands.map(command => command.substring(preppedCommand.length + 1));
+			commands = commands.map((command) => command.substring(preppedCommand.length + 1));
 
 			// Sort commands
 			commands.sort();
@@ -168,7 +168,7 @@ export default function screens(currentSettings: Settings) {
 			}
 
 			// Loop over and push each command
-			commands.forEach(command => {
+			commands.forEach((command) => {
 				const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
 				table.push([`  ${command}`, mergedSpec.description ? mergedSpec.description : '']);
 			});

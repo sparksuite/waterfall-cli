@@ -33,7 +33,7 @@
 		"chalk": "^4.0.0",
 		"cli-table": "^0.3.1",
 		"deepmerge": "^4.0.0",
-		"fuse.js": "^3.4.5",
+		"fuse.js": "^5.2.1",
 		"semver": "^7.0.0"
 	},
 	"devDependencies": {

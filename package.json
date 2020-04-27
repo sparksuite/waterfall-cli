@@ -52,7 +52,7 @@
 		"eslint-config-prettier": "^6.3.0",
 		"eslint-plugin-import": "^2.18.2",
 		"jest": "^25.2.1",
-		"prettier": "2.0.4",
+		"prettier": "2.0.5",
 		"typescript": "^3.6.3"
 	},
 	"jest": {

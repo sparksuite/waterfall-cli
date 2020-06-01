@@ -1,5 +1,5 @@
 // Dependencies
-import chalk from 'chalk';
+import chalk from './chalk';
 import Table from 'cli-table';
 import { Settings } from './types';
 import utils from './utils';

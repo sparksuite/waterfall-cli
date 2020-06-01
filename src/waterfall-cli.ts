@@ -1,5 +1,5 @@
 // Dependencies
-import chalk from 'chalk';
+import chalk from './chalk';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';

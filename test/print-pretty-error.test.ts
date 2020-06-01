@@ -2,7 +2,7 @@
 
 // Dependencies
 const printPrettyError = require('../dist/print-pretty-error').default;
-const chalk = require('chalk');
+const chalk = require('../dist/chalk').default;
 
 // Holders for capturing console.error output
 let spy;

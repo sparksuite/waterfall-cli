@@ -1,5 +1,5 @@
 // Dependencies
-import chalk from 'chalk';
+import chalk from './chalk';
 
 // Print a pretty error message
 export default function printPrettyError(message: string) {

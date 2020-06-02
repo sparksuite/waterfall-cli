@@ -225,10 +225,10 @@ export async function error(message: string) {
 			resolve();
 		});
 	});
-	
+
 	// Emit error message
 	printPrettyError(message);
-	
+
 	// Exit
 	process.exit(255);
 }

@@ -220,7 +220,7 @@ export function parse() {
 // A helper function provided to commands to keep error messages consistent
 export async function error(message: string) {
 	// Allow stdout to flush before proceeding
-	await new Promise<void>((resolve) => {
+	await new Promise<Error | undefined>((resolve) => {
 		process.stdout.write('', resolve);
 	});
 

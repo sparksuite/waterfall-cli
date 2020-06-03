@@ -6,4 +6,4 @@ _**Heads up!** This proof-of-concept is only used internally right now; however,
 
 Notes:
 
-The `error()` function, if used from an async context as `await waterfall.error('Message text goes here');`, an attempt is made to wait for buffered stdout content _before_ emitting the error message on stderr, and calling `exit()` to terminate the application.  Use in synchronous contexts will likely not see this happen because Promise resolution will not actually be waited for.
+The `error()` function, if used in an async context like `await waterfall.error('Message text goes here');`, will attempt to wait for buffered stdout content to flush _before_ emitting the error message on stderr and terminating the application. Using the `error()` function in a synchronous context, though, will likely not see this happen because the code won't wait for the `Promise` to resolve.

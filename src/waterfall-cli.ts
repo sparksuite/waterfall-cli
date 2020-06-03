@@ -221,9 +221,7 @@ export function parse() {
 export async function error(message: string) {
 	// Allow stdout to flush before proceeding
 	await new Promise<void>((resolve) => {
-		process.stdout.write('', () => {
-			resolve();
-		});
+		process.stdout.write('', resolve);
 	});
 
 	// Emit error message

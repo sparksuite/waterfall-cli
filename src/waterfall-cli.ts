@@ -218,7 +218,15 @@ export function parse() {
 }
 
 // A helper function provided to commands to keep error messages consistent
-export function error(message: string) {
+export async function error(message: string) {
+	// Allow stdout to flush before proceeding
+	await new Promise<Error | undefined>((resolve) => {
+		process.stdout.write('', resolve);
+	});
+
+	// Emit error message
 	printPrettyError(message);
+
+	// Exit
 	process.exit(255);
 }

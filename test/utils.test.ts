@@ -744,6 +744,32 @@ describe('#organizeArguments()', () => {
 			utils(settings).organizeArguments();
 		}).toThrow();
 	});
+
+	test('Complains about unexpected pass-through arguments ', () => {
+		const settings = {
+			...settingsPizzaOrdering,
+			arguments: ['order', 'dine-in', '--', '--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+		};
+
+		expect(() => {
+			utils(settings).organizeArguments()
+		}).toThrow();
+	});
+
+	test('Handles having pass-through arguments', () => {
+		const settings = {
+			...settingsPizzaOrdering,
+			arguments: ['order', 'to-go', '--', '--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+		};
+
+		expect(utils(settings).organizeArguments()).toStrictEqual({
+			command: 'order to-go',
+			flags: [],
+			options: [],
+			passThrough: ['--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+			values: [],
+		});
+	});
 });
 
 describe('#constructInputObject()', () => {

@@ -451,7 +451,7 @@ export default function utils(currentSettings: Settings) {
 			if (organizedArguments.passThrough) {
 				inputObject.passThrough = organizedArguments.passThrough;
 			}
-			
+
 			// Return
 			return inputObject;
 		},

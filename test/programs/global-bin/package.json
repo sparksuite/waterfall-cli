@@ -1,6 +1,7 @@
 {
 	"name": "global-bin",
 	"version": "1.2.3",
+	"license": "MIT",
 	"bin": {
 		"global-bin": "./cli/entry.js"
 	},

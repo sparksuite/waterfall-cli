@@ -752,7 +752,7 @@ describe('#organizeArguments()', () => {
 		};
 
 		expect(() => {
-			utils(settings).organizeArguments()
+			utils(settings).organizeArguments();
 		}).toThrow();
 	});
 

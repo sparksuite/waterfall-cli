@@ -8,7 +8,7 @@ import deepmerge from 'deepmerge';
 import defaultSettings from './default-settings';
 import ErrorWithoutStack from './error-without-stack';
 import screens from './screens';
-import { Settings } from './types';
+import { Settings, InputObject } from './types';
 import utils from './utils';
 import printPrettyError from './print-pretty-error';
 
@@ -214,7 +214,7 @@ export function init(customSettings: Partial<Settings>) {
 
 // The function used to kick off commands
 export function parse() {
-	return JSON.parse(process.argv[2]);
+	return JSON.parse(process.argv[2]) as InputObject;
 }
 
 // A helper function provided to commands to keep error messages consistent

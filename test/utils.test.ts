@@ -748,7 +748,7 @@ describe('#organizeArguments()', () => {
 	test('Complains about unexpected pass-through arguments ', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: ['order', 'dine-in', '--', '--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+			arguments: ['order', 'dine-in', '--', '--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
 		};
 
 		expect(() => {
@@ -759,14 +759,14 @@ describe('#organizeArguments()', () => {
 	test('Handles having pass-through arguments', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: ['order', 'to-go', '--', '--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+			arguments: ['order', 'to-go', '--', '--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
 		};
 
 		expect(utils(settings).organizeArguments()).toStrictEqual({
 			command: 'order to-go',
 			flags: [],
 			options: [],
-			passThrough: ['--passThrough-flag', 'passThroughArgument1', 'passThroughArgument2'],
+			passThrough: ['--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
 			values: [],
 		});
 	});

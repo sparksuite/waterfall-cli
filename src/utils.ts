@@ -212,7 +212,7 @@ export default function utils(currentSettings: Settings) {
 				if (argument === '--') {
 					// Error if this command does not accept pass-through arguments
 					if (!mergedSpec.passThrough) {
-						throw new ErrorWithoutStack(`Unrecognized argument: ${argument}`);
+						throw new ErrorWithoutStack('This command does not support pass-through arguments');
 					}
 
 					// Begin collecting pass-through arguments

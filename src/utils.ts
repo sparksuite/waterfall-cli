@@ -97,6 +97,10 @@ export default function utils(currentSettings: Settings) {
 					});
 				}
 
+				if (spec.passThrough) {
+					mergedSpec.passThrough = true;
+				}
+
 				if (index === pieces.length - 1) {
 					mergedSpec.description = spec.description;
 					mergedSpec.data = spec.data;
@@ -122,6 +126,7 @@ export default function utils(currentSettings: Settings) {
 			let nextValueType: string | null = null;
 			let nextValueAccepts: string[] | null = null;
 			let reachedData = false;
+			let reachedPassThrough = false;
 
 			// Loop over every command
 			let currentPathPrefix = path.dirname(settings.mainFilename);
@@ -129,6 +134,18 @@ export default function utils(currentSettings: Settings) {
 			for (const argument of settings.arguments) {
 				// Verbose output
 				utils(settings).verboseLog(`Inspecting argument: ${argument}`);
+
+				// Collect pass-through arguments
+				if (reachedPassThrough) {
+					// Initialize if needed
+					if (!organizedArguments.passThrough) {
+						organizedArguments.passThrough = [];
+					}
+
+					// Store pass-through
+					organizedArguments.passThrough.push(argument);
+					continue;
+				}
 
 				// Skip option values
 				if (nextIsOptionValue) {
@@ -188,6 +205,18 @@ export default function utils(currentSettings: Settings) {
 					}
 
 					// Skip further processing
+					continue;
+				}
+
+				// Detect pass-through indication
+				if (argument === '--') {
+					// Error if this command does not accept pass-through arguments
+					if (!mergedSpec.passThrough) {
+						throw new ErrorWithoutStack('This command does not support pass-through arguments');
+					}
+
+					// Begin collecting pass-through arguments
+					reachedPassThrough = true;
 					continue;
 				}
 
@@ -417,6 +446,11 @@ export default function utils(currentSettings: Settings) {
 
 			// Store command
 			inputObject.command = organizedArguments.command;
+
+			// Store pass-through
+			if (organizedArguments.passThrough) {
+				inputObject.passThrough = organizedArguments.passThrough;
+			}
 
 			// Return
 			return inputObject;

@@ -31,12 +31,14 @@ export interface CommandSpec {
 		};
 	};
 	executeOnCascade?: true;
+	passThrough?: true;
 }
 
 export interface InputObject {
 	command: string;
 	data?: string | number;
-	[index: string]: boolean | string | number | undefined;
+	passThrough?: string[];
+	[index: string]: boolean | string | string[] | number | undefined;
 }
 
 export interface OrganizedArguments {
@@ -45,6 +47,7 @@ export interface OrganizedArguments {
 	flags: string[];
 	options: string[];
 	values: (string | number)[];
+	passThrough?: string[];
 }
 
 export interface Settings {

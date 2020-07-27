@@ -759,7 +759,7 @@ describe('#organizeArguments()', () => {
 	test('Handles having pass-through arguments', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: ['order', 'to-go', '--', '--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
+			arguments: ['order', 'to-go', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		};
 
 		expect(utils(settings).organizeArguments()).toStrictEqual({

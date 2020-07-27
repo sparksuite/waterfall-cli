@@ -748,7 +748,7 @@ describe('#organizeArguments()', () => {
 	test('Complains about unexpected pass-through arguments ', () => {
 		const settings = {
 			...settingsPizzaOrdering,
-			arguments: ['order', 'dine-in', '--', '--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
+			arguments: ['order', 'dine-in', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		};
 
 		expect(() => {

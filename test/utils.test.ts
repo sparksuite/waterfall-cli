@@ -766,7 +766,7 @@ describe('#organizeArguments()', () => {
 			command: 'order to-go',
 			flags: [],
 			options: [],
-			passThrough: ['--pass-through-flag', 'pass-through-option=true', 'pass-through-data'],
+			passThrough: ['--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 			values: [],
 		});
 	});

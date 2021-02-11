@@ -74,7 +74,6 @@ export default function screens(currentSettings: Settings) {
 			const hasOptions = !!Object.entries(mergedSpec.options).length;
 			const allowsData = typeof mergedSpec.data === 'object';
 			const hasCommands = !!commands.length;
-			const allowsPassThrough = mergedSpec.passThrough;
 
 			// Output description
 			if (mergedSpec.description) {
@@ -89,7 +88,6 @@ export default function screens(currentSettings: Settings) {
 			usageLine += chalk.gray(hasFlags ? ' [flags]' : '');
 			usageLine += chalk.gray(hasOptions ? ' [options]' : '');
 			usageLine += chalk.gray(allowsData ? ' [data]' : '');
-			usageLine += chalk.gray(allowsPassThrough ? ' -- [pass-through arguments]' : '');
 
 			outputString += `${usageLine}\n`;
 
@@ -208,15 +206,6 @@ export default function screens(currentSettings: Settings) {
 
 				// Print
 				outputString += `  ${fullDescription}\n`;
-			}
-
-			// Handle pass-through
-			if (allowsPassThrough) {
-				// Print header
-				outputString += '\nPASS-THROUGH:\n';
-
-				// Full description
-				outputString += '  Arguments after ‘--’ will be passed through to an underlying command\n';
 			}
 
 			// Add spacing after

@@ -90,7 +90,7 @@ export function init(customSettings: Partial<Settings>) {
 			if (latestVersion && currentVersion) {
 				const bothVersionsAreValid = semver.valid(latestVersion) && semver.valid(currentVersion);
 
-				// Verbose ouput
+				// Verbose output
 				utils(settings).verboseLog(`Previously retrieved latest app version: ${latestVersion}`);
 				utils(settings).verboseLog(`Cleaned-up current app version: ${currentVersion}`);
 				utils(settings).verboseLog(`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`);

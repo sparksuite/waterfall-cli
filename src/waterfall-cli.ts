@@ -182,7 +182,12 @@ export function init(customSettings: Partial<Settings>) {
 				process.exit();
 			}
 
-			// Handle if error message already happened
+			// Handle as already handled, prevent display
+			if (code === 254) {
+				process.exit(254);
+			}
+
+			// Handle if error message already happened, propagate as code 1
 			if (code === 255) {
 				process.exit(1);
 			}

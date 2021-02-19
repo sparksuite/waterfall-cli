@@ -10,8 +10,8 @@
 	"scripts": {
 		"pretest": "yarn compile && yarn link && for directory in ./test/programs/*/ ; do (yarn --cwd \"$directory\" link waterfall-cli); done && yarn --cwd test/programs/typescript/ compile",
 		"test": "jest",
-		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json}'",
-		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json}'",
+		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json,yml}'",
+		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json,yml}'",
 		"clean": "rm -rf node_modules/ coverage/ dist/ && for directory in ./test/programs/*/ ; do (cd \"$directory\" && rm -rf node_modules/); done",
 		"compile": "rm -rf dist/ && tsc"
 	},

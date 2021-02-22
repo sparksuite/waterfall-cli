@@ -182,7 +182,12 @@ export function init(customSettings: Partial<Settings>) {
 				process.exit();
 			}
 
-			// Handle if error message already happened
+			// Handle as already handled, prevent display
+			if (code === 254) {
+				process.exit(254);
+			}
+
+			// Handle if error message already happened, propagate as code 1
 			if (code === 255) {
 				process.exit(1);
 			}
@@ -215,18 +220,4 @@ export function init(customSettings: Partial<Settings>) {
 // The function used to kick off commands
 export function parse() {
 	return JSON.parse(process.argv[2]);
-}
-
-// A helper function provided to commands to keep error messages consistent
-export async function error(message: string) {
-	// Allow stdout to flush before proceeding
-	await new Promise<Error | undefined>((resolve) => {
-		process.stdout.write('', resolve);
-	});
-
-	// Emit error message
-	printPrettyError(message);
-
-	// Exit
-	process.exit(255);
 }

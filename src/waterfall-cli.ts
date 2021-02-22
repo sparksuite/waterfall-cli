@@ -121,7 +121,7 @@ export function init(customSettings: Partial<Settings>) {
 		const versionCheck = spawn('npm', ['view', settings.app.packageName, 'version']);
 
 		versionCheck.stdout.on('data', (stdout: string) => {
-			fs.writeFile(pathToLatestVersion, semver.clean(`${stdout}`), 'utf8', () => {
+			fs.writeFile(pathToLatestVersion, semver.clean(`${stdout}`) ?? '', 'utf8', () => {
 				// Do nothing
 			});
 		});

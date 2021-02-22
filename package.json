@@ -12,7 +12,7 @@
 		"test": "jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json,yml}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json,yml}'",
-		"clean": "rm -rf node_modules/ coverage/ dist/ && for directory in ./test/programs/*/ ; do (cd \"$directory\" && rm -rf node_modules/); done",
+		"clean": "git clean -X -d --force && find . -type d -empty -delete",
 		"compile": "rm -rf dist/ && tsc"
 	},
 	"repository": {

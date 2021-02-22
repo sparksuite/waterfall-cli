@@ -42,4 +42,8 @@ describe('#printPrettyError()', () => {
 
 		expect(consoleResult).toContain('Error message content');
 	});
+
+	test('Returns the message text', () => {
+		expect(printPrettyError('Error message content')).toEqual('Error message content');
+	});
 });

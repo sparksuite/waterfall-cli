@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 // Dependencies
-const processArguments = require('../dist/process-arguments').default;
+import processArguments from '../src/process-arguments';
 
 // Tests
 describe('#processArguments()', () => {

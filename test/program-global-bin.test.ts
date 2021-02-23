@@ -1,9 +1,9 @@
 /* eslint-env jest */
 
 // Dependencies
-const runProgram = require('./run-program');
-const path = require('path');
-const { exec } = require('child_process');
+import runProgram from './run-program';
+import path from 'path';
+import { exec } from 'child_process';
 
 // Link this program
 beforeAll(() => {

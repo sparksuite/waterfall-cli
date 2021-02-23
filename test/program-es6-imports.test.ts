@@ -1,8 +1,8 @@
 /* eslint-env jest */
 
 // Dependencies
-const runProgram = require('./run-program');
-const semver = require('semver');
+import runProgram from './run-program';
+import semver from 'semver';
 
 // Initialize
 const entryFile = `${__dirname}/programs/es6-imports/cli/entry.js`;

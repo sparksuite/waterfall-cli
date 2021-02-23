@@ -1,7 +1,7 @@
 /* eslint-env jest */
 
 // Dependencies
-const runProgram = require('./run-program');
+import runProgram from './run-program';
 
 // Initialize
 const entryFile = `${__dirname}/programs/pizza-ordering/cli/entry.js`;

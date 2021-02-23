@@ -529,12 +529,12 @@ export default function utils(currentSettings: Settings) {
 				// Error if not exactly one spec file
 				if (commandFiles.filter((path) => path.match(/\.spec.c?js$/)).length !== 1) {
 					throw new ErrorWithoutStack(
-						`There should be exactly one ${chalk.bold('.spec.js')} or ${chalk.bold('.spec.cjs')} file in: ${directory}`
+						`There should be exactly one spec file (ending in ${chalk.bold('.spec.[cm]?js')}) in: ${directory}`
 					);
 				}
 
 				// Get the file path
-				const specFilePath = commandFiles.filter((path) => path.match(/\.spec.c?js$/))[0];
+				const specFilePath = commandFiles.filter((path) => path.match(/\.spec.[cm]?js$/))[0];
 
 				// Return
 				try {

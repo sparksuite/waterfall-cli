@@ -21,4 +21,12 @@ if (semver.lt(semver.clean(process.version) ?? '', '13.2.0')) {
 			});
 		});
 	});
+
+	describe('Commands', () => {
+		test('Runs a simple command successfully', () => {
+			return runProgram(`node ${entryFile} example`).then(({ stdout }) => {
+				expect(stdout).toContain('Ran example command');
+			});
+		});
+	});
 }

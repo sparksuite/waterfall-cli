@@ -1,5 +1,5 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 
 // Print a pretty error message and return just the message
 export default function printPrettyError(message: string) {

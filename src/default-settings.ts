@@ -1,8 +1,8 @@
 // Dependencies
 import fs from 'fs';
 import path from 'path';
-import processArguments from './process-arguments';
-import { Settings } from './types';
+import processArguments from './process-arguments.js';
+import type { Settings } from './types';
 
 // Default Settings
 const settings: Settings = {

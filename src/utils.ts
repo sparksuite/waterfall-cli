@@ -1,10 +1,10 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 import fs from 'fs';
 import path from 'path';
 import Fuse from 'fuse.js';
-import ErrorWithoutStack from './error-without-stack';
-import { AppInformation, CommandSpec, InputObject, OrganizedArguments, Settings } from './types';
+import ErrorWithoutStack from './error-without-stack.js';
+import type { AppInformation, CommandSpec, InputObject, OrganizedArguments, Settings } from './types';
 
 // Helpful utility functions
 export default function utils(currentSettings: Settings) {

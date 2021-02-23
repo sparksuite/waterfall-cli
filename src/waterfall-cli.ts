@@ -1,16 +1,16 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 import { spawn } from 'child_process';
 import fs from 'fs';
 import path from 'path';
 import semver from 'semver';
 import deepmerge from 'deepmerge';
-import defaultSettings from './default-settings';
-import ErrorWithoutStack from './error-without-stack';
-import screens from './screens';
-import { Settings } from './types';
-import utils from './utils';
-import printPrettyError from './print-pretty-error';
+import defaultSettings from './default-settings.js';
+import ErrorWithoutStack from './error-without-stack.js';
+import screens from './screens.js';
+import type { Settings } from './types';
+import utils from './utils.js';
+import printPrettyError from './print-pretty-error.js';
 
 // Handle exceptions
 process.on('uncaughtException', (error: Error) => {

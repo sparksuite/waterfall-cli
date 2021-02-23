@@ -1,8 +1,8 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 import Table from 'cli-table';
-import { Settings } from './types';
-import utils from './utils';
+import type { Settings } from './types';
+import utils from './utils.js';
 
 // A collection of built-in screens that can be displayed
 export default function screens(currentSettings: Settings) {

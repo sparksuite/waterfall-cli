@@ -2,18 +2,25 @@
 	"name": "waterfall-cli",
 	"version": "0.5.0",
 	"description": "Effortlessly create CLIs powered by Node.js",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"types": "dist/cjs/index.d.ts",
 	"files": [
 		"dist/"
 	],
+	"exports": {
+		".": {
+			"import": "./dist/mjs/index.js",
+			"require": "./dist/cjs/index.js"
+		}
+	},
 	"scripts": {
 		"pretest": "yarn compile && yarn link && for directory in ./test/programs/*/ ; do (yarn --cwd \"$directory\" link waterfall-cli); done && yarn --cwd test/programs/typescript/ compile",
 		"test": "jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json,yml}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json,yml}'",
 		"clean": "git clean -X -d --force && find . -type d -empty -delete",
-		"compile": "rm -rf dist/ && tsc"
+		"precompile": "rm -rf dist/",
+		"compile": "tsc && tsc --project tsconfig.mjs.json",
+		"postcompile": "./set-types.sh"
 	},
 	"repository": {
 		"type": "git",

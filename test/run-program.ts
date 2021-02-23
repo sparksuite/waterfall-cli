@@ -10,7 +10,7 @@ function removeFormatting(text) {
 }
 
 // Test runner
-export default function runProgram(command: string): Promise<{ stdout: string; stderr: string; }> {
+export default function runProgram(command: string): Promise<{ stdout: string; stderr: string }> {
 	// Return a promise
 	return new Promise((resolve, reject) => {
 		// Launch the program
@@ -33,4 +33,4 @@ export default function runProgram(command: string): Promise<{ stdout: string; s
 			});
 		});
 	});
-};
+}

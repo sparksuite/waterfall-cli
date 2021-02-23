@@ -7,7 +7,7 @@ import { exec } from 'child_process';
 
 // Link this program
 beforeAll(() => {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		const programPath = path.join(__dirname, 'programs', 'global-bin');
 
 		exec(`yarn --cwd "${programPath}" link`, (error) => {
@@ -32,7 +32,7 @@ describe('Built-in abilities', () => {
 
 // Uninstall this program
 afterAll(() => {
-	return new Promise((resolve, reject) => {
+	return new Promise<void>((resolve, reject) => {
 		const programPath = path.join(__dirname, 'programs', 'global-bin');
 
 		exec(`yarn --cwd "${programPath}" unlink`, (error) => {

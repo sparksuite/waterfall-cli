@@ -5,8 +5,8 @@ import printPrettyError from '../src/print-pretty-error';
 import chalk from '../src/chalk';
 
 // Holders for capturing console.error output
-let spy;
-let consoleResult;
+let spy: ReturnType<typeof jest.spyOn>;
+let consoleResult = '';
 
 // Ask Jest to capture console.error output
 beforeEach(() => {

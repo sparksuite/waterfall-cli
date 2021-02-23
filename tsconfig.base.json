@@ -8,11 +8,11 @@
 		"noUnusedLocals": true,
 		"removeComments": true,
 		"resolveJsonModule": true,
-		"rootDir": "src",
+		"rootDirs": ["src", "test"],
 		"sourceMap": true,
 		"strict": true,
 		"strictNullChecks": true,
 	},
-	"include": ["src/**/*"],
+	"include": ["src/**/*", "test/*"],
 	"exclude": ["node_modules"]
 }

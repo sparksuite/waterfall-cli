@@ -1,5 +1,5 @@
 // Import and initialize Waterfall CLI
-import waterfall = require('waterfall-cli');
+import * as waterfall from 'waterfall-cli';
 
 waterfall.init({
 	verbose: true,

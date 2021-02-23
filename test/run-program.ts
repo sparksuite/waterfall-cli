@@ -1,5 +1,5 @@
 // Dependencies
-const { exec } = require('child_process');
+import { exec } from 'child_process';
 
 // Remove ANSI formatting
 function removeFormatting(text) {
@@ -10,7 +10,7 @@ function removeFormatting(text) {
 }
 
 // Test runner
-module.exports = function runProgram(command) {
+export default function runProgram(command: string): Promise<{ stdout: string; stderr: string; }> {
 	// Return a promise
 	return new Promise((resolve, reject) => {
 		// Launch the program

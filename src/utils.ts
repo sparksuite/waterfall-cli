@@ -525,16 +525,17 @@ export default function utils(currentSettings: Settings) {
 
 				// List the files in this directory
 				const commandFiles: string[] = utils(settings).files.getFiles(directory);
+				const specFiles = commandFiles.filter((path) => path.match(/\.spec.[cm]?js$/));
 
 				// Error if not exactly one spec file
-				if (commandFiles.filter((path) => path.match(/\.spec.c?js$/)).length !== 1) {
+				if (specFiles.length !== 1) {
 					throw new ErrorWithoutStack(
 						`There should be exactly one spec file (ending in ${chalk.bold('.spec.[cm]?js')}) in: ${directory}`
 					);
 				}
 
 				// Get the file path
-				const specFilePath = commandFiles.filter((path) => path.match(/\.spec.[cm]?js$/))[0];
+				const specFilePath = specFiles[0];
 
 				// Return
 				try {

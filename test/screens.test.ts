@@ -57,7 +57,9 @@ describe('#help()', () => {
 			usageCommand: 'node entry.js',
 		};
 
-		expect(removeFormatting(await screens(settings).help())).toContain('Usage: node entry.js [commands] [flags] [options]');
+		expect(removeFormatting(await screens(settings).help())).toContain(
+			'Usage: node entry.js [commands] [flags] [options]'
+		);
 	});
 
 	test('Usage line (flags + options + data)', async () => {
@@ -68,7 +70,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(await screens(settings).help())).toContain('Usage: node entry.js list [flags] [options] [data]');
+		expect(removeFormatting(await screens(settings).help())).toContain(
+			'Usage: node entry.js list [flags] [options] [data]'
+		);
 	});
 
 	test('Flags - header', async () => {
@@ -198,7 +202,9 @@ describe('#help()', () => {
 			arguments: ['list'],
 		};
 
-		expect(removeFormatting(await screens(settings).help())).toContain('The maximum price of the items to list (float)');
+		expect(removeFormatting(await screens(settings).help())).toContain(
+			'The maximum price of the items to list (float)'
+		);
 	});
 
 	test('Options - description (required + accepts)', async () => {

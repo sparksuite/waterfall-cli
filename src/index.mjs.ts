@@ -4,9 +4,9 @@ import printError from './print-pretty-error.js';
 
 // Default export
 export default {
-    init,
-    parse,
-    printError,
+	init,
+	parse,
+	printError,
 };
 
 // Expose some types to consumers

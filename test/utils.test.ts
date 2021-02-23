@@ -830,27 +830,27 @@ describe('#files', () => {
 	});
 
 	test('Retrieves command spec', async () => {
-		expect(await utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)).toStrictEqual(
-			{
-				flags: {
-					'non-cascading': {
-						description: 'Just used for testing',
-					},
-					quiet: {
-						cascades: true,
-						description: 'Disable interactivity, rely on default values instead',
-						shorthand: 'q',
-					},
+		expect(
+			await utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)
+		).toStrictEqual({
+			flags: {
+				'non-cascading': {
+					description: 'Just used for testing',
 				},
-				options: {
-					'delivery-zip-code': {
-						cascades: true,
-						description: 'The delivery ZIP code, for context',
-						shorthand: 'z',
-					},
+				quiet: {
+					cascades: true,
+					description: 'Disable interactivity, rely on default values instead',
+					shorthand: 'q',
 				},
-			}
-		);
+			},
+			options: {
+				'delivery-zip-code': {
+					cascades: true,
+					description: 'The delivery ZIP code, for context',
+					shorthand: 'z',
+				},
+			},
+		});
 	});
 
 	test('getFiles() returns empty array if path not found', () => {
@@ -866,6 +866,8 @@ describe('#files', () => {
 	});
 
 	test('getCommandSpec() throws an error if there are multiple spec files', () => {
-		return expect(utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`)).rejects.toThrow();
+		return expect(
+			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`)
+		).rejects.toThrow();
 	});
 });

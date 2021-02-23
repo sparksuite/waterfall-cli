@@ -21,7 +21,7 @@ process.on('uncaughtException', (error: Error) => {
 });
 
 // The constructor, for use at the entry point
-export function init(customSettings: Partial<Settings>) {
+export async function init(customSettings: Partial<Settings>) {
 	// Merge custom settings into default settings
 	const settings = deepmerge(defaultSettings, customSettings);
 
@@ -38,7 +38,7 @@ export function init(customSettings: Partial<Settings>) {
 	utils(settings).verboseLog(`Set app version to: ${settings.app.version}`);
 
 	// Organize the arguments
-	const organizedArguments = utils(settings).organizeArguments();
+	const organizedArguments = await utils(settings).organizeArguments();
 
 	// Handle --version
 	if (organizedArguments.flags.includes('version')) {
@@ -55,7 +55,7 @@ export function init(customSettings: Partial<Settings>) {
 	// Handle --help
 	if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
 		// Output
-		process.stdout.write(screens(settings).help());
+		process.stdout.write(await screens(settings).help());
 
 		// Verbose output
 		utils(settings).verboseLog('Skipping further processing...');
@@ -132,7 +132,7 @@ export function init(customSettings: Partial<Settings>) {
 	let currentPathPrefix = path.dirname(settings.mainFilename);
 	const commandPieces = organizedArguments.command.trim().split(' ');
 
-	commandPieces.forEach((command, index) => {
+	for (const [index, command] of commandPieces.entries()) {
 		// Update current path prefix
 		currentPathPrefix = path.join(currentPathPrefix, command);
 
@@ -140,16 +140,16 @@ export function init(customSettings: Partial<Settings>) {
 		const commandPath = path.join(currentPathPrefix, `${command}.js`);
 
 		// Get the command spec
-		const spec = utils(settings).files.getCommandSpec(currentPathPrefix);
+		const spec = await utils(settings).files.getCommandSpec(currentPathPrefix);
 
 		// Push onto array, if needed
 		if (index === commandPieces.length - 1 || spec.executeOnCascade === true) {
 			executionPaths.push(commandPath);
 		}
-	});
+	}
 
 	// Construct the input object
-	const inputObject = utils(settings).constructInputObject(organizedArguments);
+	const inputObject = await utils(settings).constructInputObject(organizedArguments);
 
 	// Verbose output
 	utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);

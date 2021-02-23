@@ -35,8 +35,8 @@ describe('#retrieveAppInformation()', () => {
 });
 
 describe('#getMergedSpec()', () => {
-	test('Gets top-level spec', () => {
-		expect(utils(settingsPizzaOrdering).getMergedSpec('')).toStrictEqual({
+	test('Gets top-level spec', async () => {
+		expect(await utils(settingsPizzaOrdering).getMergedSpec('')).toStrictEqual({
 			data: undefined,
 			description: undefined,
 			flags: {
@@ -67,8 +67,8 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Gets merged spec', () => {
-		expect(utils(settingsPizzaOrdering).getMergedSpec('list')).toStrictEqual({
+	test('Gets merged spec', async () => {
+		expect(await utils(settingsPizzaOrdering).getMergedSpec('list')).toStrictEqual({
 			data: {
 				description: 'What you want to list',
 				accepts: ['toppings', 'crusts', 'two words'],
@@ -117,8 +117,8 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Gets another merged spec', () => {
-		expect(utils(settingsPizzaOrdering).getMergedSpec('order')).toStrictEqual({
+	test('Gets another merged spec', async () => {
+		expect(await utils(settingsPizzaOrdering).getMergedSpec('order')).toStrictEqual({
 			data: undefined,
 			description: 'Order a pizza',
 			flags: {
@@ -149,27 +149,23 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Complains about multiple spec files', () => {
-		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('multiple-specs');
-		}).toThrow();
+	test('Complains about multiple spec files', async () => {
+		return expect(utils(settingsBadStructure).getMergedSpec('multiple-specs')).rejects.toThrow();
 	});
 
 	test('Complains about invalid spec JS', () => {
-		expect(() => {
-			utils(settingsBadStructure).getMergedSpec('invalid-spec-js');
-		}).toThrow();
+		return expect(utils(settingsBadStructure).getMergedSpec('invalid-spec-js')).rejects.toThrow();
 	});
 });
 
 describe('#organizeArguments()', () => {
-	test('Handles no arguments', () => {
+	test('Handles no arguments', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: [],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -177,13 +173,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command', () => {
+	test('Handles simple command', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -191,13 +187,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with data', () => {
+	test('Handles simple command with data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -206,13 +202,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with multi-word data', () => {
+	test('Handles simple command with multi-word data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'two', 'words'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -221,13 +217,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with flag after data', () => {
+	test('Handles simple command with flag after data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings', '--help'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['help'],
 			options: [],
 			values: [],
@@ -236,13 +232,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Ignores flag in data', () => {
+	test('Ignores flag in data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'something', '--help'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -251,13 +247,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Ignores options in data', () => {
+	test('Ignores options in data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -266,13 +262,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with longer data', () => {
+	test('Handles simple command with longer data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -281,13 +277,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles data with special characters', () => {
+	test('Handles data with special characters', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -296,13 +292,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles integer data', () => {
+	test('Handles integer data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '10'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -311,13 +307,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles float data', () => {
+	test('Handles float data', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.4'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -330,7 +326,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['order', 'float-data', '123.'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -343,7 +339,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['order', 'float-data', '123'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -356,7 +352,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['order', 'float-data', '.123'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -365,13 +361,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles multiple commands', () => {
+	test('Handles multiple commands', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: [],
 			values: [],
@@ -379,13 +375,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles flag', () => {
+	test('Handles flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['vegetarian'],
 			options: [],
 			values: [],
@@ -393,13 +389,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading flag', () => {
+	test('Handles cascading flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--quiet'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['quiet'],
 			options: [],
 			values: [],
@@ -407,13 +403,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles shorthand flag', () => {
+	test('Handles shorthand flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '-q'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['quiet'],
 			options: [],
 			values: [],
@@ -421,13 +417,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles multiple flags', () => {
+	test('Handles multiple flags', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian', '--quiet'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['vegetarian', 'quiet'],
 			options: [],
 			values: [],
@@ -435,13 +431,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading flag before command', () => {
+	test('Handles cascading flag before command', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['--quiet', 'list', '--vegetarian'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: ['quiet', 'vegetarian'],
 			options: [],
 			values: [],
@@ -449,13 +445,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles integer option', () => {
+	test('Handles integer option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '10'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['limit'],
 			values: [10],
@@ -463,13 +459,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles float option', () => {
+	test('Handles float option', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.4'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['max-price'],
 			values: [123.4],
@@ -481,7 +477,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['list', '--max-price', '123.'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['max-price'],
 			values: [123],
@@ -493,7 +489,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['list', '--max-price', '123'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['max-price'],
 			values: [123],
@@ -505,7 +501,7 @@ describe('#organizeArguments()', () => {
 			arguments: ['list', '--max-price', '.123'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['max-price'],
 			values: [0.123],
@@ -513,13 +509,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading option', () => {
+	test('Handles cascading option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code', '55555'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
@@ -527,13 +523,13 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles shorthand option', () => {
+	test('Handles shorthand option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '-z', '55555'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			flags: [],
 			options: ['delivery-zip-code'],
 			values: ['55555'],
@@ -541,228 +537,186 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Treats bad command as data', () => {
+	test('Treats bad command as data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '.'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about missing option value', () => {
+	test('Complains about missing option value', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized option value type', () => {
+	test('Complains about unrecognized option value type', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', '--test', 'test'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized data type', () => {
+	test('Complains about unrecognized data type', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', 'test'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized flag', () => {
+	test('Complains about unrecognized flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--fake'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about non-permitted data', () => {
+	test('Complains about non-permitted data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'abc', '123'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not in "values"', () => {
+	test('Complains about option value not in "values"', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'fake'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not in "values"', () => {
+	test('Complains about data not in "values"', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'fake'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not being integer', () => {
+	test('Complains about option value not being integer', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '123.4'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', 'abc'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not being float', () => {
+	test('Complains about option value not being float', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', 'abc'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.4.5'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '.'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', ''],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not being integer', () => {
+	test('Complains about data not being integer', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '123.4'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', 'abc'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not being float', () => {
+	test('Complains about data not being float', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', 'abc'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		await expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.4.5'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		await expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '.'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		await expect(utils(settings).organizeArguments()).rejects.toThrow();
 
 		settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', ''],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		await expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unexpected pass-through arguments ', () => {
+	test('Complains about unexpected pass-through arguments ', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		};
 
-		expect(() => {
-			utils(settings).organizeArguments();
-		}).toThrow();
+		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Handles having pass-through arguments', () => {
+	test('Handles having pass-through arguments', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		};
 
-		expect(utils(settings).organizeArguments()).toStrictEqual({
+		expect(await utils(settings).organizeArguments()).toStrictEqual({
 			command: 'order to-go',
 			flags: [],
 			options: [],
@@ -773,15 +727,15 @@ describe('#organizeArguments()', () => {
 });
 
 describe('#constructInputObject()', () => {
-	test('Handles combination of input', () => {
+	test('Handles combination of input', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
 		};
 
-		const organizedArguments = utils(settings).organizeArguments();
+		const organizedArguments = await utils(settings).organizeArguments();
 
-		expect(utils(settings).constructInputObject(organizedArguments)).toStrictEqual({
+		expect(await utils(settings).constructInputObject(organizedArguments)).toStrictEqual({
 			command: 'list',
 			data: 'toppings',
 			deliveryZipCode: '55555',
@@ -795,30 +749,26 @@ describe('#constructInputObject()', () => {
 		});
 	});
 
-	test('Complains about missing required option', () => {
+	test('Complains about missing required option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
 		};
 
-		const organizedArguments = utils(settings).organizeArguments();
+		const organizedArguments = await utils(settings).organizeArguments();
 
-		expect(() => {
-			utils(settings).constructInputObject(organizedArguments);
-		}).toThrow();
+		return expect(utils(settings).constructInputObject(organizedArguments)).rejects.toThrow();
 	});
 
-	test('Complains about missing required data', () => {
+	test('Complains about missing required data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'popularity'],
 		};
 
-		const organizedArguments = utils(settings).organizeArguments();
+		const organizedArguments = await utils(settings).organizeArguments();
 
-		expect(() => {
-			utils(settings).constructInputObject(organizedArguments);
-		}).toThrow();
+		return expect(utils(settings).constructInputObject(organizedArguments)).rejects.toThrow();
 	});
 });
 
@@ -879,8 +829,8 @@ describe('#files', () => {
 		]);
 	});
 
-	test('Retrieves command spec', () => {
-		expect(utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)).toStrictEqual(
+	test('Retrieves command spec', async () => {
+		expect(await utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)).toStrictEqual(
 			{
 				flags: {
 					'non-cascading': {
@@ -912,14 +862,10 @@ describe('#files', () => {
 	});
 
 	test('getCommandSpec() throws an error if path not found', () => {
-		expect(() => {
-			utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/fake`);
-		}).toThrow();
+		return expect(utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/fake`)).rejects.toThrow();
 	});
 
 	test('getCommandSpec() throws an error if there are multiple spec files', () => {
-		expect(() => {
-			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`);
-		}).toThrow();
+		return expect(utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`)).rejects.toThrow();
 	});
 });

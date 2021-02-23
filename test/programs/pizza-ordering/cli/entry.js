@@ -6,4 +6,7 @@ waterfall.init({
 	onStart: () => {
 		console.log('This is the onStart function');
 	},
+}).catch((error) => {
+	console.error(error);
+	process.exit(1);
 });

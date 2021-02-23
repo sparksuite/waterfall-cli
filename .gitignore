@@ -1,5 +1,4 @@
 node_modules/
 coverage/
 dist/
-test/programs/typescript/cli/
 yarn-error.log*

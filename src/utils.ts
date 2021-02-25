@@ -524,8 +524,9 @@ export default function utils(currentSettings: Settings) {
 				}
 
 				// List the files in this directory
-				const commandFiles: string[] = utils(settings).files.getFiles(directory);
-				const specFiles = commandFiles.filter((path) => path.match(/\.spec.[cm]?js$/));
+				const specFiles = utils(settings)
+					.files.getFiles(directory)
+					.filter((path) => path.match(/\.spec.[cm]?js$/));
 
 				// Error if not exactly one spec file
 				if (specFiles.length !== 1) {

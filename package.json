@@ -1,19 +1,26 @@
 {
 	"name": "waterfall-cli",
-	"version": "0.6.0",
+	"version": "0.7.0",
 	"description": "Effortlessly create CLIs powered by Node.js",
-	"main": "dist/index.js",
-	"types": "dist/index.d.ts",
+	"types": "dist/cjs/index.cjs.d.ts",
 	"files": [
 		"dist/"
 	],
+	"exports": {
+		".": {
+			"import": "./dist/mjs/index.mjs.js",
+			"require": "./dist/cjs/index.cjs.js"
+		}
+	},
 	"scripts": {
-		"pretest": "yarn compile && yarn link && for directory in ./test/programs/*/ ; do (yarn --cwd \"$directory\" link waterfall-cli); done && yarn --cwd test/programs/typescript/ compile",
+		"pretest": "yarn compile && yarn link && for directory in ./test/programs/*/ ; do (yarn --cwd \"$directory\" link waterfall-cli); done && for directory in ./test/programs/typescript-*/ ; do (yarn --cwd \"$directory\" compile); done",
 		"test": "jest",
 		"lint": "eslint --ext .js,.ts . && prettier --check '**/*.{ts,js,json,yml}'",
 		"format": "eslint --fix --ext .js,.ts . && prettier --write '**/*.{ts,js,json,yml}'",
 		"clean": "git clean -X -d --force && find . -type d -empty -delete",
-		"compile": "rm -rf dist/ && tsc"
+		"precompile": "rm -rf dist/",
+		"compile": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.mjs.json",
+		"postcompile": "./set-types.sh"
 	},
 	"repository": {
 		"type": "git",
@@ -37,21 +44,19 @@
 		"semver": "^7.0.0"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.7.5",
-		"@babel/preset-env": "^7.7.6",
-		"@babel/preset-typescript": "^7.7.4",
 		"@types/cli-table": "^0.3.0",
 		"@types/jest": "^26.0.3",
 		"@types/node": "^14.14.22",
 		"@types/semver": "^7.1.0",
 		"@typescript-eslint/eslint-plugin": "^2.23.0",
 		"@typescript-eslint/parser": "^2.23.0",
-		"babel-jest": "^26.6.3",
 		"eslint": "^6.4.0",
 		"eslint-config-prettier": "^6.3.0",
 		"eslint-plugin-import": "^2.18.2",
 		"jest": "^26.0.1",
+		"jest-ts-webcompat-resolver": "^1.0.0",
 		"prettier": "2.2.1",
+		"ts-jest": "^26.5.1",
 		"typescript": "^4.0.2"
 	},
 	"jest": {
@@ -60,6 +65,8 @@
 		"collectCoverageFrom": [
 			"<rootDir>/src/**"
 		],
+		"preset": "ts-jest",
+		"resolver": "jest-ts-webcompat-resolver",
 		"testMatch": [
 			"<rootDir>/test/*.test.ts"
 		],

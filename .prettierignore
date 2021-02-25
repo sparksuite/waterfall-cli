@@ -1,6 +1,5 @@
 node_modules/
 coverage/
 dist/
-test/programs/typescript/cli/
-test/programs/**/package-lock.json
+test/programs/typescript-*/cli/
 test/programs/bad-structure/cli/invalid-spec-js/invalid-spec-js.spec.js

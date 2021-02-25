@@ -1,8 +1,8 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 import Table from 'cli-table';
-import { Settings } from './types';
-import utils from './utils';
+import type { Settings } from './types';
+import utils from './utils.js';
 
 // A collection of built-in screens that can be displayed
 export default function screens(currentSettings: Settings) {
@@ -34,12 +34,12 @@ export default function screens(currentSettings: Settings) {
 		},
 
 		// Return the content of the help screen
-		help() {
+		async help() {
 			// Initialize
 			let outputString = '';
 
 			// Organize the arguments
-			const organizedArguments = utils(settings).organizeArguments();
+			const organizedArguments = await utils(settings).organizeArguments();
 
 			// Get all commands in this program
 			let commands = utils(settings).getAllProgramCommands();
@@ -67,7 +67,7 @@ export default function screens(currentSettings: Settings) {
 			utils(settings).verboseLog(`Processable: ${commands.join(' | ')}`);
 
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
+			const mergedSpec = await utils(settings).getMergedSpec(organizedArguments.command);
 
 			// Determine if certain features are available
 			const hasFlags = !!Object.entries(mergedSpec.flags).length;
@@ -170,10 +170,10 @@ export default function screens(currentSettings: Settings) {
 			}
 
 			// Loop over and push each command
-			commands.forEach((command) => {
-				const mergedSpec = utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
+			for (const command of commands) {
+				const mergedSpec = await utils(settings).getMergedSpec(`${organizedArguments.command} ${command}`.trim());
 				table.push([`  ${command}`, mergedSpec.description ? mergedSpec.description : '']);
-			});
+			}
 
 			// Print table
 			outputString += `${table.toString()}\n`;

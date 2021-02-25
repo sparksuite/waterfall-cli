@@ -1,0 +1,9 @@
+{
+	"name": "es6-exports",
+	"version": "1.2.3",
+	"license": "MIT",
+	"type": "module",
+	"dependencies": {
+		"waterfall-cli": "file:../../../"
+	}
+}

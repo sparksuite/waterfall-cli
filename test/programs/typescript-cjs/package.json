@@ -1,0 +1,11 @@
+{
+	"name": "typescript-cjs",
+	"version": "1.2.3",
+	"license": "MIT",
+	"scripts": {
+		"compile": "rm -rf cli/ && tsc"
+	},
+	"dependencies": {
+		"waterfall-cli": "file:../../../"
+	}
+}

@@ -2,7 +2,7 @@
 import { exec } from 'child_process';
 
 // Remove ANSI formatting
-function removeFormatting(text) {
+function removeFormatting(text: string) {
 	return text.replace(
 		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, // eslint-disable-line no-control-regex
 		''

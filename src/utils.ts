@@ -1,10 +1,10 @@
 // Dependencies
-import chalk from './chalk';
+import chalk from './chalk.js';
 import fs from 'fs';
 import path from 'path';
 import Fuse from 'fuse.js';
-import ErrorWithoutStack from './error-without-stack';
-import { AppInformation, CommandSpec, InputObject, OrganizedArguments, Settings } from './types';
+import ErrorWithoutStack from './error-without-stack.js';
+import type { AppInformation, CommandSpec, InputObject, OrganizedArguments, Settings } from './types';
 
 // Helpful utility functions
 export default function utils(currentSettings: Settings) {
@@ -49,7 +49,7 @@ export default function utils(currentSettings: Settings) {
 		},
 
 		// Get specs for a command
-		getMergedSpec(command: string): CommandSpec & { flags: {}; options: {} } {
+		async getMergedSpec(command: string): Promise<CommandSpec & { flags: {}; options: {} }> {
 			// Break into pieces, with entry point
 			const pieces = `. ${command}`.trim().split(' ');
 
@@ -71,14 +71,14 @@ export default function utils(currentSettings: Settings) {
 			// Loop over every piece
 			let currentPathPrefix = path.dirname(settings.mainFilename);
 
-			pieces.forEach((piece, index) => {
+			for (const [index, piece] of pieces.entries()) {
 				// Append to path prefix
 				if (piece) {
 					currentPathPrefix += `/${piece}`;
 				}
 
 				// Get the command spec
-				const spec = utils(settings).files.getCommandSpec(currentPathPrefix);
+				const spec = await utils(settings).files.getCommandSpec(currentPathPrefix);
 
 				// Build onto spec
 				if (typeof spec.flags === 'object') {
@@ -105,14 +105,14 @@ export default function utils(currentSettings: Settings) {
 					mergedSpec.description = spec.description;
 					mergedSpec.data = spec.data;
 				}
-			});
+			}
 
 			// Return spec
 			return mergedSpec;
 		},
 
 		// Organize arguments into categories
-		organizeArguments(): OrganizedArguments {
+		async organizeArguments(): Promise<OrganizedArguments> {
 			// Initialize
 			const organizedArguments: OrganizedArguments = {
 				flags: [],
@@ -190,7 +190,7 @@ export default function utils(currentSettings: Settings) {
 				}
 
 				// Get merged spec for this command
-				const mergedSpec: CommandSpec = utils(settings).getMergedSpec(organizedArguments.command);
+				const mergedSpec = await utils(settings).getMergedSpec(organizedArguments.command);
 
 				// Handle if we're supposed to ignore anything that looks like flags/options
 				if (reachedData && mergedSpec.data && mergedSpec.data.ignoreFlagsAndOptions === true) {
@@ -315,7 +315,7 @@ export default function utils(currentSettings: Settings) {
 			// Handle if there's any data
 			if (typeof organizedArguments.data === 'string') {
 				// Get merged spec for this command
-				const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
+				const mergedSpec = await utils(settings).getMergedSpec(organizedArguments.command);
 
 				// Handle if data is not allowed
 				if (typeof mergedSpec.data !== 'object') {
@@ -411,14 +411,14 @@ export default function utils(currentSettings: Settings) {
 		},
 
 		// Construct a full input object
-		constructInputObject(organizedArguments: OrganizedArguments): InputObject {
+		async constructInputObject(organizedArguments: OrganizedArguments): Promise<InputObject> {
 			// Initialize
 			const inputObject: InputObject = {
 				command: '',
 			};
 
 			// Get merged spec for this command
-			const mergedSpec = utils(settings).getMergedSpec(organizedArguments.command);
+			const mergedSpec = await utils(settings).getMergedSpec(organizedArguments.command);
 
 			// Loop over each component and store
 			Object.entries(mergedSpec.flags).forEach(([flag]) => {
@@ -517,28 +517,31 @@ export default function utils(currentSettings: Settings) {
 			},
 
 			// Get a command's spec
-			getCommandSpec(directory: string): CommandSpec {
+			async getCommandSpec(directory: string): Promise<CommandSpec> {
 				// Error if directory does not exist
 				if (!fs.existsSync(directory)) {
 					throw new Error(`Directory does not exist: ${directory}`);
 				}
 
 				// List the files in this directory
-				const commandFiles: string[] = utils(settings).files.getFiles(directory);
+				const specFiles = utils(settings)
+					.files.getFiles(directory)
+					.filter((path) => path.match(/\.spec.[cm]?js$/));
 
 				// Error if not exactly one spec file
-				if (commandFiles.filter((path) => path.match(/\.spec.c?js$/)).length !== 1) {
+				if (specFiles.length !== 1) {
 					throw new ErrorWithoutStack(
-						`There should be exactly one ${chalk.bold('.spec.js')} or ${chalk.bold('.spec.cjs')} file in: ${directory}`
+						`There should be exactly one spec file (ending in ${chalk.bold('.spec.[cm]?js')}) in: ${directory}`
 					);
 				}
 
 				// Get the file path
-				const specFilePath = commandFiles.filter((path) => path.match(/\.spec.c?js$/))[0];
+				const specFilePath = specFiles[0];
 
 				// Return
 				try {
-					return require(specFilePath);
+					const spec = await import(specFilePath);
+					return 'default' in spec ? spec.default : spec;
 				} catch (error) {
 					throw new ErrorWithoutStack(
 						`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold('JS Error: ')}${error}`

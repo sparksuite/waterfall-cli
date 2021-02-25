@@ -4,13 +4,13 @@
 import runProgram from './run-program';
 
 // Initialize
-const entryFile = `${__dirname}/programs/typescript/cli/entry.js`;
+const entryFile = `${__dirname}/programs/typescript-cjs/cli/entry.js`;
 
 // Tests
 describe('Built-in abilities', () => {
 	test('Displays version', () => {
 		return runProgram(`node ${entryFile} --version`).then(({ stdout }) => {
-			expect(stdout).toContain('typescript: 1.2.3');
+			expect(stdout).toContain('typescript-cjs: 1.2.3');
 		});
 	});
 });

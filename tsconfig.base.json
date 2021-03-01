@@ -6,6 +6,7 @@
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"noUnusedLocals": true,
+		"noUnusedParameters": true,
 		"removeComments": true,
 		"resolveJsonModule": true,
 		"rootDirs": ["src", "test"],
@@ -13,6 +14,6 @@
 		"strict": true,
 		"strictNullChecks": true
 	},
-	"include": ["src/**/*", "test/*"],
+	"include": ["src/**/*"],
 	"exclude": ["node_modules"]
 }

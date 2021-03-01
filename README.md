@@ -1,8 +1,26 @@
-# Waterfall CLI
+# <div align="center">Waterfall CLI</div>
 
-Effortlessly create powerful, thoughtfully-organized CLIs with Node.js, using an intuitive cascading design.
+<p align="center">
+<img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/waterfall-cli">
+<img alt="Codecov" src="https://img.shields.io/codecov/c/github/sparksuite/waterfall-cli">
+<img alt="npm" src="https://img.shields.io/npm/dw/waterfall-cli">
+<img alt="npm" src="https://img.shields.io/npm/v/waterfall-cli">
+<img alt="npm" src="https://img.shields.io/npm/l/waterfall-cli">
+</p>
 
-_**Heads up!** This proof-of-concept is only used internally right now; however, we may flesh out Waterfall CLI as a fully-capable open source project in the future._
+TODO
+
+## Quick start
+
+TODO
+
+## Documentation
+
+Read the docs at: https://waterfallcli.io/docs/
+
+## Contributing
+
+We love contributions! Contributing is easy; [learn how](https://github.com/sparksuite/waterfall-cli/blob/master/CONTRIBUTING.md).
 
 ### Notes for future documentation:
 

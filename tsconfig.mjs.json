@@ -4,6 +4,5 @@
 		"module": "ESNext",
 		"outDir": "./dist/mjs/",
 		"target": "ES2020"
-	},
-	"exclude": ["test/*"]
+	}
 }

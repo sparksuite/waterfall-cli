@@ -1,5 +1,5 @@
 {
-	"name": "typescript-mjs",
+	"name": "typescript-esm",
 	"version": "1.2.3",
 	"type": "module",
 	"scripts": {

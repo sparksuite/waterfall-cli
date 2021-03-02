@@ -21,7 +21,7 @@ describe('Built-in abilities', () => {
 		
 		expect(result).toMatchObject({
 			exitCode: 0,
-			stdout: expect.stringContaining('typescript-mjs: 1.2.3'),
+			stdout: expect.stringContaining('typescript-esm: 1.2.3'),
 			stderr: '',
 		});
 	});

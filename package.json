@@ -8,7 +8,7 @@
 	],
 	"exports": {
 		".": {
-			"import": "./dist/mjs/index.mjs.js",
+			"import": "./dist/esm/index.esm.js",
 			"require": "./dist/cjs/index.cjs.js"
 		}
 	},
@@ -19,7 +19,7 @@
 		"format": "eslint --fix --ext .js,.ts,.jsx,.tsx ./website && prettier --write '**/*.{ts,js,tsx,jsx,json,css,html,yml}'",
 		"clean": "git clean -X -d --force && find . -type d -empty -delete",
 		"precompile": "rm -rf dist/",
-		"compile": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.mjs.json",
+		"compile": "tsc --project tsconfig.cjs.json && tsc --project tsconfig.esm.json",
 		"postcompile": "./set-types.sh"
 	},
 	"repository": {

@@ -3,20 +3,21 @@
 // Dependencies
 import defaultSettings from '../src/default-settings';
 import utils from '../src/utils';
+import path from 'path';
 
 const settingsBadStructure = {
 	...defaultSettings,
-	mainFilename: `${__dirname}/programs/bad-structure/cli/entry.js`,
+	mainFilename: `${__dirname}/file-trees/bad-structure/cli/entry.js`,
 };
 
 const settingsPizzaOrdering = {
 	...defaultSettings,
-	mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+	mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 };
 
 // Tests
 describe('#retrieveAppInformation()', () => {
-	test('Retrieves app info', () => {
+	it('Retrieves app info', () => {
 		expect(utils(settingsPizzaOrdering).retrieveAppInformation()).toStrictEqual({
 			name: 'pizza-ordering',
 			packageName: 'pizza-ordering',
@@ -24,7 +25,7 @@ describe('#retrieveAppInformation()', () => {
 		});
 	});
 
-	test('Cannot find package.json', () => {
+	it('Cannot find package.json', () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			packageFilePath: '../fake.json',
@@ -35,7 +36,7 @@ describe('#retrieveAppInformation()', () => {
 });
 
 describe('#getMergedSpec()', () => {
-	test('Gets top-level spec', async () => {
+	it('Gets top-level spec', async () => {
 		expect(await utils(settingsPizzaOrdering).getMergedSpec('')).toStrictEqual({
 			data: undefined,
 			description: undefined,
@@ -67,7 +68,7 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Gets merged spec', async () => {
+	it('Gets merged spec', async () => {
 		expect(await utils(settingsPizzaOrdering).getMergedSpec('list')).toStrictEqual({
 			data: {
 				description: 'What you want to list',
@@ -117,7 +118,7 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Gets another merged spec', async () => {
+	it('Gets another merged spec', async () => {
 		expect(await utils(settingsPizzaOrdering).getMergedSpec('order')).toStrictEqual({
 			data: undefined,
 			description: 'Order a pizza',
@@ -149,17 +150,17 @@ describe('#getMergedSpec()', () => {
 		});
 	});
 
-	test('Complains about multiple spec files', async () => {
+	it('Complains about multiple spec files', async () => {
 		return expect(utils(settingsBadStructure).getMergedSpec('multiple-specs')).rejects.toThrow();
 	});
 
-	test('Complains about invalid spec JS', () => {
+	it('Complains about invalid spec JS', () => {
 		return expect(utils(settingsBadStructure).getMergedSpec('invalid-spec-js')).rejects.toThrow();
 	});
 });
 
 describe('#organizeArguments()', () => {
-	test('Handles no arguments', async () => {
+	it('Handles no arguments', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: [],
@@ -173,7 +174,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command', async () => {
+	it('Handles simple command', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list'],
@@ -187,7 +188,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with data', async () => {
+	it('Handles simple command with data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
@@ -202,7 +203,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with multi-word data', async () => {
+	it('Handles simple command with multi-word data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'two', 'words'],
@@ -217,7 +218,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with flag after data', async () => {
+	it('Handles simple command with flag after data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings', '--help'],
@@ -232,7 +233,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Ignores flag in data', async () => {
+	it('Ignores flag in data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'something', '--help'],
@@ -247,7 +248,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Ignores options in data', async () => {
+	it('Ignores options in data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'something', '--delivery-zip-code', '55555'],
@@ -262,7 +263,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles simple command with longer data', async () => {
+	it('Handles simple command with longer data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', 'pizza1', 'pizza2'],
@@ -277,7 +278,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles data with special characters', async () => {
+	it('Handles data with special characters', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', '~!@#$%^&*()-=_+'],
@@ -292,7 +293,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles integer data', async () => {
+	it('Handles integer data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '10'],
@@ -307,7 +308,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles float data', async () => {
+	it('Handles float data', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', '123.4'],
@@ -361,7 +362,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles multiple commands', async () => {
+	it('Handles multiple commands', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in'],
@@ -375,7 +376,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles flag', async () => {
+	it('Handles flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian'],
@@ -389,7 +390,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading flag', async () => {
+	it('Handles cascading flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--quiet'],
@@ -403,7 +404,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles shorthand flag', async () => {
+	it('Handles shorthand flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '-q'],
@@ -417,7 +418,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles multiple flags', async () => {
+	it('Handles multiple flags', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--vegetarian', '--quiet'],
@@ -431,7 +432,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading flag before command', async () => {
+	it('Handles cascading flag before command', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['--quiet', 'list', '--vegetarian'],
@@ -445,7 +446,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles integer option', async () => {
+	it('Handles integer option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '10'],
@@ -459,7 +460,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles float option', async () => {
+	it('Handles float option', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', '123.4'],
@@ -509,7 +510,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles cascading option', async () => {
+	it('Handles cascading option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code', '55555'],
@@ -523,7 +524,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Handles shorthand option', async () => {
+	it('Handles shorthand option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '-z', '55555'],
@@ -537,7 +538,7 @@ describe('#organizeArguments()', () => {
 		});
 	});
 
-	test('Treats bad command as data', async () => {
+	it('Treats bad command as data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '.'],
@@ -546,7 +547,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about missing option value', async () => {
+	it('Complains about missing option value', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code'],
@@ -555,7 +556,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized option value type', async () => {
+	it('Complains about unrecognized option value type', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', '--test', 'test'],
@@ -564,7 +565,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized data type', async () => {
+	it('Complains about unrecognized data type', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', 'test'],
@@ -573,7 +574,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unrecognized flag', async () => {
+	it('Complains about unrecognized flag', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--fake'],
@@ -582,7 +583,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about non-permitted data', async () => {
+	it('Complains about non-permitted data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'abc', '123'],
@@ -591,7 +592,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not in "values"', async () => {
+	it('Complains about option value not in "values"', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'fake'],
@@ -600,7 +601,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not in "values"', async () => {
+	it('Complains about data not in "values"', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'fake'],
@@ -609,7 +610,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not being integer', async () => {
+	it('Complains about option value not being integer', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--limit', '123.4'],
@@ -625,7 +626,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about option value not being float', async () => {
+	it('Complains about option value not being float', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--max-price', 'abc'],
@@ -655,7 +656,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not being integer', async () => {
+	it('Complains about data not being integer', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'integer-data', '123.4'],
@@ -671,7 +672,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about data not being float', async () => {
+	it('Complains about data not being float', async () => {
 		let settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'float-data', 'abc'],
@@ -701,7 +702,7 @@ describe('#organizeArguments()', () => {
 		await expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Complains about unexpected pass-through arguments ', async () => {
+	it('Complains about unexpected pass-through arguments ', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'dine-in', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
@@ -710,7 +711,7 @@ describe('#organizeArguments()', () => {
 		return expect(utils(settings).organizeArguments()).rejects.toThrow();
 	});
 
-	test('Handles having pass-through arguments', async () => {
+	it('Handles having pass-through arguments', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['order', 'to-go', '--', '--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
@@ -727,7 +728,7 @@ describe('#organizeArguments()', () => {
 });
 
 describe('#constructInputObject()', () => {
-	test('Handles combination of input', async () => {
+	it('Handles combination of input', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--delivery-zip-code', '55555', '--sort', 'popularity', '-q', '--vegetarian', 'toppings'],
@@ -749,7 +750,7 @@ describe('#constructInputObject()', () => {
 		});
 	});
 
-	test('Complains about missing required option', async () => {
+	it('Complains about missing required option', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', 'toppings'],
@@ -760,7 +761,7 @@ describe('#constructInputObject()', () => {
 		return expect(utils(settings).constructInputObject(organizedArguments)).rejects.toThrow();
 	});
 
-	test('Complains about missing required data', async () => {
+	it('Complains about missing required data', async () => {
 		const settings = {
 			...settingsPizzaOrdering,
 			arguments: ['list', '--sort', 'popularity'],
@@ -773,7 +774,7 @@ describe('#constructInputObject()', () => {
 });
 
 describe('#getAllProgramCommands()', () => {
-	test('Gets all commands', () => {
+	it('Gets all commands', () => {
 		expect(utils(settingsPizzaOrdering).getAllProgramCommands()).toStrictEqual([
 			'list',
 			'order',
@@ -787,51 +788,51 @@ describe('#getAllProgramCommands()', () => {
 });
 
 describe('#convertDashesToCamelCase()', () => {
-	test('Normal string', () => {
+	it('Normal string', () => {
 		expect(utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-aaa-aaa')).toEqual('aaaAaaAaa');
 	});
 
-	test('With numbers', () => {
+	it('With numbers', () => {
 		expect(utils(settingsPizzaOrdering).convertDashesToCamelCase('aaa-123-aaa')).toEqual('aaa123Aaa');
 	});
 });
 
 describe('#files', () => {
-	test('Detects directory is directory', () => {
-		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-tree/directory1`)).toEqual(true);
+	it('Detects directory is directory', () => {
+		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-trees/primary/directory1`)).toEqual(true);
 	});
 
-	test('Detects file is not directory', () => {
-		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-tree/file1.js`)).toEqual(false);
+	it('Detects file is not directory', () => {
+		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-trees/primary/file1.js`)).toEqual(false);
 	});
 
-	test('Detects file is file', () => {
-		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-tree/file1.js`)).toEqual(true);
+	it('Detects file is file', () => {
+		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-trees/primary/file1.js`)).toEqual(true);
 	});
 
-	test('Detects directory is not file', () => {
-		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-tree/directory1`)).toEqual(false);
+	it('Detects directory is not file', () => {
+		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-trees/primary/directory1`)).toEqual(false);
 	});
 
-	test('Retrieves first level files', () => {
-		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-tree`)).toEqual([
-			`${__dirname}/file-tree/file1.js`,
-			`${__dirname}/file-tree/file2.js`,
+	it('Retrieves first level files', () => {
+		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-trees/primary`)).toEqual([
+			`${__dirname}/file-trees/primary/file1.js`,
+			`${__dirname}/file-trees/primary/file2.js`,
 		]);
 	});
 
-	test('Retrieves all directories', () => {
-		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/file-tree`)).toStrictEqual([
-			`${__dirname}/file-tree/directory1`,
-			`${__dirname}/file-tree/directory1/directory1`,
-			`${__dirname}/file-tree/directory1/directory2`,
-			`${__dirname}/file-tree/directory2`,
+	it('Retrieves all directories', () => {
+		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/file-trees/primary`)).toStrictEqual([
+			`${__dirname}/file-trees/primary/directory1`,
+			`${__dirname}/file-trees/primary/directory1/directory1`,
+			`${__dirname}/file-trees/primary/directory1/directory2`,
+			`${__dirname}/file-trees/primary/directory2`,
 		]);
 	});
 
-	test('Retrieves command spec', async () => {
+	it('Retrieves command spec', async () => {
 		expect(
-			await utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/programs/pizza-ordering/cli`)
+			await utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/../test-projects/pizza-ordering/cli`)
 		).toStrictEqual({
 			flags: {
 				'non-cascading': {
@@ -853,21 +854,21 @@ describe('#files', () => {
 		});
 	});
 
-	test('getFiles() returns empty array if path not found', () => {
+	it('getFiles() returns empty array if path not found', () => {
 		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/fake`)).toStrictEqual([]);
 	});
 
-	test('getAllDirectories() returns empty array if path not found', () => {
+	it('getAllDirectories() returns empty array if path not found', () => {
 		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/fake`)).toStrictEqual([]);
 	});
 
-	test('getCommandSpec() throws an error if path not found', () => {
+	it('getCommandSpec() throws an error if path not found', () => {
 		return expect(utils(settingsPizzaOrdering).files.getCommandSpec(`${__dirname}/fake`)).rejects.toThrow();
 	});
 
-	test('getCommandSpec() throws an error if there are multiple spec files', () => {
+	it('getCommandSpec() throws an error if there are multiple spec files', () => {
 		return expect(
-			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/programs/bad-structure/cli/multiple-specs`)
+			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/file-trees/bad-structure/cli/multiple-specs`)
 		).rejects.toThrow();
 	});
 });

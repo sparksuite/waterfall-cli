@@ -25,25 +25,25 @@ afterEach(() => {
 
 // Tests
 describe('#printPrettyError()', () => {
-	test('Has the "ERROR" title', () => {
+	it('Has the "ERROR" title', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain(chalk.inverse.red.bold(' ERROR '));
 	});
 
-	test('Has the indent marker (">")', () => {
+	it('Has the indent marker (">")', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('> ');
 	});
 
-	test('Displays the message text', () => {
+	it('Displays the message text', () => {
 		printPrettyError('Error message content');
 
 		expect(consoleResult).toContain('Error message content');
 	});
 
-	test('Returns the message text', () => {
+	it('Returns the message text', () => {
 		expect(printPrettyError('Error message content')).toEqual('Error message content');
 	});
 });

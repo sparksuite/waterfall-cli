@@ -4,6 +4,7 @@
 // Dependencies
 import defaultSettings from '../src/default-settings';
 import screens from '../src/screens';
+import path from 'path';
 
 // Remove ANSI formatting
 function removeFormatting(text: string) {
@@ -12,7 +13,7 @@ function removeFormatting(text: string) {
 
 // Tests
 describe('#version()', () => {
-	test('Full version screen', () => {
+	it('Full version screen', () => {
 		const settings = {
 			...defaultSettings,
 			app: {
@@ -24,7 +25,7 @@ describe('#version()', () => {
 		expect(removeFormatting(screens(settings).version())).toContain('Example program: 1.2.3');
 	});
 
-	test('Missing name', () => {
+	it('Missing name', () => {
 		const settings = {
 			...defaultSettings,
 			app: {
@@ -39,10 +40,10 @@ describe('#version()', () => {
 });
 
 describe('#help()', () => {
-	test('Description line', async () => {
+	it('Description line', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -50,10 +51,10 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).toContain('Description: List something');
 	});
 
-	test('Usage line (commands + flags + options)', async () => {
+	it('Usage line (commands + flags + options)', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -62,10 +63,10 @@ describe('#help()', () => {
 		);
 	});
 
-	test('Usage line (flags + options + data)', async () => {
+	it('Usage line (flags + options + data)', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -75,20 +76,20 @@ describe('#help()', () => {
 		);
 	});
 
-	test('Flags - header', async () => {
+	it('Flags - header', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('FLAGS:');
 	});
 
-	test('Flags - non-cascading', async () => {
+	it('Flags - non-cascading', async () => {
 		let settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -96,7 +97,7 @@ describe('#help()', () => {
 
 		settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -104,10 +105,10 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).not.toContain('--non-cascading');
 	});
 
-	test('Flags - cascading', async () => {
+	it('Flags - cascading', async () => {
 		let settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -115,7 +116,7 @@ describe('#help()', () => {
 
 		settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -123,20 +124,20 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).toContain('--quiet');
 	});
 
-	test('Flags - shorthand', async () => {
+	it('Flags - shorthand', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('--quiet, -q');
 	});
 
-	test('Flags - description', async () => {
+	it('Flags - description', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -145,20 +146,20 @@ describe('#help()', () => {
 		);
 	});
 
-	test('Options - header', async () => {
+	it('Options - header', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('OPTIONS:');
 	});
 
-	test('Options - cascading', async () => {
+	it('Options - cascading', async () => {
 		let settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -166,7 +167,7 @@ describe('#help()', () => {
 
 		settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -174,30 +175,30 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).toContain('--delivery-zip-code');
 	});
 
-	test('Options - shorthand', async () => {
+	it('Options - shorthand', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('--delivery-zip-code, -z');
 	});
 
-	test('Options - description', async () => {
+	it('Options - description', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('The delivery ZIP code, for context');
 	});
 
-	test('Options - description (type)', async () => {
+	it('Options - description (type)', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -207,10 +208,10 @@ describe('#help()', () => {
 		);
 	});
 
-	test('Options - description (required + accepts)', async () => {
+	it('Options - description (required + accepts)', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -220,10 +221,10 @@ describe('#help()', () => {
 		);
 	});
 
-	test('Commands - header', async () => {
+	it('Commands - header', async () => {
 		let settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
@@ -231,7 +232,7 @@ describe('#help()', () => {
 
 		settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -239,20 +240,20 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).not.toContain('COMMANDS:');
 	});
 
-	test('Commands - description', async () => {
+	it('Commands - description', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).toContain('Order a pizza');
 	});
 
-	test('Data - header', async () => {
+	it('Data - header', async () => {
 		let settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};
@@ -261,17 +262,17 @@ describe('#help()', () => {
 
 		settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 		};
 
 		expect(removeFormatting(await screens(settings).help())).not.toContain('DATA:');
 	});
 
-	test('Data - description', async () => {
+	it('Data - description', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['order', 'dine-in'],
 		};
@@ -279,10 +280,10 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).toContain('What type of pizza to order');
 	});
 
-	test('Data - no description', async () => {
+	it('Data - no description', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['order', 'descriptionless-data'],
 		};
@@ -292,10 +293,10 @@ describe('#help()', () => {
 		expect(removeFormatting(await screens(settings).help())).toContain('This command allows data to be passed in');
 	});
 
-	test('Data - description (required + accepts)', async () => {
+	it('Data - description (required + accepts)', async () => {
 		const settings = {
 			...defaultSettings,
-			mainFilename: `${__dirname}/programs/pizza-ordering/cli/entry.js`,
+			mainFilename: path.normalize(`${__dirname}/../test-projects/pizza-ordering/cli/entry.js`),
 			usageCommand: 'node entry.js',
 			arguments: ['list'],
 		};

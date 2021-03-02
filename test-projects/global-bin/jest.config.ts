@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types';
 
 const config: Config.InitialOptions = {
-	displayName: 'Full test suite',
+	displayName: 'Test suite',
 	verbose: true,
 	preset: 'ts-jest',
 	testMatch: ['<rootDir>/*.test.ts'],

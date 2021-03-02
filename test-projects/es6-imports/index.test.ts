@@ -25,7 +25,7 @@ if (semver.lt(semver.clean(process.version) ?? '', '13.2.0')) {
 			});
 
 			result.stdout = removeFormatting(result.stdout);
-			
+
 			expect(result).toMatchObject({
 				exitCode: 0,
 				stdout: expect.stringContaining('es6-imports: 1.2.3'),

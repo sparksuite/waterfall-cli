@@ -27,7 +27,7 @@ describe('Built-in abilities', () => {
 		});
 
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('global-bin: 1.2.3'),

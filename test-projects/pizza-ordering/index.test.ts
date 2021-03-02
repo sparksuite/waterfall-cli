@@ -16,9 +16,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('pizza-ordering: 1.2.3'),
@@ -31,9 +31,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('pizza-ordering: 1.2.3'),
@@ -46,9 +46,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('Usage: node entry.js [commands]'),
@@ -61,9 +61,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('Usage: node entry.js list [flags]'),
@@ -76,9 +76,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('Usage: node entry.js [commands]'),
@@ -93,9 +93,9 @@ describe('Commands', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('Ordered for dining in'),
@@ -110,9 +110,9 @@ describe('Init settings', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('This is the onStart function'),

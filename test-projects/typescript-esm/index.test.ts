@@ -16,9 +16,9 @@ describe('Built-in abilities', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('typescript-esm: 1.2.3'),
@@ -33,9 +33,9 @@ describe('Commands', () => {
 			all: true,
 			reject: false,
 		});
-		
+
 		result.stdout = removeFormatting(result.stdout);
-		
+
 		expect(result).toMatchObject({
 			exitCode: 0,
 			stdout: expect.stringContaining('Ran example command'),

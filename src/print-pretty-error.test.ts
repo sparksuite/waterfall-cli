@@ -1,8 +1,8 @@
 /* eslint-env jest */
 
 // Dependencies
-import printPrettyError from '../src/print-pretty-error';
-import chalk from '../src/chalk';
+import printPrettyError from './print-pretty-error';
+import chalk from './chalk';
 
 // Holders for capturing console.error output
 let spy: ReturnType<typeof jest.spyOn>;

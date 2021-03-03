@@ -5,5 +5,5 @@
 		"outDir": "./dist/esm/",
 		"target": "ES2020"
 	},
-	"exclude": ["tests/**/*"]
+	"exclude": ["**/*.test.ts"]
 }

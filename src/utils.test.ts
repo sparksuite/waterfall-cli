@@ -7,7 +7,7 @@ import path from 'path';
 
 const settingsBadStructure = {
 	...defaultSettings,
-	mainFilename: `${__dirname}/file-trees/bad-structure/cli/entry.js`,
+	mainFilename: path.normalize(`${__dirname}/../test-file-trees/bad-structure/cli/entry.js`),
 };
 
 const settingsPizzaOrdering = {
@@ -799,34 +799,34 @@ describe('#convertDashesToCamelCase()', () => {
 
 describe('#files', () => {
 	it('Detects directory is directory', () => {
-		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-trees/primary/directory1`)).toEqual(true);
+		expect(utils(settingsPizzaOrdering).files.isDirectory(path.normalize(`${__dirname}/../test-file-trees/primary/directory1`))).toEqual(true);
 	});
 
 	it('Detects file is not directory', () => {
-		expect(utils(settingsPizzaOrdering).files.isDirectory(`${__dirname}/file-trees/primary/file1.js`)).toEqual(false);
+		expect(utils(settingsPizzaOrdering).files.isDirectory(path.normalize(`${__dirname}/../test-file-trees/primary/file1.js`))).toEqual(false);
 	});
 
 	it('Detects file is file', () => {
-		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-trees/primary/file1.js`)).toEqual(true);
+		expect(utils(settingsPizzaOrdering).files.isFile(path.normalize(`${__dirname}/../test-file-trees/primary/file1.js`))).toEqual(true);
 	});
 
 	it('Detects directory is not file', () => {
-		expect(utils(settingsPizzaOrdering).files.isFile(`${__dirname}/file-trees/primary/directory1`)).toEqual(false);
+		expect(utils(settingsPizzaOrdering).files.isFile(path.normalize(`${__dirname}/../test-file-trees/primary/directory1`))).toEqual(false);
 	});
 
 	it('Retrieves first level files', () => {
-		expect(utils(settingsPizzaOrdering).files.getFiles(`${__dirname}/file-trees/primary`)).toEqual([
-			`${__dirname}/file-trees/primary/file1.js`,
-			`${__dirname}/file-trees/primary/file2.js`,
+		expect(utils(settingsPizzaOrdering).files.getFiles(path.normalize(`${__dirname}/../test-file-trees/primary`))).toEqual([
+			path.normalize(`${__dirname}/../test-file-trees/primary/file1.js`),
+			path.normalize(`${__dirname}/../test-file-trees/primary/file2.js`),
 		]);
 	});
 
 	it('Retrieves all directories', () => {
-		expect(utils(settingsPizzaOrdering).files.getAllDirectories(`${__dirname}/file-trees/primary`)).toStrictEqual([
-			`${__dirname}/file-trees/primary/directory1`,
-			`${__dirname}/file-trees/primary/directory1/directory1`,
-			`${__dirname}/file-trees/primary/directory1/directory2`,
-			`${__dirname}/file-trees/primary/directory2`,
+		expect(utils(settingsPizzaOrdering).files.getAllDirectories(path.normalize(`${__dirname}/../test-file-trees/primary`))).toStrictEqual([
+			path.normalize(`${__dirname}/../test-file-trees/primary/directory1`),
+			path.normalize(`${__dirname}/../test-file-trees/primary/directory1/directory1`),
+			path.normalize(`${__dirname}/../test-file-trees/primary/directory1/directory2`),
+			path.normalize(`${__dirname}/../test-file-trees/primary/directory2`),
 		]);
 	});
 
@@ -868,7 +868,7 @@ describe('#files', () => {
 
 	it('getCommandSpec() throws an error if there are multiple spec files', () => {
 		return expect(
-			utils(settingsBadStructure).files.getCommandSpec(`${__dirname}/file-trees/bad-structure/cli/multiple-specs`)
+			utils(settingsBadStructure).files.getCommandSpec(path.normalize(`${__dirname}/../test-file-trees/bad-structure/cli/multiple-specs`))
 		).rejects.toThrow();
 	});
 });

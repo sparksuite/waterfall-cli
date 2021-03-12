@@ -1,24 +1,12 @@
 # <div align="center">Waterfall CLI</div>
 
 <p align="center">
-    <a href="https://www.npmjs.com/package/waterfall-cli">
-        <img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/waterfall-cli">
-    </a>
-    <a href="https://app.codecov.io/gh/sparksuite/waterfall-cli/branch/master">
-        <img alt="Codecov coverage" src="https://img.shields.io/codecov/c/github/sparksuite/waterfall-cli">
-    </a>
-    <a href="https://www.npmjs.com/package/waterfall-cli">
-        <img alt="npm downloads" src="https://img.shields.io/npm/dw/waterfall-cli">
-    </a>
-    <a href="https://www.npmjs.com/package/waterfall-cli">
-        <img alt="npm release" src="https://img.shields.io/npm/v/waterfall-cli">
-    </a>
-    <a href="https://github.com/sparksuite/rugged">
-        <img alt="tested with Rugged" src="https://img.shields.io/badge/tested%20with-Rugged-green">
-    </a>
-    <a href="https://github.com/sparksuite/waterfall-cli/blob/master/LICENSE">
-        <img alt="license" src="https://img.shields.io/npm/l/waterfall-cli">
-    </a>
+<a href="https://www.npmjs.com/package/waterfall-cli"><img alt="npm bundle size" src="https://img.shields.io/bundlephobia/min/waterfall-cli"></a>
+<a href="https://app.codecov.io/gh/sparksuite/waterfall-cli/branch/master"><img alt="Codecov coverage" src="https://img.shields.io/codecov/c/github/sparksuite/waterfall-cli"></a>
+<a href="https://www.npmjs.com/package/waterfall-cli"><img alt="npm downloads" src="https://img.shields.io/npm/dw/waterfall-cli"></a>
+<a href="https://www.npmjs.com/package/waterfall-cli"><img alt="npm release" src="https://img.shields.io/npm/v/waterfall-cli"></a>
+<a href="https://github.com/sparksuite/rugged"><img alt="tested with Rugged" src="https://img.shields.io/badge/tested%20with-Rugged-green"></a>
+<a href="https://github.com/sparksuite/waterfall-cli/blob/master/LICENSE"><img alt="license" src="https://img.shields.io/npm/l/waterfall-cli"></a>
 </p>
 
 TODO

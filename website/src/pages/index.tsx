@@ -10,15 +10,15 @@ import styles from './styles.module.css';
 // Define the features
 const features = [
 	{
-		title: 'Modern design',
+		title: 'TODO',
 		imageUrl: 'img/undraw_appreciation.svg',
-		description: <>Written entirely in TypeScript, with zero dependencies, and a promise-based design.</>,
+		description: <>TODO</>,
 	},
 	{
-		title: 'Node.js + browser',
+		title: 'TODO',
 		imageUrl: 'img/undraw_powerful.svg',
 		description: (
-			<>Switches intelligently between native libraries to be work in both Node.js and browser environments.</>
+			<>TODO</>
 		),
 	},
 	{

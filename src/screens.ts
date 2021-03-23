@@ -70,10 +70,10 @@ export default function screens(currentSettings: Settings) {
 			const mergedSpec = await utils(settings).getMergedSpec(organizedArguments.command);
 
 			// Determine if certain features are available
-			const hasFlags = !!Object.entries(mergedSpec.flags).length;
-			const hasOptions = !!Object.entries(mergedSpec.options).length;
+			const hasFlags = Boolean(Object.entries(mergedSpec.flags).length);
+			const hasOptions = Boolean(Object.entries(mergedSpec.options).length);
 			const allowsData = typeof mergedSpec.data === 'object';
-			const hasCommands = !!commands.length;
+			const hasCommands = Boolean(commands.length);
 			const allowsPassThrough = mergedSpec.passThrough;
 
 			// Output description

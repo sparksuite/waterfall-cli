@@ -1,5 +1,5 @@
 // Process arguments
-export default function processArguments(argv: string[]) {
+export default function processArguments(argv: string[]): string[] {
 	const processedArguments: string[] = [];
 
 	argv.forEach((argument) => {

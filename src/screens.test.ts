@@ -7,7 +7,7 @@ import screens from '../src/screens';
 import path from 'path';
 
 // Remove ANSI formatting
-function removeFormatting(text: string) {
+function removeFormatting(text: string): string {
 	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 }
 

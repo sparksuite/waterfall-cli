@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"module": "ESNext",
 		"target": "ES2020",
-		"outDir": "cli"
+		"outDir": "cli",
+		"rootDir": "src"
 	},
 	"include": ["src/**/*"]
 }

@@ -3,7 +3,8 @@
 	"compilerOptions": {
 		"module": "CommonJS",
 		"target": "ES2015",
-		"outDir": "cli"
+		"outDir": "cli",
+		"rootDir": "src"
 	},
 	"include": ["src/**/*"]
 }

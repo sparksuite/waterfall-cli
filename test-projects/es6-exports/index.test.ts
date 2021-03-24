@@ -3,7 +3,7 @@ import execa from 'execa';
 import semver from 'semver';
 
 // Remove ANSI formatting
-function removeFormatting(text: string) {
+function removeFormatting(text: string): string {
 	return text.replace(
 		/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, // eslint-disable-line no-control-regex
 		''

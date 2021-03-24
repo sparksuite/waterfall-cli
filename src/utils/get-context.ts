@@ -32,17 +32,25 @@ export default async function getContext(reconstruct?: true): Promise<Context> {
 	}
 
 	// Create context schema
-	const schema = z.object({
-		packageFile: z.object({
-			name: z.string().nonempty().refine((value) => validatePackageName(value).validForOldPackages, {
-				message: '`package.json` contains an invalid name',
-			}).optional(),
-			version: z.string().nonempty().optional(),
-		}).optional(),
-	}).strict();
+	const schema = z
+		.object({
+			packageFile: z
+				.object({
+					name: z
+						.string()
+						.nonempty()
+						.refine((value) => validatePackageName(value).validForOldPackages, {
+							message: '`package.json` contains an invalid name',
+						})
+						.optional(),
+					version: z.string().nonempty().optional(),
+				})
+				.optional(),
+		})
+		.strict();
 
 	// Validate and store the context
-	context = await schema.parse({
+	context = schema.parse({
 		packageFile: packageFile,
 	});
 

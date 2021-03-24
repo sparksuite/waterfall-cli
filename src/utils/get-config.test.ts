@@ -14,7 +14,7 @@ const testFileTreesPath = path.normalize(path.join(__dirname, '..', '..', 'test-
 // Tests
 describe('#getConfig()', () => {
 	it('Skips reconstructing the config when possible', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-missing-version'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
 
 		const config1 = await getConfig(undefined, true);
 		const config2 = await getConfig();
@@ -23,7 +23,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Defaults to expected default values when no custom config', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'primary'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		expect(await getConfig(undefined, true)).toStrictEqual({
 			app: {
@@ -35,11 +35,12 @@ describe('#getConfig()', () => {
 				before: 1,
 				after: 1,
 			},
+			verbose: false,
 		});
 	});
 
 	it('Handles overriding defaults with custom values', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'primary'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		expect(
 			await getConfig(
@@ -53,6 +54,7 @@ describe('#getConfig()', () => {
 						before: 0,
 						after: 0,
 					},
+					verbose: true,
 				},
 				true
 			)
@@ -66,11 +68,12 @@ describe('#getConfig()', () => {
 				before: 0,
 				after: 0,
 			},
+			verbose: true,
 		});
 	});
 
 	it('Handles some custom values when there is no package file', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = '/tmp';
 
 		expect(
 			(
@@ -93,7 +96,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Catches invalid name', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		const invalidConfig = {
 			app: {
@@ -108,7 +111,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Catches invalid version', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		const invalidConfig = {
 			app: {
@@ -125,7 +128,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Catches invalid spacing', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		const invalidConfig = {
 			spacing: {
@@ -140,7 +143,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Catches unknown keys', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		let invalidConfig: Partial<Config> = {
 			// @ts-expect-error: We're forcing an error here

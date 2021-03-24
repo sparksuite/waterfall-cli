@@ -9,7 +9,7 @@ const testFileTreesPath = path.normalize(path.join(__dirname, '..', '..', 'test-
 // Tests
 describe('#getContext()', () => {
 	it('Skips reconstructing the context when possible', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-missing-version'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
 
 		const context1 = await getContext(true);
 		const context2 = await getContext();
@@ -18,7 +18,7 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles no package file', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+		process.argv[1] = '/tmp';
 
 		expect(await getContext(true)).toStrictEqual({
 			packageFile: undefined,
@@ -26,7 +26,7 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles empty package file', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'empty-package'));
+		process.argv[1] = path.join(testFileTreesPath, 'empty-package', 'entry.js');
 
 		expect(await getContext(true)).toStrictEqual({
 			packageFile: {},
@@ -34,7 +34,7 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles package file missing name', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-missing-name'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-missing-name', 'entry.js');
 
 		expect(await getContext(true)).toStrictEqual({
 			packageFile: {
@@ -44,7 +44,7 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles package file missing version', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-missing-version'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
 
 		expect(await getContext(true)).toStrictEqual({
 			packageFile: {
@@ -54,7 +54,7 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles package file with custom key', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-with-custom-key'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-with-custom-key', 'entry.js');
 
 		expect(await getContext(true)).toStrictEqual({
 			packageFile: {
@@ -64,14 +64,14 @@ describe('#getContext()', () => {
 	});
 
 	it('Catches invalid name', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-with-invalid-name'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-with-invalid-name', 'entry.js');
 
 		await expect(() => getContext(true)).rejects.toThrow(z.ZodError);
 		await expect(() => getContext(true)).rejects.toThrow('`package.json` contains an invalid name');
 	});
 
 	it('Catches invalid version', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-with-invalid-version'));
+		process.argv[1] = path.join(testFileTreesPath, 'package-with-invalid-version', 'entry.js');
 
 		await expect(() => getContext(true)).rejects.toThrow(z.ZodError);
 		await expect(() => getContext(true)).rejects.toThrowError('Expected string, received object');

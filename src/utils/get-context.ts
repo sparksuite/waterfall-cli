@@ -1,8 +1,8 @@
 // Imports
 import fs from 'fs';
-import path from 'path';
 import { z } from 'zod';
 import validatePackageName from 'validate-npm-package-name';
+import readPkgUp from 'read-pkg-up';
 
 // Define what a fully-constructed context object looks like
 export interface Context {
@@ -24,12 +24,12 @@ export default async function getContext(reconstruct?: true): Promise<Context> {
 	}
 
 	// Attempt to get details from the package file
-	let packageFile: unknown = undefined;
-	const packageFilePath = path.join(process.cwd(), 'package.json');
-
-	if (fs.existsSync(packageFilePath)) {
-		packageFile = require(packageFilePath);
-	}
+	const packageFile = (
+		await readPkgUp({
+			cwd: fs.realpathSync(process.argv[1]),
+			normalize: false,
+		})
+	)?.packageJson;
 
 	// Create context schema
 	const schema = z

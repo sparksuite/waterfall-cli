@@ -1,9 +1,9 @@
 // Imports
 import * as z from 'zod';
 import validatePackageName from 'validate-npm-package-name';
-import getContext from './get-context';
-import printPrettyError from './print-pretty-error';
-import chalk from './chalk';
+import getContext from './get-context.js';
+import printPrettyError from './print-pretty-error.js';
+import chalk from './chalk.js';
 
 // Define what a fully-constructed config object looks like
 export interface Config {
@@ -27,6 +27,9 @@ export interface Config {
 		/** Extra whitespace printed after your app’s output. Defaults to `1`. */
 		after: number;
 	};
+
+	/** Whether to print verbose debugging information. Defaults to `false`. */
+	verbose: boolean;
 }
 
 // Initialize
@@ -65,6 +68,7 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 				})
 				.strict()
 				.default({}),
+			verbose: z.boolean().default(false),
 		})
 		.strict()
 		.default({});

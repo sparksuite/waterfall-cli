@@ -43,7 +43,7 @@
 	"dependencies": {
 		"chalk": "^4.0.0",
 		"validate-npm-package-name": "^3.0.0",
-		"yup": "^0.32.9"
+		"zod": "^3.0.0-alpha.31"
 	},
 	"devDependencies": {
 		"@types/jest": "^26.0.20",

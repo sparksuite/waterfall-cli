@@ -1,7 +1,7 @@
 // Imports
 import fs from 'fs';
 import path from 'path';
-import * as yup from 'yup';
+import { z } from 'zod';
 import validatePackageName from 'validate-npm-package-name';
 
 // Define what a fully-constructed context object looks like
@@ -32,19 +32,17 @@ export default async function getContext(reconstruct?: true): Promise<Context> {
 	}
 
 	// Create context schema
-	const schema: yup.SchemaOf<Context> = yup.object({
-		packageFile: yup.object({
-			name: yup
-				.string()
-				.test('is-valid-package-name', '`package.json` contains an invalid name', (value) =>
-					value === undefined ? true : validatePackageName(value).validForOldPackages
-				),
-			version: yup.string().label('`package.json` version'),
-		}),
-	});
+	const schema = z.object({
+		packageFile: z.object({
+			name: z.string().nonempty().refine((value) => validatePackageName(value).validForOldPackages, {
+				message: '`package.json` contains an invalid name',
+			}).optional(),
+			version: z.string().nonempty().optional(),
+		}).optional(),
+	}).strict();
 
 	// Validate and store the context
-	context = await schema.validate({
+	context = await schema.parse({
 		packageFile: packageFile,
 	});
 

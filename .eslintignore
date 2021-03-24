@@ -2,6 +2,7 @@ node_modules/
 coverage/
 dist/
 build/
+cli/
 .docusaurus/
 babel.config.js
 jest-puppeteer.config.js

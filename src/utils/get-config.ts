@@ -40,7 +40,7 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 				.test(
 					'is-valid-package-name',
 					'${path} is not valid',
-					(value) => validatePackageName(value ?? '???').validForOldPackages
+					(value) => value === undefined ? true : validatePackageName(value ?? '???').validForOldPackages
 				)
 				.default(context.packageFile?.name || undefined),
 			version: yup.string().default(context.packageFile?.version || undefined),

@@ -76,7 +76,7 @@ describe('#getConfig()', () => {
 	});
 
 	it('Catches invalid name', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-with-invalid-name'));
+		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
 
 		const invalidConfig = {
 			app: {
@@ -85,21 +85,23 @@ describe('#getConfig()', () => {
 		};
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow('`package.json` contains an invalid name');
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow('app.packageName is not valid');
 	});
 
 	it('Catches invalid version', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'package-with-invalid-version'));
+		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
 
 		const invalidConfig = {
 			app: {
-				version: false,
+				version: {
+					fake: true,
+				},
 			},
 		};
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(
-			'`package.json` version must be a `string` type'
+			'app.version must be a `string` type'
 		);
 	});
 });

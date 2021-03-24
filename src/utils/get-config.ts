@@ -16,6 +16,15 @@ export interface Config {
 		/** Your app’s version number. Defaults to the `version` in its `package.json` file, if available. */
 		version?: string;
 	};
+
+	/** Extra whitespace automatically printed around your app’s output for aesthetics. */
+	spacing?: {
+		/** Extra whitespace printed before your app’s output. Defaults to `1`. */
+		before?: number;
+
+		/** Extra whitespace printed after your app’s output. Defaults to `1`. */
+		after?: number;
+	};
 }
 
 // Initialize
@@ -45,6 +54,10 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 				.default(context.packageFile?.name || undefined),
 			version: yup.string().default(context.packageFile?.version || undefined),
 		}),
+		spacing: yup.object({
+			before: yup.number().integer().min(0).default(1),
+			after: yup.number().integer().min(0).default(1),
+		})
 	});
 
 	// Validate and store the config

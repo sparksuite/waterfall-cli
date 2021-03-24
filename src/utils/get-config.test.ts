@@ -17,7 +17,7 @@ describe('#getConfig()', () => {
 		expect(Object.is(config2, config1)).toBe(true);
 	});
 
-	it('Handles no custom config', async () => {
+	it('Defaults to expected default values when no custom config', async () => {
 		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'primary'));
 
 		expect(await getConfig(undefined, true)).toStrictEqual({
@@ -26,10 +26,14 @@ describe('#getConfig()', () => {
 				packageName: 'primary',
 				version: '1.2.3',
 			},
+			spacing: {
+				before: 1,
+				after: 1,
+			},
 		});
 	});
 
-	it('Handles custom values', async () => {
+	it('Handles overriding defaults with custom values', async () => {
 		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'primary'));
 
 		expect(
@@ -40,28 +44,9 @@ describe('#getConfig()', () => {
 						packageName: 'custom',
 						version: '4.5.6',
 					},
-				},
-				true
-			)
-		).toStrictEqual({
-			app: {
-				displayName: 'Custom',
-				packageName: 'custom',
-				version: '4.5.6',
-			},
-		});
-	});
-
-	it('Handles custom values when there is no package file', async () => {
-		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
-
-		expect(
-			await getConfig(
-				{
-					app: {
-						displayName: 'Custom',
-						packageName: 'custom',
-						version: '4.5.6',
+					spacing: {
+						before: 0,
+						after: 0,
 					},
 				},
 				true
@@ -72,6 +57,31 @@ describe('#getConfig()', () => {
 				packageName: 'custom',
 				version: '4.5.6',
 			},
+			spacing: {
+				before: 0,
+				after: 0,
+			},
+		});
+	});
+
+	it('Handles some custom values when there is no package file', async () => {
+		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+
+		expect(
+			(await getConfig(
+				{
+					app: {
+						displayName: 'Custom',
+						packageName: 'custom',
+						version: '4.5.6',
+					},
+				},
+				true
+			)).app
+		).toStrictEqual({
+				displayName: 'Custom',
+				packageName: 'custom',
+				version: '4.5.6',
 		});
 	});
 
@@ -102,6 +112,21 @@ describe('#getConfig()', () => {
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(
 			'app.version must be a `string` type'
+		);
+	});
+
+	it('Catches invalid spacing', async () => {
+		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+
+		const invalidConfig = {
+			spacing: {
+				before: false,
+			},
+		};
+
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(
+			'spacing.before must be a `number` type'
 		);
 	});
 });

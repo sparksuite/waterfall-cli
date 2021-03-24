@@ -17,9 +17,7 @@ const features = [
 	{
 		title: 'TODO',
 		imageUrl: 'img/undraw_powerful.svg',
-		description: (
-			<>TODO</>
-		),
+		description: <>TODO</>,
 	},
 	{
 		title: 'Thoroughly tested',

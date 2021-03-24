@@ -45,13 +45,16 @@
 		"cli-table": "^0.3.1",
 		"deepmerge": "^4.0.0",
 		"fuse.js": "^3.4.5",
-		"semver": "^7.0.0"
+		"semver": "^7.0.0",
+		"validate-npm-package-name": "^3.0.0",
+		"yup": "^0.32.9"
 	},
 	"devDependencies": {
 		"@types/cli-table": "^0.3.0",
 		"@types/jest": "^26.0.20",
 		"@types/node": "^14.14.25",
 		"@types/semver": "^7.3.4",
+		"@types/validate-npm-package-name": "^3.0.2",
 		"@typescript-eslint/eslint-plugin": "^4.14.2",
 		"@typescript-eslint/parser": "^4.14.2",
 		"eslint": "^7.19.0",

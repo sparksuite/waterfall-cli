@@ -19,6 +19,10 @@ TODO
 
 Read the docs at: https://waterfallcli.io/docs/
 
+## Comparison
+
+TODO
+
 ## Contributing
 
 We love contributions! Contributing is easy; [learn how](https://github.com/sparksuite/waterfall-cli/blob/master/CONTRIBUTING.md).

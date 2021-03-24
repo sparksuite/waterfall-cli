@@ -53,15 +53,17 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 				)
 				.default(context.packageFile?.name || undefined),
 			version: yup.string().default(context.packageFile?.version || undefined),
-		}),
+		}).strict().noUnknown(),
 		spacing: yup.object({
 			before: yup.number().integer().min(0).default(1),
 			after: yup.number().integer().min(0).default(1),
-		})
-	});
+		}).strict().noUnknown(),
+	}).strict().noUnknown().label('config');
 
 	// Validate and store the config
 	config = await schema.validate(customConfig);
+	console.log(schema.getDefault());
+	console.log(schema.getDefaultFromShape());
 
 	// Return
 	return config;

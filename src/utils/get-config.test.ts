@@ -129,4 +129,28 @@ describe('#getConfig()', () => {
 			'spacing.before must be a `number` type'
 		);
 	});
+
+	it('Catches unknown keys', async () => {
+		jest.spyOn(process, 'cwd').mockReturnValue(path.join(testFileTreesPath, 'no-package'));
+
+		let invalidConfig: any = {
+			fake: true,
+		};
+
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(
+			'config field has unspecified keys: fake'
+		);
+
+		invalidConfig = {
+			spacing: {
+				fake: true,
+			},
+		};
+
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(yup.ValidationError);
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(
+			'spacing field has unspecified keys: fake'
+		);
+	});
 });

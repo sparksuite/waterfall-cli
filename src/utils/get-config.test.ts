@@ -29,7 +29,7 @@ describe('#getConfig()', () => {
 			displayName: 'primary',
 			packageName: 'primary',
 			version: '1.2.3',
-			usageCommand: 'node TODO.js',
+			usageCommand: 'node entry.js',
 			spacing: {
 				before: 1,
 				after: 1,
@@ -81,7 +81,7 @@ describe('#getConfig()', () => {
 				},
 				true
 			)
-		).toStrictEqual({
+		).toMatchObject({
 			displayName: 'Custom',
 			packageName: 'custom',
 			version: '4.5.6',
@@ -154,7 +154,7 @@ describe('#getConfig()', () => {
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('root')}: Unrecognized key(s) in object: 'fake'`)
+			expect.stringContaining(`Unrecognized key(s) in object: 'fake'`)
 		);
 
 		invalidConfig = {

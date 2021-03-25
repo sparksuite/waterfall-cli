@@ -18,9 +18,9 @@ describe('#getContext()', () => {
 	});
 
 	it('Handles entry file', async () => {
-		process.argv[1] = '/tmp';
+		process.argv[1] = process.cwd();
 
-		expect((await getContext(true)).entryFile).toEqual('/tmp');
+		expect((await getContext(true)).entryFile).toEqual(process.cwd());
 	});
 
 	it('Handles no package file', async () => {

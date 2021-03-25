@@ -5,6 +5,7 @@ import getContext from './get-context.js';
 import printPrettyError from './print-pretty-error.js';
 import chalk from './chalk.js';
 import path from 'path';
+import { InputObject } from './construct-input-object.js';
 
 // Define what a fully-constructed config object looks like
 export interface Config {
@@ -19,6 +20,9 @@ export interface Config {
 
 	/** The command users should use to run your program. Defaults to the `node [entry filename]`. */
 	usageCommand: string;
+
+	/** An optional function to call when the program is first executed. */
+	onStart?: (inputObject: InputObject) => void;
 
 	/** Extra whitespace automatically printed around your program’s output for aesthetics. */
 	spacing: {
@@ -61,6 +65,7 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 				.string()
 				.nonempty()
 				.default(`node ${path.basename(context.entryFile)}`),
+			onStart: z.function(z.tuple([z.any()]), z.void()).optional(),
 			spacing: z
 				.object({
 					before: z.number().int().min(0).default(1),

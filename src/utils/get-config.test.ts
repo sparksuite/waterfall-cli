@@ -4,6 +4,7 @@ import getConfig, { Config } from './get-config';
 import * as z from 'zod';
 import printPrettyError from './print-pretty-error';
 import chalk from './chalk';
+import { InputObject } from './construct-input-object';
 
 // Mock the error printing function
 jest.mock('./print-pretty-error');
@@ -48,6 +49,9 @@ describe('#getConfig()', () => {
 					packageName: 'custom',
 					version: '4.5.6',
 					usageCommand: 'custom-executable',
+					onStart: (inputObject: InputObject) => {
+						inputObject = inputObject;
+					},
 					spacing: {
 						before: 0,
 						after: 0,
@@ -61,6 +65,7 @@ describe('#getConfig()', () => {
 			packageName: 'custom',
 			version: '4.5.6',
 			usageCommand: 'custom-executable',
+			onStart: expect.any(Function),
 			spacing: {
 				before: 0,
 				after: 0,

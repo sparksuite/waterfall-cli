@@ -4,7 +4,7 @@ import getMergedSpec from './get-merged-spec.js';
 import getOrganizedArguments from './get-organized-arguments.js';
 
 // Define what the input object looks like
-interface InputObject {
+export interface InputObject {
 	command: string;
 	data?: string | number;
 	passThrough?: string[];

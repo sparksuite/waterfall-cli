@@ -1,7 +1,9 @@
 // Imports
+import helpScreen from '../screens/help.js';
 import versionScreen from '../screens/version.js';
 import { PrintableError } from '../utils/errors.js';
 import getConfig, { Config } from '../utils/get-config.js';
+import getContext from '../utils/get-context.js';
 import organizeArguments from '../utils/organize-arguments.js';
 import printPrettyError from '../utils/print-pretty-error.js';
 import verboseLog from '../utils/verbose-log.js';
@@ -10,7 +12,8 @@ import verboseLog from '../utils/verbose-log.js';
 export default async function init(customConfig: Partial<Config>): Promise<void> {
 	// Wrap in a try/catch
 	try {
-		// Get the config
+		// Get the context/config
+		const context = await getContext();
 		const config = await getConfig(customConfig);
 
 		// Add spacing before
@@ -36,11 +39,10 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			return;
 		}
 
-		/*
 		// Handle --help
-		if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
+		if (organizedArguments.flags.includes('help') || context.standardizedArguments.length === 0) {
 			// Output
-			process.stdout.write(await help());
+			process.stdout.write(await helpScreen());
 
 			// Verbose output
 			await verboseLog('Skipping further processing...');
@@ -49,6 +51,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			return;
 		}
 
+		/*
 		// Handle new version warning
 		if (settings.newVersionWarning.enabled && settings.app.packageName) {
 			// Determine where to store the version
@@ -75,7 +78,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 				if (latestVersion && currentVersion) {
 					const bothVersionsAreValid = semver.valid(latestVersion) && semver.valid(currentVersion);
 
-					// Verbose ouput
+					// Verbose output
 					await verboseLog(`Previously retrieved latest app version: ${latestVersion}`);
 					await verboseLog(`Cleaned-up current app version: ${currentVersion}`);
 					await verboseLog(`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`);

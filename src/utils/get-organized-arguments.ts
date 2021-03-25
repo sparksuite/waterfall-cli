@@ -20,10 +20,18 @@ interface OrganizedArguments {
 	passThrough?: string[];
 }
 
+// Initialize
+let organizedArguments: OrganizedArguments | undefined = undefined;
+
 /** Organize arguments into their respective categories */
-export default async function organizeArguments(): Promise<OrganizedArguments> {
+export default async function getOrganizedArguments(reconstruct?: true): Promise<OrganizedArguments> {
+	// Return already constructed version, if possible
+	if (typeof organizedArguments === 'object' && reconstruct !== true) {
+		return organizedArguments;
+	}
+
 	// Initialize
-	const organizedArguments: OrganizedArguments = {
+	organizedArguments = {
 		flags: [],
 		options: [],
 		values: [],

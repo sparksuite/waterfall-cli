@@ -4,9 +4,12 @@ import versionScreen from '../screens/version.js';
 import { PrintableError } from '../utils/errors.js';
 import getConfig, { Config } from '../utils/get-config.js';
 import getContext from '../utils/get-context.js';
-import organizeArguments from '../utils/organize-arguments.js';
+import getOrganizedArguments from '../utils/get-organized-arguments.js';
 import printPrettyError from '../utils/print-pretty-error.js';
 import verboseLog from '../utils/verbose-log.js';
+import path from 'path';
+import getCommandSpec from '../utils/get-command-spec.js';
+import constructInputObject from '../utils/construct-input-object.js';
 
 /** The initialization point, which should be called at the root of your CLI app */
 export default async function init(customConfig: Partial<Config>): Promise<void> {
@@ -25,7 +28,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		await verboseLog(`Determined config to be: ${JSON.stringify(config)}`);
 
 		// Organize the arguments
-		const organizedArguments = await organizeArguments();
+		const organizedArguments = await getOrganizedArguments();
 
 		// Handle --version
 		if (organizedArguments.flags.includes('version')) {
@@ -114,10 +117,11 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 				});
 			});
 		}
+		*/
 
-		// Form execution paths
-		const executionPaths: string[] = [];
-		let currentPathPrefix = path.dirname(settings.mainFilename);
+		// Form import paths
+		const importPaths: string[] = [];
+		let currentPathPrefix = path.dirname(context.entryFile);
 		const commandPieces = organizedArguments.command.trim().split(' ');
 
 		for (const [index, command] of commandPieces.entries()) {
@@ -128,20 +132,21 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			const commandPath = path.join(currentPathPrefix, `${command}.js`);
 
 			// Get the command spec
-			const spec = await utils(settings).files.getCommandSpec(currentPathPrefix);
+			const spec = await getCommandSpec(currentPathPrefix);
 
 			// Push onto array, if needed
 			if (index === commandPieces.length - 1 || spec.executeOnCascade === true) {
-				executionPaths.push(commandPath);
+				importPaths.push(commandPath);
 			}
 		}
 
 		// Construct the input object
-		const inputObject = await utils(settings).constructInputObject(organizedArguments);
+		const inputObject = await constructInputObject();
 
 		// Verbose output
 		await verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 
+		/*
 		// Call onStart() function, if any
 		if (settings.onStart) {
 			settings.onStart(inputObject);

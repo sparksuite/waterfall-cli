@@ -3,7 +3,7 @@ import chalk from '../utils/chalk.js';
 import getAllProgramCommands from '../utils/get-all-program-commands.js';
 import getConfig from '../utils/get-config.js';
 import getMergedSpec from '../utils/get-merged-spec.js';
-import organizeArguments from '../utils/organize-arguments.js';
+import getOrganizedArguments from '../utils/get-organized-arguments.js';
 import verboseLog from '../utils/verbose-log.js';
 import Table from 'cli-table3';
 
@@ -16,7 +16,7 @@ export default async function helpScreen(): Promise<string> {
 	let outputString = '';
 
 	// Organize the arguments
-	const organizedArguments = await organizeArguments();
+	const organizedArguments = await getOrganizedArguments();
 
 	// Get all commands in this program
 	let commands = await getAllProgramCommands();

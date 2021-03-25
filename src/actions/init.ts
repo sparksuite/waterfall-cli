@@ -10,6 +10,7 @@ import verboseLog from '../utils/verbose-log.js';
 import path from 'path';
 import getCommandSpec from '../utils/get-command-spec.js';
 import constructInputObject from '../utils/construct-input-object.js';
+import chalk from '../utils/chalk.js';
 
 /** The initialization point, which should be called at the root of your CLI app */
 export default async function init(customConfig: Partial<Config>): Promise<void> {
@@ -119,8 +120,8 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		}
 		*/
 
-		// Form import paths
-		const importPaths: string[] = [];
+		// Form command paths
+		const commandPaths: string[] = [];
 		let currentPathPrefix = path.dirname(context.entryFile);
 		const commandPieces = organizedArguments.command.trim().split(' ');
 
@@ -136,7 +137,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 
 			// Push onto array, if needed
 			if (index === commandPieces.length - 1 || spec.executeOnCascade === true) {
-				importPaths.push(commandPath);
+				commandPaths.push(commandPath);
 			}
 		}
 
@@ -146,14 +147,57 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		// Verbose output
 		await verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 
-		/*
 		// Call onStart() function, if any
-		if (settings.onStart) {
-			settings.onStart(inputObject);
+		if (config.onStart) {
+			config.onStart(inputObject);
 		}
 
-		// Execute each path sequentially, starting with the first
-		const executePath = (paths: string[]) => {
+		// Run each command path sequentially, starting with the first
+		for (const commandPath of commandPaths) {
+			// Initialize
+			// TODO: Use real type
+			type Command = () => Promise<void>;
+			let command: Command | undefined = undefined;
+			const truncatedPath = commandPath.replace(`${path.dirname(context.entryFile)}/`, '');
+
+			// Wrap in try/catch
+			try {
+				// Import it
+				const importedCommand = (await import(commandPath)) as { default: Command } | Command;
+				command = 'default' in importedCommand ? importedCommand.default : importedCommand;
+			} catch (error: unknown) {
+				// Let outer try/catch handle printable errors
+				if (error instanceof PrintableError) {
+					throw error;
+				}
+
+				throw new PrintableError(
+					`${String(error)}\n\nEncountered this error while importing the command at: ${chalk.bold(truncatedPath)}`
+				);
+			}
+
+			// Wrap in try/catch
+			try {
+				// TODO: Give it input object
+				await command();
+			} catch (error: unknown) {
+				// Let outer try/catch handle printable errors
+				if (error instanceof PrintableError) {
+					throw error;
+				}
+
+				throw new PrintableError(
+					`${String(error)}\n\nEncountered this error while running the command at: ${chalk.bold(truncatedPath)}`
+				);
+			}
+		}
+
+		// Add spacing after
+		for (let i = 0; i < config.spacing.after; i += 1) {
+			console.log();
+		}
+		/*
+		const executePath = async (paths: string[]) => {
 			// Stop if none
 			if (paths.length === 0) {
 				return;
@@ -194,10 +238,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 				if (paths[1]) {
 					executePath(paths.slice(1));
 				} else {
-					// Add spacing after
-					for (let i = 0; i < settings.spacing.after; i += 1) {
-						console.log();
-					}
+					
 				}
 			});
 
@@ -207,11 +248,22 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			});
 		};
 
-		executePath(executionPaths);
+		await executePath(commandPaths);
 		*/
 	} catch (error: unknown) {
 		if (error instanceof PrintableError) {
+			// Print the error
 			printPrettyError(error.message);
+
+			// Get the config
+			const config = await getConfig(customConfig);
+
+			// Add spacing after
+			for (let i = 0; i < config.spacing.after; i += 1) {
+				console.log();
+			}
+
+			// Exit with error code
 			process.exit(1);
 		}
 

@@ -4,7 +4,6 @@ import getConfig, { Config } from './get-config';
 import * as z from 'zod';
 import printPrettyError from './print-pretty-error';
 import chalk from './chalk';
-import { InputObject } from './construct-input-object';
 
 // Mock the error printing function
 jest.mock('./print-pretty-error');
@@ -49,8 +48,8 @@ describe('#getConfig()', () => {
 					packageName: 'custom',
 					version: '4.5.6',
 					usageCommand: 'custom-executable',
-					onStart: (inputObject: InputObject) => {
-						inputObject = inputObject;
+					onStart: () => {
+						// Do nothing
 					},
 					spacing: {
 						before: 0,
@@ -65,7 +64,7 @@ describe('#getConfig()', () => {
 			packageName: 'custom',
 			version: '4.5.6',
 			usageCommand: 'custom-executable',
-			onStart: expect.any(Function),
+			onStart: expect.any(Function), // eslint-disable-line @typescript-eslint/no-unsafe-assignment
 			spacing: {
 				before: 0,
 				after: 0,
@@ -158,9 +157,7 @@ describe('#getConfig()', () => {
 		};
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
-		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`Unrecognized key(s) in object: 'fake'`)
-		);
+		expect(printPrettyError).toHaveBeenLastCalledWith(expect.stringContaining(`Unrecognized key(s) in object: 'fake'`));
 
 		invalidConfig = {
 			spacing: {

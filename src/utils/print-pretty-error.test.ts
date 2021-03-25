@@ -15,13 +15,6 @@ describe('#printPrettyError()', () => {
 		expect(console.error).toHaveBeenCalledWith(expect.stringMatching(/ ERROR /));
 	});
 
-	it('Has the indent marker (">")', () => {
-		printPrettyError('Error message content');
-
-		expect(console.error).toHaveBeenCalledTimes(2);
-		expect(console.error).toHaveBeenCalledWith(expect.stringMatching(/> /));
-	});
-
 	it('Displays the message text', () => {
 		printPrettyError('Error message content');
 

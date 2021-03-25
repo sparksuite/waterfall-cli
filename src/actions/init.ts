@@ -1,5 +1,6 @@
 // Imports
 import getConfig, { Config } from '../utils/get-config.js';
+import organizeArguments from '../utils/organize-arguments.js';
 import verboseLog from '../utils/verbose-log.js';
 
 /** The initialization point, which should be called at the root of your CLI app */
@@ -7,18 +8,19 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 	// Get the config
 	const config = await getConfig(customConfig);
 
-	// Verbose output
-	await verboseLog(`Determined config to be: ${JSON.stringify(config)}`);
-
 	// Add spacing before
 	for (let i = 0; i < config.spacing.before; i += 1) {
 		console.log();
 	}
 
-	/*
-	// Organize the arguments
-	const organizedArguments = await utils(settings).organizeArguments();
+	// Verbose output
+	await verboseLog(`Determined config to be: ${JSON.stringify(config)}`);
 
+	// Organize the arguments
+	const organizedArguments = await organizeArguments();
+	console.log(organizedArguments);
+
+	/*
 	// Handle --version
 	if (organizedArguments.flags.includes('version')) {
 		// Output

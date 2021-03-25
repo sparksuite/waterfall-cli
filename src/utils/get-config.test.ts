@@ -26,11 +26,10 @@ describe('#getConfig()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		expect(await getConfig(undefined, true)).toStrictEqual({
-			app: {
-				displayName: 'primary',
-				packageName: 'primary',
-				version: '1.2.3',
-			},
+			displayName: 'primary',
+			packageName: 'primary',
+			version: '1.2.3',
+			usageCommand: 'node TODO.js',
 			spacing: {
 				before: 1,
 				after: 1,
@@ -45,11 +44,10 @@ describe('#getConfig()', () => {
 		expect(
 			await getConfig(
 				{
-					app: {
-						displayName: 'Custom',
-						packageName: 'custom',
-						version: '4.5.6',
-					},
+					displayName: 'Custom',
+					packageName: 'custom',
+					version: '4.5.6',
+					usageCommand: 'custom-executable',
 					spacing: {
 						before: 0,
 						after: 0,
@@ -59,11 +57,10 @@ describe('#getConfig()', () => {
 				true
 			)
 		).toStrictEqual({
-			app: {
-				displayName: 'Custom',
-				packageName: 'custom',
-				version: '4.5.6',
-			},
+			displayName: 'Custom',
+			packageName: 'custom',
+			version: '4.5.6',
+			usageCommand: 'custom-executable',
 			spacing: {
 				before: 0,
 				after: 0,
@@ -76,18 +73,14 @@ describe('#getConfig()', () => {
 		process.argv[1] = '/tmp';
 
 		expect(
-			(
-				await getConfig(
-					{
-						app: {
-							displayName: 'Custom',
-							packageName: 'custom',
-							version: '4.5.6',
-						},
-					},
-					true
-				)
-			).app
+			await getConfig(
+				{
+					displayName: 'Custom',
+					packageName: 'custom',
+					version: '4.5.6',
+				},
+				true
+			)
 		).toStrictEqual({
 			displayName: 'Custom',
 			packageName: 'custom',
@@ -99,14 +92,12 @@ describe('#getConfig()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		const invalidConfig = {
-			app: {
-				packageName: '???',
-			},
+			packageName: '???',
 		};
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('app.packageName')}: Invalid value`)
+			expect.stringContaining(`${chalk.bold('packageName')}: Invalid value`)
 		);
 	});
 
@@ -114,16 +105,27 @@ describe('#getConfig()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		const invalidConfig = {
-			app: {
-				version: {
-					fake: true,
-				},
+			version: {
+				fake: true,
 			},
 		};
 
 		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('app.version')}: Expected string, received object`)
+			expect.stringContaining(`${chalk.bold('version')}: Expected string, received object`)
+		);
+	});
+
+	it('Catches invalid usage command', async () => {
+		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
+
+		const invalidConfig = {
+			usageCommand: false,
+		};
+
+		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		expect(printPrettyError).toHaveBeenLastCalledWith(
+			expect.stringContaining(`${chalk.bold('usageCommand')}: Expected string, received boolean`)
 		);
 	});
 

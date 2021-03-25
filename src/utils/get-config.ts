@@ -4,27 +4,28 @@ import validatePackageName from 'validate-npm-package-name';
 import getContext from './get-context.js';
 import printPrettyError from './print-pretty-error.js';
 import chalk from './chalk.js';
+import path from 'path';
 
 // Define what a fully-constructed config object looks like
 export interface Config {
-	/** Information about your CLI app. */
-	app?: {
-		/** Your app’s display name. Defaults to the `name` in its `package.json` file, if available. */
-		displayName?: string;
+	/** Your program’s display name. Defaults to the `name` in its `package.json` file, if available. */
+	displayName?: string;
 
-		/** Your app’s published package name. Defaults to the `name` in its `package.json` file, if available. */
-		packageName?: string;
+	/** Your program’s published package name. Defaults to the `name` in its `package.json` file, if available. */
+	packageName?: string;
 
-		/** Your app’s version number. Defaults to the `version` in its `package.json` file, if available. */
-		version?: string;
-	};
+	/** Your program’s version number. Defaults to the `version` in its `package.json` file, if available. */
+	version?: string;
 
-	/** Extra whitespace automatically printed around your app’s output for aesthetics. */
+	/** The command users should use to run your program. Defaults to the `node [entry filename]`. */
+	usageCommand: string;
+
+	/** Extra whitespace automatically printed around your program’s output for aesthetics. */
 	spacing: {
-		/** Extra whitespace printed before your app’s output. Defaults to `1`. */
+		/** Extra whitespace printed before your program’s output. Defaults to `1`. */
 		before: number;
 
-		/** Extra whitespace printed after your app’s output. Defaults to `1`. */
+		/** Extra whitespace printed after your program’s output. Defaults to `1`. */
 		after: number;
 	};
 
@@ -48,19 +49,18 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 	// Create config schema
 	const schema = z
 		.object({
-			app: z
-				.object({
-					displayName: z.string().nonempty().optional().default(context.packageFile?.name),
-					packageName: z
-						.string()
-						.nonempty()
-						.refine((value) => validatePackageName(value).validForOldPackages)
-						.optional()
-						.default(context.packageFile?.name),
-					version: z.string().nonempty().optional().default(context.packageFile?.version),
-				})
-				.strict()
-				.default({}),
+			displayName: z.string().nonempty().optional().default(context.packageFile?.name),
+			packageName: z
+				.string()
+				.nonempty()
+				.refine((value) => validatePackageName(value).validForOldPackages)
+				.optional()
+				.default(context.packageFile?.name),
+			version: z.string().nonempty().optional().default(context.packageFile?.version),
+			usageCommand: z
+				.string()
+				.nonempty()
+				.default(`node ${path.basename(context.entryFile)}`),
 			spacing: z
 				.object({
 					before: z.number().int().min(0).default(1),
@@ -81,7 +81,14 @@ export default async function getConfig(customConfig?: unknown, reconstruct?: tr
 			let errorMessage = 'Found issues with config:\n';
 
 			for (const suberror of error.errors) {
-				errorMessage += `\n${chalk.bold(suberror.path.join('.') || 'root')}: ${suberror.message}`;
+				let prefix = '';
+				const pathToKey = suberror.path.join('.');
+
+				if (pathToKey) {
+					prefix = `${chalk.bold(suberror.path.join('.'))}: `;
+				}
+
+				errorMessage += `${prefix}${suberror.message}`;
 			}
 
 			printPrettyError(errorMessage);

@@ -17,49 +17,45 @@ describe('#getContext()', () => {
 		expect(Object.is(context2, context1)).toBe(true);
 	});
 
+	it('Handles entry file', async () => {
+		process.argv[1] = '/tmp';
+
+		expect((await getContext(true)).entryFile).toEqual('/tmp');
+	});
+
 	it('Handles no package file', async () => {
 		process.argv[1] = '/tmp';
 
-		expect(await getContext(true)).toStrictEqual({
-			packageFile: undefined,
-		});
+		expect((await getContext(true)).packageFile).toEqual(undefined);
 	});
 
 	it('Handles empty package file', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'empty-package', 'entry.js');
 
-		expect(await getContext(true)).toStrictEqual({
-			packageFile: {},
-		});
+		expect((await getContext(true)).packageFile).toStrictEqual({});
 	});
 
 	it('Handles package file missing name', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-missing-name', 'entry.js');
 
-		expect(await getContext(true)).toStrictEqual({
-			packageFile: {
-				version: '1.2.3',
-			},
+		expect((await getContext(true)).packageFile).toStrictEqual({
+			version: '1.2.3',
 		});
 	});
 
 	it('Handles package file missing version', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
 
-		expect(await getContext(true)).toStrictEqual({
-			packageFile: {
-				name: 'test',
-			},
+		expect((await getContext(true)).packageFile).toStrictEqual({
+			name: 'test',
 		});
 	});
 
 	it('Handles package file with custom key', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-with-custom-key', 'entry.js');
 
-		expect(await getContext(true)).toStrictEqual({
-			packageFile: {
-				name: 'test',
-			},
+		expect((await getContext(true)).packageFile).toStrictEqual({
+			name: 'test',
 		});
 	});
 

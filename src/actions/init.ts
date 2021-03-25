@@ -1,4 +1,5 @@
 // Imports
+import versionScreen from '../screens/version.js';
 import { PrintableError } from '../utils/errors.js';
 import getConfig, { Config } from '../utils/get-config.js';
 import organizeArguments from '../utils/organize-arguments.js';
@@ -22,28 +23,27 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 
 		// Organize the arguments
 		const organizedArguments = await organizeArguments();
-		console.log(organizedArguments);
 
-		/*
 		// Handle --version
 		if (organizedArguments.flags.includes('version')) {
 			// Output
-			process.stdout.write(screens(settings).version());
+			process.stdout.write(await versionScreen());
 
 			// Verbose output
-			utils(settings).verboseLog('Skipping further processing...');
+			await verboseLog('Skipping further processing...');
 
 			// Stop processing
 			return;
 		}
 
+		/*
 		// Handle --help
 		if (organizedArguments.flags.includes('help') || settings.arguments.length === 0) {
 			// Output
-			process.stdout.write(await screens(settings).help());
+			process.stdout.write(await help());
 
 			// Verbose output
-			utils(settings).verboseLog('Skipping further processing...');
+			await verboseLog('Skipping further processing...');
 
 			// Stop processing
 			return;
@@ -62,7 +62,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 
 			if (!fs.existsSync(appVersionsDirectory)) {
 				fs.mkdirSync(appVersionsDirectory);
-				utils(settings).verboseLog(`Created directory: ${appVersionsDirectory}`);
+				await verboseLog(`Created directory: ${appVersionsDirectory}`);
 			}
 
 			// Warning message
@@ -76,9 +76,9 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 					const bothVersionsAreValid = semver.valid(latestVersion) && semver.valid(currentVersion);
 
 					// Verbose ouput
-					utils(settings).verboseLog(`Previously retrieved latest app version: ${latestVersion}`);
-					utils(settings).verboseLog(`Cleaned-up current app version: ${currentVersion}`);
-					utils(settings).verboseLog(`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`);
+					await verboseLog(`Previously retrieved latest app version: ${latestVersion}`);
+					await verboseLog(`Cleaned-up current app version: ${currentVersion}`);
+					await verboseLog(`Both versions are valid: ${bothVersionsAreValid ? 'yes' : 'no'}`);
 
 					// Determine if warning is needed
 					if (bothVersionsAreValid && semver.gt(latestVersion, currentVersion)) {
@@ -137,7 +137,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		const inputObject = await utils(settings).constructInputObject(organizedArguments);
 
 		// Verbose output
-		utils(settings).verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
+		await verboseLog(`Constructed input: ${JSON.stringify(inputObject)}`);
 
 		// Call onStart() function, if any
 		if (settings.onStart) {
@@ -152,7 +152,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			}
 
 			// Verbose output
-			utils(settings).verboseLog(`Executing: ${paths[0]}\n`);
+			await verboseLog(`Executing: ${paths[0]}\n`);
 
 			// Spawn child
 			const child = spawn('node', [paths[0], JSON.stringify(inputObject)], {

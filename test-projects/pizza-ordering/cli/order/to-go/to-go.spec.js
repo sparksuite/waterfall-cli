@@ -10,5 +10,5 @@ module.exports = {
 			type: 'fake',
 		},
 	},
-	passThrough: true,
+	acceptsPassThroughArgs: true,
 };

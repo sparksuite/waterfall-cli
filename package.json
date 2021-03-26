@@ -2,14 +2,14 @@
 	"name": "waterfall-cli",
 	"version": "1.0.0-alpha.0",
 	"description": "Effortlessly create CLIs powered by Node.js",
-	"types": "dist/cjs/index.cjs.d.ts",
+	"types": "dist/cjs/index.d.ts",
 	"files": [
 		"dist/"
 	],
 	"exports": {
 		".": {
-			"import": "./dist/esm/index.esm.js",
-			"require": "./dist/cjs/index.cjs.js"
+			"import": "./dist/esm/index.js",
+			"require": "./dist/cjs/index.js"
 		}
 	},
 	"scripts": {

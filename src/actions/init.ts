@@ -169,9 +169,8 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			let command: CommandFunction | undefined = undefined;
 			const truncatedPath = commandPath.replace(`${path.dirname(context.entryFile)}/`, '');
 
-			// Wrap in try/catch
+			// Import it within a try/catch
 			try {
-				// Import it
 				const importedCommand = (await import(commandPath)) as { default: CommandFunction } | CommandFunction;
 				command = 'default' in importedCommand ? importedCommand.default : importedCommand;
 			} catch (error: unknown) {
@@ -183,6 +182,11 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 				throw new PrintableError(
 					`${String(error)}\n\nEncountered this error while importing the command at: ${chalk.bold(truncatedPath)}`
 				);
+			}
+
+			// Verify it's a function
+			if (typeof command !== 'function') {
+				throw new PrintableError(`This command doesn’t export a function: ${chalk.bold(truncatedPath)}`);
 			}
 
 			// Wrap in try/catch

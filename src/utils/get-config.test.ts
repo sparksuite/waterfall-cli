@@ -46,22 +46,20 @@ describe('#getConfig()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
 		expect(
-			await getConfig(
-				{
-					displayName: 'Custom',
-					packageName: 'custom',
-					version: '4.5.6',
-					usageCommand: 'custom-executable',
-					onStart: () => {
-						// Do nothing
-					},
-					spacing: {
-						before: 0,
-						after: 0,
-					},
-					verbose: true,
-				}
-			)
+			await getConfig({
+				displayName: 'Custom',
+				packageName: 'custom',
+				version: '4.5.6',
+				usageCommand: 'custom-executable',
+				onStart: () => {
+					// Do nothing
+				},
+				spacing: {
+					before: 0,
+					after: 0,
+				},
+				verbose: true,
+			})
 		).toStrictEqual({
 			displayName: 'Custom',
 			packageName: 'custom',
@@ -80,13 +78,11 @@ describe('#getConfig()', () => {
 		process.argv[1] = '/tmp';
 
 		expect(
-			await getConfig(
-				{
-					displayName: 'Custom',
-					packageName: 'custom',
-					version: '4.5.6',
-				}
-			)
+			await getConfig({
+				displayName: 'Custom',
+				packageName: 'custom',
+				version: '4.5.6',
+			})
 		).toMatchObject({
 			displayName: 'Custom',
 			packageName: 'custom',

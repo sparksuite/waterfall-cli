@@ -9,7 +9,7 @@ const testProjectsPath = path.normalize(path.join(__dirname, '..', '..', 'test-p
 describe('#getMergedSpec()', () => {
 	it('Gets top-level spec', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
-		
+
 		expect(await getMergedSpec('')).toStrictEqual({
 			data: undefined,
 			description: undefined,
@@ -43,7 +43,7 @@ describe('#getMergedSpec()', () => {
 
 	it('Gets merged spec', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
-		
+
 		expect(await getMergedSpec('list')).toStrictEqual({
 			data: {
 				description: 'What you want to list',
@@ -95,7 +95,7 @@ describe('#getMergedSpec()', () => {
 
 	it('Gets another merged spec', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
-		
+
 		expect(await getMergedSpec('order')).toStrictEqual({
 			data: undefined,
 			description: 'Order a pizza',

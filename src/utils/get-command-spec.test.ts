@@ -12,11 +12,15 @@ describe('#getCommandSpec()', () => {
 	});
 
 	it('Complains about multiple spec files', async () => {
-		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'multiple-specs'))).rejects.toThrow('There should be exactly one spec file');
+		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'multiple-specs'))).rejects.toThrow(
+			'There should be exactly one spec file'
+		);
 	});
 
 	it('Complains about invalid spec JS', async () => {
-		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-spec-js'))).rejects.toThrow('This spec file contains invalid JS');
+		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-spec-js'))).rejects.toThrow(
+			'This spec file contains invalid JS'
+		);
 	});
 
 	it('Returns the spec file', async () => {

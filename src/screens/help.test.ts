@@ -4,7 +4,8 @@ import chalk from '../utils/chalk';
 import helpScreen from './help';
 
 // Remove ANSI formatting
-function removeFormatting(text: string) {
+function removeFormatting(text: string): string {
+	// eslint-disable-next-line no-control-regex
 	return text.replace(/[\u001b\u009b][[()#;?]*(?:[0-9]{1,4}(?:;[0-9]{0,4})*)?[0-9A-ORZcf-nqry=><]/g, '');
 }
 
@@ -22,17 +23,13 @@ describe('#helpScreen()', () => {
 	it('Contains usage line (commands + flags + options)', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
 
-		expect(removeFormatting(await helpScreen())).toContain(
-			'Usage: node entry.js [commands] [flags] [options]'
-		);
+		expect(removeFormatting(await helpScreen())).toContain('Usage: node entry.js [commands] [flags] [options]');
 	});
 
 	it('Contains usage line (flags + options + data)', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'), 'list'];
 
-		expect(removeFormatting(await helpScreen())).toContain(
-			'Usage: node entry.js list [flags] [options] [data]'
-		);
+		expect(removeFormatting(await helpScreen())).toContain('Usage: node entry.js list [flags] [options] [data]');
 	});
 
 	it('Contains flags header', async () => {
@@ -70,9 +67,7 @@ describe('#helpScreen()', () => {
 	it('Contains description of  flag', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
 
-		expect(removeFormatting(await helpScreen())).toContain(
-			'Disable interactivity, rely on default values instead'
-		);
+		expect(removeFormatting(await helpScreen())).toContain('Disable interactivity, rely on default values instead');
 	});
 
 	it('Contains options header', async () => {
@@ -106,9 +101,7 @@ describe('#helpScreen()', () => {
 	it('Contains description of option with type', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'), 'list'];
 
-		expect(removeFormatting(await helpScreen())).toContain(
-			'The maximum price of the items to list (float)'
-		);
+		expect(removeFormatting(await helpScreen())).toContain('The maximum price of the items to list (float)');
 	});
 
 	it('Contains description of required option with accepts', async () => {
@@ -146,13 +139,23 @@ describe('#helpScreen()', () => {
 	});
 
 	it('Contains description of data', async () => {
-		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'), 'order', 'dine-in'];
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dine-in',
+		];
 
 		expect(removeFormatting(await helpScreen())).toContain('What type of pizza to order');
 	});
 
 	it('Falls back to default data description', async () => {
-		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'), 'order', 'descriptionless-data'];
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'descriptionless-data',
+		];
 
 		expect(removeFormatting(await helpScreen())).toContain('DATA:');
 

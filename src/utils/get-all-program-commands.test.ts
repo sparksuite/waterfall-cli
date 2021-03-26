@@ -9,7 +9,7 @@ const testProjectsPath = path.normalize(path.join(__dirname, '..', '..', 'test-p
 describe('#getAllProgramCommands()', () => {
 	it('Gets all commands', async () => {
 		process.argv = ['/path/to/node', path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js')];
-		
+
 		expect(await getAllProgramCommands()).toStrictEqual([
 			'list',
 			'order',

@@ -17,3 +17,4 @@ export default {
 
 // Expose some types to consumers
 export type { CommandSpec } from './utils/get-command-spec';
+export type { default as CommandFunction } from './types/command-function';

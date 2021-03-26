@@ -11,6 +11,7 @@ import path from 'path';
 import getCommandSpec from '../utils/get-command-spec.js';
 import constructInputObject from '../utils/construct-input-object.js';
 import chalk from '../utils/chalk.js';
+import CommandFunction from '../types/command-function.js';
 
 /** The initialization point, which should be called at the root of your CLI app */
 export default async function init(customConfig: Partial<Config>): Promise<void> {
@@ -155,15 +156,13 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		// Run each command path sequentially, starting with the first
 		for (const commandPath of commandPaths) {
 			// Initialize
-			// TODO: Use real type
-			type Command = () => Promise<void>;
-			let command: Command | undefined = undefined;
+			let command: CommandFunction | undefined = undefined;
 			const truncatedPath = commandPath.replace(`${path.dirname(context.entryFile)}/`, '');
 
 			// Wrap in try/catch
 			try {
 				// Import it
-				const importedCommand = (await import(commandPath)) as { default: Command } | Command;
+				const importedCommand = (await import(commandPath)) as { default: CommandFunction } | CommandFunction;
 				command = 'default' in importedCommand ? importedCommand.default : importedCommand;
 			} catch (error: unknown) {
 				// Let outer try/catch handle printable errors
@@ -178,8 +177,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 
 			// Wrap in try/catch
 			try {
-				// TODO: Give it input object
-				await command();
+				await command(inputObject);
 			} catch (error: unknown) {
 				// Let outer try/catch handle printable errors
 				if (error instanceof PrintableError) {
@@ -196,60 +194,6 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		for (let i = 0; i < config.spacing.after; i += 1) {
 			console.log();
 		}
-		/*
-		const executePath = async (paths: string[]) => {
-			// Stop if none
-			if (paths.length === 0) {
-				return;
-			}
-
-			// Verbose output
-			await verboseLog(`Executing: ${paths[0]}\n`);
-
-			// Spawn child
-			const child = spawn('node', [paths[0], JSON.stringify(inputObject)], {
-				stdio: 'inherit',
-			});
-
-			// Wait for exit
-			child.on('exit', (code: number) => {
-				// Handle a SIGKILL
-				if (code === null) {
-					console.log(); // Ensure it goes to the next line
-					process.exit();
-				}
-
-				// Handle as already handled, prevent display
-				if (code === 254) {
-					process.exit(254);
-				}
-
-				// Handle if error message already happened, propagate as code 1
-				if (code === 255) {
-					process.exit(1);
-				}
-
-				// Handle an issue
-				if (code !== 0) {
-					throw new ErrorWithoutStack(`Received exit code ${code} from: ${paths[0]}\nSee above output`);
-				}
-
-				// Run next path, if one exists
-				if (paths[1]) {
-					executePath(paths.slice(1));
-				} else {
-					
-				}
-			});
-
-			// Handle error
-			child.on('error', (error: Error) => {
-				throw new Error(error.toString().replace(/^Error: /i, ''));
-			});
-		};
-
-		await executePath(commandPaths);
-		*/
 	} catch (error: unknown) {
 		if (error instanceof PrintableError) {
 			// Print the error

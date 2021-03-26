@@ -1,0 +1,8 @@
+{
+	"name": "bad-structure",
+	"version": "1.2.3",
+	"license": "MIT",
+	"dependencies": {
+		"waterfall-cli": "file:../../../"
+	}
+}

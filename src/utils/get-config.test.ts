@@ -15,17 +15,21 @@ const testFileTreesPath = path.normalize(path.join(__dirname, '..', '..', 'test-
 describe('#getConfig()', () => {
 	it('Skips reconstructing the config when possible', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
+		const jestWorkerID = process.env.JEST_WORKER_ID;
+		delete process.env.JEST_WORKER_ID;
 
-		const config1 = await getConfig(undefined, true);
+		const config1 = await getConfig();
 		const config2 = await getConfig();
 
 		expect(Object.is(config2, config1)).toBe(true);
+
+		process.env.JEST_WORKER_ID = jestWorkerID;
 	});
 
 	it('Defaults to expected default values when no custom config', async () => {
 		process.argv[1] = path.join(testFileTreesPath, 'primary', 'entry.js');
 
-		expect(await getConfig(undefined, true)).toStrictEqual({
+		expect(await getConfig()).toStrictEqual({
 			displayName: 'primary',
 			packageName: 'primary',
 			version: '1.2.3',
@@ -56,8 +60,7 @@ describe('#getConfig()', () => {
 						after: 0,
 					},
 					verbose: true,
-				},
-				true
+				}
 			)
 		).toStrictEqual({
 			displayName: 'Custom',
@@ -82,8 +85,7 @@ describe('#getConfig()', () => {
 					displayName: 'Custom',
 					packageName: 'custom',
 					version: '4.5.6',
-				},
-				true
+				}
 			)
 		).toMatchObject({
 			displayName: 'Custom',
@@ -99,7 +101,7 @@ describe('#getConfig()', () => {
 			packageName: '???',
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
 			expect.stringContaining(`${chalk.bold('packageName')}: Invalid value`)
 		);
@@ -114,7 +116,7 @@ describe('#getConfig()', () => {
 			},
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
 			expect.stringContaining(`${chalk.bold('version')}: Expected string, received object`)
 		);
@@ -127,7 +129,7 @@ describe('#getConfig()', () => {
 			usageCommand: false,
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
 			expect.stringContaining(`${chalk.bold('usageCommand')}: Expected string, received boolean`)
 		);
@@ -142,7 +144,7 @@ describe('#getConfig()', () => {
 			},
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
 			expect.stringContaining(`${chalk.bold('spacing.before')}: Expected number, received boolean`)
 		);
@@ -156,7 +158,7 @@ describe('#getConfig()', () => {
 			fake: true,
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(expect.stringContaining(`Unrecognized key(s) in object: 'fake'`));
 
 		invalidConfig = {
@@ -166,7 +168,7 @@ describe('#getConfig()', () => {
 			},
 		};
 
-		await expect(() => getConfig(invalidConfig, true)).rejects.toThrow(z.ZodError);
+		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
 			expect.stringContaining(`${chalk.bold('spacing')}: Unrecognized key(s) in object: 'fake'`)
 		);

@@ -1,7 +1,7 @@
 // Dependencies
 import printPrettyError from './print-pretty-error';
 
-// Mock the function
+// Mocks
 console.error = jest.fn();
 
 // Tests

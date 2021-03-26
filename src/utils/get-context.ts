@@ -24,9 +24,9 @@ export interface Context {
 let context: Context | undefined = undefined;
 
 /** Construct the context object */
-export default async function getContext(reconstruct?: true): Promise<Context> {
+export default async function getContext(): Promise<Context> {
 	// Return already constructed version, if possible
-	if (typeof context === 'object' && reconstruct !== true) {
+	if (typeof context === 'object' && !process.env.JEST_WORKER_ID) {
 		return context;
 	}
 

@@ -8,18 +8,18 @@ import verboseLog from '../utils/verbose-log.js';
 import Table from 'cli-table3';
 
 /** Return the content of the help screen */
-export default async function helpScreen(reconstruct?: true): Promise<string> {
+export default async function helpScreen(): Promise<string> {
 	// Get the config
-	const config = await getConfig(undefined, reconstruct);
+	const config = await getConfig();
 
 	// Initialize
 	let outputString = '';
 
 	// Organize the arguments
-	const organizedArguments = await getOrganizedArguments(reconstruct);
+	const organizedArguments = await getOrganizedArguments();
 
 	// Get all commands in this program
-	let commands = await getAllProgramCommands(reconstruct);
+	let commands = await getAllProgramCommands();
 
 	// Verbose output
 	await verboseLog(`Found commands: ${commands.join(' | ')}`);

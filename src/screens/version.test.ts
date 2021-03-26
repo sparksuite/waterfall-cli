@@ -1,11 +1,20 @@
 // Dependencies
 import versionScreen from './version';
-import { Config } from '../utils/get-config';
-import getConfig from '../utils/get-config';
+import getConfig, { Config } from '../utils/get-config';
 import chalk from '../utils/chalk';
 
 // Mocks
 jest.mock('../utils/get-config');
+
+// Config details that need to be provided, but don't impact testing
+const unimportantConfigDetails = {
+	usageCommand: 'node entry.js',
+	spacing: {
+		before: 1,
+		after: 1,
+	},
+	verbose: false,
+};
 
 // Tests
 describe('#versionScreen()', () => {
@@ -14,12 +23,7 @@ describe('#versionScreen()', () => {
 			displayName: 'Example program',
 			packageName: 'example',
 			version: '1.2.3',
-			usageCommand: 'node entry.js',
-			spacing: {
-				before: 1,
-				after: 1,
-			},
-			verbose: false,
+			...unimportantConfigDetails,
 		};
 
 		// @ts-expect-error: mockImplementation() *is* available
@@ -32,12 +36,7 @@ describe('#versionScreen()', () => {
 		const config: Config = {
 			packageName: 'example',
 			version: '1.2.3',
-			usageCommand: 'node entry.js',
-			spacing: {
-				before: 1,
-				after: 1,
-			},
-			verbose: false,
+			...unimportantConfigDetails,
 		};
 
 		// @ts-expect-error: mockImplementation() *is* available
@@ -50,12 +49,7 @@ describe('#versionScreen()', () => {
 		const config: Config = {
 			displayName: 'Example program',
 			version: '1.2.3',
-			usageCommand: 'node entry.js',
-			spacing: {
-				before: 1,
-				after: 1,
-			},
-			verbose: false,
+			...unimportantConfigDetails,
 		};
 
 		// @ts-expect-error: mockImplementation() *is* available
@@ -67,12 +61,7 @@ describe('#versionScreen()', () => {
 	it('Handles missing version', async () => {
 		const config: Config = {
 			displayName: 'Example program',
-			usageCommand: 'node entry.js',
-			spacing: {
-				before: 1,
-				after: 1,
-			},
-			verbose: false,
+			...unimportantConfigDetails,
 		};
 
 		// @ts-expect-error: mockImplementation() *is* available
@@ -84,12 +73,7 @@ describe('#versionScreen()', () => {
 	it('Handles missing name', async () => {
 		const config: Config = {
 			version: '1.2.3',
-			usageCommand: 'node entry.js',
-			spacing: {
-				before: 1,
-				after: 1,
-			},
-			verbose: false,
+			...unimportantConfigDetails,
 		};
 
 		// @ts-expect-error: mockImplementation() *is* available

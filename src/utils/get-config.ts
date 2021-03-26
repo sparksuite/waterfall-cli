@@ -41,14 +41,14 @@ export interface Config {
 let config: Config | undefined = undefined;
 
 /** Construct the config object */
-export default async function getConfig(customConfig?: unknown, reconstruct?: true): Promise<Config> {
+export default async function getConfig(customConfig?: unknown): Promise<Config> {
 	// Return already constructed version, if possible
-	if (typeof config === 'object' && reconstruct !== true) {
+	if (typeof config === 'object' && !process.env.JEST_WORKER_ID) {
 		return config;
 	}
 
 	// Get the context
-	const context = await getContext(reconstruct);
+	const context = await getContext();
 
 	// Create config schema
 	const schema = z

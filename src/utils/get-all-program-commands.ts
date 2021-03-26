@@ -4,7 +4,7 @@ import path from 'path';
 import getContext from './get-context.js';
 
 /** Get all commands in program */
-export default async function getAllProgramCommands(reconstruct?: true): Promise<string[]> {
+export default async function getAllProgramCommands(): Promise<string[]> {
 	// Get child directories of a parent directory, recursively & synchronously
 	const getAllDirectories = (directory: string): string[] => {
 		const isDirectory = (path: string): boolean => {
@@ -27,7 +27,7 @@ export default async function getAllProgramCommands(reconstruct?: true): Promise
 	};
 
 	// Get the context
-	const context = await getContext(reconstruct);
+	const context = await getContext();
 
 	// Get all directories
 	const mainDir = path.dirname(context.entryFile);

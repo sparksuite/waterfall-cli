@@ -24,9 +24,9 @@ interface OrganizedArguments {
 let organizedArguments: OrganizedArguments | undefined = undefined;
 
 /** Organize arguments into their respective categories */
-export default async function getOrganizedArguments(reconstruct?: true): Promise<OrganizedArguments> {
+export default async function getOrganizedArguments(): Promise<OrganizedArguments> {
 	// Return already constructed version, if possible
-	if (typeof organizedArguments === 'object' && reconstruct !== true) {
+	if (typeof organizedArguments === 'object' && !process.env.JEST_WORKER_ID) {
 		return organizedArguments;
 	}
 

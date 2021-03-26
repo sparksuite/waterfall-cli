@@ -1,1 +1,3 @@
-console.log('Ran example command');
+export default async function() {
+	console.log('Ran example command');
+}

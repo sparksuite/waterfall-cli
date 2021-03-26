@@ -10,7 +10,6 @@ import { PrintableError } from './utils/errors.js';
 
 export default {
 	init,
-	// parse,
 	printError,
 	PrintableError,
 };

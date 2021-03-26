@@ -194,11 +194,6 @@ export default async function helpScreen(): Promise<string> {
 		outputString += '  Arguments after ‘--’ will be passed through to an underlying command\n';
 	}
 
-	// Add spacing after
-	for (let i = 0; i < config.spacing.after; i += 1) {
-		outputString += '\n';
-	}
-
 	// Return
-	return outputString;
+	return outputString.trim();
 }

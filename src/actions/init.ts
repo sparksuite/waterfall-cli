@@ -35,7 +35,12 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		// Handle --version
 		if (organizedArguments.flags.includes('version')) {
 			// Output
-			process.stdout.write(await versionScreen());
+			console.log(await versionScreen());
+
+			// Add spacing after
+			for (let i = 0; i < config.spacing.after; i += 1) {
+				console.log();
+			}
 
 			// Verbose output
 			await verboseLog('Skipping further processing...');
@@ -47,7 +52,12 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		// Handle --help
 		if (organizedArguments.flags.includes('help') || context.standardizedArguments.length === 0) {
 			// Output
-			process.stdout.write(await helpScreen());
+			console.log(await helpScreen());
+
+			// Add spacing after
+			for (let i = 0; i < config.spacing.after; i += 1) {
+				console.log();
+			}
 
 			// Verbose output
 			await verboseLog('Skipping further processing...');

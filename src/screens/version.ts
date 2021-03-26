@@ -10,17 +10,14 @@ export default async function versionScreen(): Promise<string> {
 	// Initialize
 	let outputString = '';
 
-	// Add name, if we have one
-	if (config.displayName) {
-		outputString += chalk.bold(`${config.displayName}: `);
+	// Add name, if we have one, with colon, if necessary
+	if (config.displayName || config.packageName) {
+		outputString += chalk.bold(`${String(config.displayName || config.packageName)}${config.version ? ': ' : ''}`);
 	}
 
-	// Add version (if we have one) and a newline
-	outputString += `${config.version || ''}\n`;
-
-	// Add spacing after
-	for (let i = 0; i < config.spacing.after; i += 1) {
-		outputString += '\n';
+	// Add version (if we have one)
+	if (config.version) {
+		outputString += config.version;
 	}
 
 	// Return

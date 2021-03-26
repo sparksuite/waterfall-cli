@@ -5,35 +5,70 @@ import chalk from './chalk.js';
 import { PrintableError } from './errors.js';
 
 // Define what a command spec looks like
-// TODO: Document with /** comments */
 export interface CommandSpec {
-	data?: {
-		accepts?: string[];
-		description?: string;
-		ignoreFlagsAndOptions?: true;
-		required?: true;
-		type?: 'integer' | 'float';
-	};
+	/** A description of this command, to be shown on help screens. */
 	description?: string;
-	flags?: {
-		[index: string]: {
-			cascades?: true;
-			description?: string;
-			shorthand?: string;
-		};
-	};
-	options?: {
-		[index: string]: {
-			accepts?: string[];
-			cascades?: true;
-			description?: string;
-			required?: true;
-			shorthand?: string;
-			type?: 'integer' | 'float';
-		};
-	};
+
+	/** Whether to execute this command before executing commands farther down in the file tree. */
 	executeOnCascade?: true;
-	passThrough?: true;
+
+	/** Whether this command accepts pass-through arguments (arguments that follow ` -- `). Pass-through arguments are intended to be handed off to another program being executed by this command. */
+	acceptsPassThroughArgs?: true;
+
+	/** Permitted boolean arguments. */
+	flags?: {
+		[flag: string]: {
+			/** A description of this flag, to be shown on help screens. */
+			description?: string;
+
+			/** Whether this flag also applies to commands farther down in the file tree. */
+			cascades?: true;
+
+			/** A single-character that could be used instead of the full flag name. */
+			shorthand?: string;
+		};
+	};
+
+	/** Permitted key/value arguments. */
+	options?: {
+		[option: string]: {
+			/** A description of this option, to be shown on help screens. */
+			description?: string;
+
+			/** Whether this option also applies to commands farther down in the file tree. */
+			cascades?: true;
+
+			/** A single-character that could be used instead of the full option name. */
+			shorthand?: string;
+
+			/** Whether this option must be provided with this command. */
+			required?: true;
+
+			/** What type of value should be provided. Invalid values will be rejected. */
+			type?: 'integer' | 'float';
+
+			/** A finite array of acceptable value strings. Invalid values will be rejected. */
+			accepts?: string[];
+		};
+	};
+
+	/** Details about what kind of data this command accepts. Any object (even an empty one) permits data. The keys inside this object provide details about the data. */
+	data?: {
+		/** A description of what kind of data should be provided, to be shown on help screens. */
+		description?: string;
+
+		/** Whether data must be provided to this command. */
+		required?: true;
+
+		/** What type of data should be provided. Invalid data will be rejected. */
+		type?: 'integer' | 'float';
+
+		/** A finite array of acceptable data strings. Invalid data will be rejected. */
+		accepts?: string[];
+
+		/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
+		ignoreFlagsAndOptions?: true;
+	};
 }
 
 /** Get the parsed command spec from a particular directory */

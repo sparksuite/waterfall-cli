@@ -132,7 +132,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 		// Detect pass-through indication
 		if (argument === '--') {
 			// Error if this command does not accept pass-through arguments
-			if (!mergedSpec.passThrough) {
+			if (!mergedSpec.acceptsPassThroughArgs) {
 				throw new PrintableError('This command does not support pass-through arguments');
 			}
 
@@ -249,9 +249,6 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 				includeScore: true,
 				includeMatches: true,
 				minMatchCharLength: 1,
-				// TODO: Remove these if possible
-				// tokenize: true,
-				// maxPatternLength: 32,
 			});
 
 			const results = fuse.search(`${organizedArguments.command} ${organizedArguments.data}`.trim());

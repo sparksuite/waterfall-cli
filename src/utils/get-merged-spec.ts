@@ -9,7 +9,7 @@ type MergedSpec = CommandSpec & {
 	options: NonNullable<CommandSpec['options']>;
 };
 
-/** TODO */
+/** Retrieve the merged specifications for a command, taking into consideration parent specs */
 export default async function getMergedSpec(command: string): Promise<MergedSpec> {
 	// Break into pieces, with entry point
 	const pieces = `. ${command}`.trim().split(' ');
@@ -61,8 +61,8 @@ export default async function getMergedSpec(command: string): Promise<MergedSpec
 			});
 		}
 
-		if (spec.passThrough) {
-			mergedSpec.passThrough = true;
+		if (spec.acceptsPassThroughArgs) {
+			mergedSpec.acceptsPassThroughArgs = true;
 		}
 
 		if (index === pieces.length - 1) {

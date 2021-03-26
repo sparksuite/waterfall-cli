@@ -51,7 +51,7 @@ export default async function helpScreen(): Promise<string> {
 	const hasOptions = Boolean(Object.entries(mergedSpec.options).length);
 	const allowsData = typeof mergedSpec.data === 'object';
 	const hasCommands = Boolean(commands.length);
-	const allowsPassThrough = mergedSpec.passThrough;
+	const allowsPassThrough = mergedSpec.acceptsPassThroughArgs;
 
 	// Output description
 	if (mergedSpec.description) {

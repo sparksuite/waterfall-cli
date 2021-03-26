@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 // Dependencies
 import printPrettyError from './print-pretty-error';
 

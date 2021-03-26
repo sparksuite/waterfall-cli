@@ -1,5 +1,3 @@
-/* eslint-env jest */
-
 // Dependencies
 import standardizeArguments from './standardize-arguments';
 

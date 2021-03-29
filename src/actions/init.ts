@@ -95,7 +95,7 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 
 		// Call onStart() function, if any
 		if (config.onStart) {
-			config.onStart(inputObject);
+			await config.onStart(inputObject);
 		}
 
 		// Run each command path sequentially, starting with the first

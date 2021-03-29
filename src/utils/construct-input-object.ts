@@ -2,20 +2,28 @@
 import { PrintableError } from './errors.js';
 import getMergedSpec from './get-merged-spec.js';
 import getOrganizedArguments from './get-organized-arguments.js';
+import { AnyCommandInput, CommandInput } from './get-command-spec.js';
 
 // Define what the input object looks like
-export interface InputObject {
+export interface InputObject<Input extends CommandInput> {
 	command: string;
+	flags: {
+		[Flag in keyof Input['flags']]: boolean;
+	};
+	options: {
+		[Option in keyof Input['options']]: string | number;
+	};
 	data?: string | number;
 	passThrough?: string[];
-	[index: string]: boolean | string | string[] | number | undefined;
 }
 
 // Construct a full input object
-export default async function constructInputObject(): Promise<InputObject> {
+export default async function constructInputObject(): Promise<InputObject<AnyCommandInput>> {
 	// Initialize
-	const inputObject: InputObject = {
+	const inputObject: InputObject<AnyCommandInput> = {
 		command: '',
+		flags: {},
+		options: {},
 	};
 
 	// Get organized arguments
@@ -30,15 +38,15 @@ export default async function constructInputObject(): Promise<InputObject> {
 	};
 
 	// Loop over each component and store
-	Object.entries(mergedSpec.flags).forEach(([flag]) => {
+	Object.entries(mergedSpec.flags ?? {}).forEach(([flag]) => {
 		const camelCaseKey = convertDashesToCamelCase(flag);
-		inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
+		inputObject.flags[camelCaseKey] = organizedArguments.flags.includes(flag);
 	});
 
-	Object.entries(mergedSpec.options).forEach(([option, details]) => {
+	Object.entries(mergedSpec.options ?? {}).forEach(([option, details]) => {
 		const camelCaseKey = convertDashesToCamelCase(option);
 		const optionIndex = organizedArguments.options.indexOf(option);
-		inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
+		inputObject.options[camelCaseKey] = organizedArguments.values[optionIndex];
 
 		if (details.required && !organizedArguments.options.includes(option)) {
 			throw new PrintableError(`The --${option} option is required`);

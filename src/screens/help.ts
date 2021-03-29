@@ -47,8 +47,8 @@ export default async function helpScreen(): Promise<string> {
 	const mergedSpec = await getMergedSpec(organizedArguments.command);
 
 	// Determine if certain features are available
-	const hasFlags = Boolean(Object.entries(mergedSpec.flags).length);
-	const hasOptions = Boolean(Object.entries(mergedSpec.options).length);
+	const hasFlags = Boolean(Object.entries(mergedSpec.flags ?? {}).length);
+	const hasOptions = Boolean(Object.entries(mergedSpec.options ?? {}).length);
 	const allowsData = typeof mergedSpec.data === 'object';
 	const hasCommands = Boolean(commands.length);
 	const allowsPassThrough = mergedSpec.acceptsPassThroughArgs;
@@ -101,7 +101,7 @@ export default async function helpScreen(): Promise<string> {
 		table.push(['\nFLAGS:']);
 
 		// List flags
-		Object.entries(mergedSpec.flags).forEach(([flag, details]) => {
+		Object.entries(mergedSpec.flags ?? {}).forEach(([flag, details]) => {
 			table.push([
 				`  --${flag}${details.shorthand ? `, -${details.shorthand}` : ''}`,
 				`${details.description ? `${details.description}` : ''}`,
@@ -115,7 +115,7 @@ export default async function helpScreen(): Promise<string> {
 		table.push(['\nOPTIONS:']);
 
 		// List options
-		Object.entries(mergedSpec.options).forEach(([option, details]) => {
+		Object.entries(mergedSpec.options ?? {}).forEach(([option, details]) => {
 			// Form full description
 			let fullDescription = '';
 

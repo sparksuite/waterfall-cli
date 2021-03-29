@@ -22,7 +22,7 @@ export interface Config {
 	usageCommand: string;
 
 	/** An optional function to call when the program is first executed. */
-	onStart?: (inputObject: InputObject) => void;
+	onStart?: (inputObject: InputObject) => Promise<void>;
 
 	/** Extra whitespace automatically printed around your program’s output for aesthetics. */
 	spacing: {
@@ -65,7 +65,7 @@ export default async function getConfig(customConfig?: unknown): Promise<Config>
 				.string()
 				.nonempty()
 				.default(`node ${path.basename(context.entryFile)}`),
-			onStart: z.function(z.tuple([z.any()]), z.void()).optional(),
+			onStart: z.function(z.tuple([z.any()]), z.promise(z.void())).optional(),
 			spacing: z
 				.object({
 					before: z.number().int().min(0).default(1),

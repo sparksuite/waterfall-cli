@@ -51,7 +51,7 @@ describe('#getConfig()', () => {
 				packageName: 'custom',
 				version: '4.5.6',
 				usageCommand: 'custom-executable',
-				onStart: () => {
+				onStart: async () => {
 					// Do nothing
 				},
 				spacing: {

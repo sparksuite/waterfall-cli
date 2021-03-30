@@ -98,7 +98,9 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 	}
 
 	// Store data
-	inputObject.data = organizedArguments.data;
+	if (typeof mergedSpec.data === 'object') {
+		inputObject.data = organizedArguments.data;
+	}
 
 	// Store command
 	inputObject.command = organizedArguments.command;

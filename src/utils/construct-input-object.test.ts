@@ -24,14 +24,18 @@ describe('#constructInputObject()', () => {
 		expect(await constructInputObject()).toStrictEqual({
 			command: 'list',
 			data: 'toppings',
-			deliveryZipCode: '55555',
-			help: false,
-			limit: undefined,
-			maxPrice: undefined,
-			quiet: true,
-			sort: 'popularity',
-			vegetarian: true,
-			version: false,
+			options: {
+				deliveryZipCode: '55555',
+				limit: undefined,
+				maxPrice: undefined,
+				sort: 'popularity',
+			},
+			flags: {
+				help: false,
+				quiet: true,
+				vegetarian: true,
+				version: false,
+			},
 		});
 	});
 

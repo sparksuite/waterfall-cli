@@ -1,10 +1,10 @@
 // Imports
 import path from 'path';
-import getCommandSpec, { AnyCommandInput, CommandSpec } from './get-command-spec.js';
+import getCommandSpec, { GenericCommandSpec } from './get-command-spec.js';
 import getContext from './get-context.js';
 
 // Define what a merged spec looks like
-type MergedSpec = Partial<CommandSpec<AnyCommandInput>>;
+type MergedSpec = GenericCommandSpec;
 
 /** Retrieve the merged specifications for a command, taking into consideration parent specs */
 export default async function getMergedSpec(command: string): Promise<MergedSpec> {

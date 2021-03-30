@@ -25,7 +25,15 @@ export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
 		  };
 
 	/** If provided, the data given to this command. */
-	data: undefined extends Input['data'] ? ExcludeMe : string | number;
+	data: 'data' extends keyof Input
+		? NonNullable<Input['data']> extends never
+			? ExcludeMe
+			: NonNullable<Input['data']> extends Array<string | number>
+			? undefined extends Input['data']
+				? NonNullable<Input['data']>[number] | undefined
+				: NonNullable<Input['data']>[number]
+			: Input['data']
+		: ExcludeMe;
 
 	/** If provided, an array of pass-through arguments. */
 	passThroughArgs?: undefined extends Input['acceptsPassThroughArgs'] ? ExcludeMe : string[];
@@ -47,6 +55,15 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 
 	// Get merged spec for this command
 	const mergedSpec = await getMergedSpec(organizedArguments.command);
+
+	// Initialize some keys, in case the objects are empty
+	if (typeof mergedSpec.flags === 'object') {
+		inputObject.flags = {};
+	}
+
+	if (typeof mergedSpec.options === 'object') {
+		inputObject.options = {};
+	}
 
 	// Convert a string from aaa-aaa-aaa to aaaAaaAaa
 	const convertDashesToCamelCase = (string: string): string => {
@@ -89,7 +106,9 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 	}
 
 	// Store data
-	inputObject.data = organizedArguments.data;
+	if (typeof mergedSpec.data === 'object') {
+		inputObject.data = organizedArguments.data;
+	}
 
 	// Store command
 	inputObject.command = organizedArguments.command;

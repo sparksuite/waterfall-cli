@@ -55,6 +55,10 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 
 	// Loop over each component and store
 	Object.entries(mergedSpec.flags ?? {}).forEach(([flag]) => {
+		if (['help', 'version'].includes(flag)) {
+			return;
+		}
+
 		const camelCaseKey = convertDashesToCamelCase(flag);
 
 		if (!inputObject.flags) {

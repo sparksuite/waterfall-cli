@@ -2,19 +2,43 @@
 import { PrintableError } from './errors.js';
 import getMergedSpec from './get-merged-spec.js';
 import getOrganizedArguments from './get-organized-arguments.js';
+import { CommandInput } from './get-command-spec.js';
+import { ExcludeMe, OmitExcludeMeProperties } from '../types/exclude-matching-properties.js';
 
-// Define what the input object looks like
-export interface InputObject {
+/** Describes the type that governs a command's input */
+export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
+	/** The final command being run. */
 	command: string;
-	data?: string | number;
-	passThrough?: string[];
-	[index: string]: boolean | string | string[] | number | undefined;
-}
+
+	/** For each available flag (converted to camel case), a boolean value indicating whether it was provided. */
+	flags: undefined extends Input['flags']
+		? ExcludeMe
+		: {
+				[Flag in keyof Input['flags']]: boolean;
+		  };
+
+	/** For each available option (converted to camel case), the value that was provided (or `undefined` if not provided). */
+	options: undefined extends Input['options']
+		? ExcludeMe
+		: {
+				[Option in keyof Input['options']]: string | number;
+		  };
+
+	/** If provided, the data given to this command. */
+	data: undefined extends Input['data'] ? ExcludeMe : string | number;
+
+	/** If provided, an array of pass-through arguments. */
+	passThroughArgs?: undefined extends Input['acceptsPassThroughArgs'] ? ExcludeMe : string[];
+}>;
+
+// Define the return type
+export type ConstructedInputObject = Omit<Partial<InputObject<Required<CommandInput>>>, 'command'> &
+	Pick<InputObject<Required<CommandInput>>, 'command'>;
 
 // Construct a full input object
-export default async function constructInputObject(): Promise<InputObject> {
+export default async function constructInputObject(): Promise<ConstructedInputObject> {
 	// Initialize
-	const inputObject: InputObject = {
+	const inputObject: ConstructedInputObject = {
 		command: '',
 	};
 
@@ -30,15 +54,25 @@ export default async function constructInputObject(): Promise<InputObject> {
 	};
 
 	// Loop over each component and store
-	Object.entries(mergedSpec.flags).forEach(([flag]) => {
+	Object.entries(mergedSpec.flags ?? {}).forEach(([flag]) => {
 		const camelCaseKey = convertDashesToCamelCase(flag);
-		inputObject[camelCaseKey] = organizedArguments.flags.includes(flag);
+
+		if (!inputObject.flags) {
+			inputObject.flags = {};
+		}
+
+		inputObject.flags[camelCaseKey] = organizedArguments.flags.includes(flag);
 	});
 
-	Object.entries(mergedSpec.options).forEach(([option, details]) => {
+	Object.entries(mergedSpec.options ?? {}).forEach(([option, details]) => {
 		const camelCaseKey = convertDashesToCamelCase(option);
 		const optionIndex = organizedArguments.options.indexOf(option);
-		inputObject[camelCaseKey] = organizedArguments.values[optionIndex];
+
+		if (!inputObject.options) {
+			inputObject.options = {};
+		}
+
+		inputObject.options[camelCaseKey] = organizedArguments.values[optionIndex];
 
 		if (details.required && !organizedArguments.options.includes(option)) {
 			throw new PrintableError(`The --${option} option is required`);
@@ -58,7 +92,7 @@ export default async function constructInputObject(): Promise<InputObject> {
 
 	// Store pass-through
 	if (organizedArguments.passThrough) {
-		inputObject.passThrough = organizedArguments.passThrough;
+		inputObject.passThroughArgs = organizedArguments.passThrough;
 	}
 
 	// Return

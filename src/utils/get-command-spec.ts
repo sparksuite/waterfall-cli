@@ -3,9 +3,27 @@ import fs from 'fs';
 import path from 'path';
 import chalk from './chalk.js';
 import { PrintableError } from './errors.js';
+import { ExcludeMe, OmitExcludeMeProperties } from '../types/exclude-matching-properties.js';
 
-// Define what a command spec looks like
-export interface CommandSpec {
+// Define what command input looks like
+export interface CommandInput {
+	flags?: {
+		[flag: string]: boolean;
+	};
+	options?: {
+		[option: string]: string | string[] | number | number[];
+	};
+	data?: string | string[] | number | number[];
+	acceptsPassThroughArgs?: true;
+}
+
+// Helper types
+export type EmptyCommandInput = {
+	[Key in keyof Required<CommandInput>]: undefined;
+};
+
+/** Describes a command's specifications */
+export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitExcludeMeProperties<{
 	/** A description of this command, to be shown on help screens. */
 	description?: string;
 
@@ -13,66 +31,119 @@ export interface CommandSpec {
 	executeOnCascade?: true;
 
 	/** Whether this command accepts pass-through arguments (arguments that follow ` -- `). Pass-through arguments are intended to be handed off to another program being executed by this command. */
-	acceptsPassThroughArgs?: true;
+	acceptsPassThroughArgs: undefined extends Input['acceptsPassThroughArgs'] ? ExcludeMe : true;
 
 	/** Permitted boolean arguments. */
-	flags?: {
-		[flag: string]: {
-			/** A description of this flag, to be shown on help screens. */
-			description?: string;
+	flags: 'flags' extends keyof Input
+		? NonNullable<Input['flags']> extends never
+			? ExcludeMe
+			: {
+					[Flag in keyof Input['flags']]: {
+						/** A description of this flag, to be shown on help screens. */
+						description?: string;
 
-			/** Whether this flag also applies to commands farther down in the file tree. */
-			cascades?: true;
+						/** Whether this flag also applies to commands farther down in the file tree. */
+						cascades?: true;
 
-			/** A single-character that could be used instead of the full flag name. */
-			shorthand?: string;
-		};
-	};
+						/** A single-character that could be used instead of the full flag name. */
+						shorthand?: string;
+					};
+			  }
+		: ExcludeMe;
 
 	/** Permitted key/value arguments. */
-	options?: {
-		[option: string]: {
-			/** A description of this option, to be shown on help screens. */
+	options: 'options' extends keyof Input
+		? NonNullable<Input['options']> extends never
+			? ExcludeMe
+			: {
+					[Option in keyof Input['options']]: OmitExcludeMeProperties<{
+						/** A description of this option, to be shown on help screens. */
+						description?: string;
+
+						/** Whether this option also applies to commands farther down in the file tree. */
+						cascades?: true;
+
+						/** A single-character that could be used instead of the full option name. */
+						shorthand?: string;
+
+						/** Whether this option must be provided with this command. */
+						required: undefined extends Input['options'][Option] ? ExcludeMe : true;
+
+						/** What type of value should be provided. Invalid values will be rejected. */
+						type: number extends Input['options'][Option]
+							? Input['options'][Option] extends number
+								? 'integer' | 'float'
+								: ExcludeMe
+							: ExcludeMe;
+
+						/** A finite array of acceptable option values. Invalid values will be rejected. */
+						accepts: NonNullable<Input['options'][Option]> extends Array<string | number>
+							? Input['options'][Option]
+							: ExcludeMe;
+					}>;
+			  }
+		: ExcludeMe;
+
+	/** Details about what kind of data this command accepts. Any object (even an empty one) permits data. */
+	data: 'data' extends keyof Input
+		? NonNullable<Input['data']> extends never
+			? ExcludeMe
+			: OmitExcludeMeProperties<{
+					/** A description of what kind of data should be provided, to be shown on help screens. */
+					description?: string;
+
+					/** Whether data must be provided to this command. */
+					required: undefined extends Input['data'] ? ExcludeMe : true;
+
+					/** What type of data should be provided. Invalid data will be rejected. */
+					type: number extends Input['data']
+						? Input['data'] extends number
+							? 'integer' | 'float'
+							: ExcludeMe
+						: ExcludeMe;
+
+					/** A finite array of acceptable data values. Invalid data will be rejected. */
+					accepts: NonNullable<Input['data']> extends Array<string | number> ? Input['data'] : ExcludeMe;
+
+					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
+					ignoreFlagsAndOptions?: true;
+			  }>
+		: ExcludeMe;
+}>;
+
+// Describes what a command spec might look like after being imported
+export interface GenericCommandSpec {
+	description?: string;
+	executeOnCascade?: true;
+	acceptsPassThroughArgs?: true;
+	flags?: {
+		[flag: string]: {
 			description?: string;
-
-			/** Whether this option also applies to commands farther down in the file tree. */
 			cascades?: true;
-
-			/** A single-character that could be used instead of the full option name. */
 			shorthand?: string;
-
-			/** Whether this option must be provided with this command. */
-			required?: true;
-
-			/** What type of value should be provided. Invalid values will be rejected. */
-			type?: 'integer' | 'float';
-
-			/** A finite array of acceptable value strings. Invalid values will be rejected. */
-			accepts?: string[];
 		};
 	};
-
-	/** Details about what kind of data this command accepts. Any object (even an empty one) permits data. The keys inside this object provide details about the data. */
+	options?: {
+		[option: string]: {
+			description?: string;
+			cascades?: true;
+			shorthand?: string;
+			required?: true;
+			type?: 'integer' | 'float';
+			accepts?: string[] | number[];
+		};
+	};
 	data?: {
-		/** A description of what kind of data should be provided, to be shown on help screens. */
 		description?: string;
-
-		/** Whether data must be provided to this command. */
 		required?: true;
-
-		/** What type of data should be provided. Invalid data will be rejected. */
 		type?: 'integer' | 'float';
-
-		/** A finite array of acceptable data strings. Invalid data will be rejected. */
-		accepts?: string[];
-
-		/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
+		accepts?: string[] | number[];
 		ignoreFlagsAndOptions?: true;
 	};
 }
 
 /** Get the parsed command spec from a particular directory */
-export default async function getCommandSpec(directory: string): Promise<CommandSpec> {
+export default async function getCommandSpec(directory: string): Promise<GenericCommandSpec> {
 	// Error if directory does not exist
 	if (!fs.existsSync(directory)) {
 		throw new Error(`Directory does not exist: ${directory}`);
@@ -104,7 +175,7 @@ export default async function getCommandSpec(directory: string): Promise<Command
 
 	// Return
 	try {
-		const spec = (await import(specFilePath)) as { default: CommandSpec } | CommandSpec;
+		const spec = (await import(specFilePath)) as { default: GenericCommandSpec } | GenericCommandSpec;
 		return 'default' in spec ? spec.default : spec;
 	} catch (error) {
 		throw new PrintableError(

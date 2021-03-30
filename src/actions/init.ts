@@ -8,7 +8,7 @@ import getOrganizedArguments from '../utils/get-organized-arguments.js';
 import printPrettyError from '../utils/print-pretty-error.js';
 import verboseLog from '../utils/verbose-log.js';
 import path from 'path';
-import getCommandSpec from '../utils/get-command-spec.js';
+import getCommandSpec, { EmptyCommandInput } from '../utils/get-command-spec.js';
 import constructInputObject from '../utils/construct-input-object.js';
 import chalk from '../utils/chalk.js';
 import CommandFunction from '../types/command-function.js';
@@ -101,12 +101,14 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 		// Run each command path sequentially, starting with the first
 		for (const commandPath of commandPaths) {
 			// Initialize
-			let command: CommandFunction | undefined = undefined;
+			let command: CommandFunction<EmptyCommandInput> | undefined = undefined;
 			const truncatedPath = commandPath.replace(`${path.dirname(context.entryFile)}/`, '');
 
 			// Import it within a try/catch
 			try {
-				const importedCommand = (await import(commandPath)) as { default: CommandFunction } | CommandFunction;
+				const importedCommand = (await import(commandPath)) as
+					| { default: CommandFunction<EmptyCommandInput> }
+					| CommandFunction<EmptyCommandInput>;
 				command = 'default' in importedCommand ? importedCommand.default : importedCommand;
 			} catch (error: unknown) {
 				// Let outer try/catch handle printable errors

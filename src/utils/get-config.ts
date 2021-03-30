@@ -5,7 +5,7 @@ import getContext from './get-context.js';
 import printPrettyError from './print-pretty-error.js';
 import chalk from './chalk.js';
 import path from 'path';
-import { InputObject } from './construct-input-object.js';
+import { ConstructedInputObject } from './construct-input-object.js';
 
 // Define what a fully-constructed config object looks like
 export interface Config {
@@ -22,7 +22,7 @@ export interface Config {
 	usageCommand: string;
 
 	/** An optional function to call when the program is first executed. */
-	onStart?: (inputObject: InputObject) => Promise<void>;
+	onStart?: (inputObject: ConstructedInputObject) => Promise<void>;
 
 	/** Extra whitespace automatically printed around your program’s output for aesthetics. */
 	spacing: {

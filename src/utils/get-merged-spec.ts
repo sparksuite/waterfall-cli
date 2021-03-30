@@ -1,13 +1,10 @@
 // Imports
 import path from 'path';
-import getCommandSpec, { CommandSpec } from './get-command-spec.js';
+import getCommandSpec, { GenericCommandSpec } from './get-command-spec.js';
 import getContext from './get-context.js';
 
 // Define what a merged spec looks like
-type MergedSpec = CommandSpec & {
-	flags: NonNullable<CommandSpec['flags']>;
-	options: NonNullable<CommandSpec['options']>;
-};
+type MergedSpec = GenericCommandSpec;
 
 /** Retrieve the merged specifications for a command, taking into consideration parent specs */
 export default async function getMergedSpec(command: string): Promise<MergedSpec> {
@@ -48,6 +45,10 @@ export default async function getMergedSpec(command: string): Promise<MergedSpec
 		if (typeof spec.flags === 'object') {
 			Object.entries(spec.flags).forEach(([flag, details]) => {
 				if (index === pieces.length - 1 || details.cascades === true) {
+					if (mergedSpec.flags === undefined) {
+						throw new Error('This should not be possible');
+					}
+
 					mergedSpec.flags[flag] = details;
 				}
 			});
@@ -56,6 +57,10 @@ export default async function getMergedSpec(command: string): Promise<MergedSpec
 		if (typeof spec.options === 'object') {
 			Object.entries(spec.options).forEach(([option, details]) => {
 				if (index === pieces.length - 1 || details.cascades === true) {
+					if (mergedSpec.options === undefined) {
+						throw new Error('This should not be possible');
+					}
+
 					mergedSpec.options[option] = details;
 				}
 			});

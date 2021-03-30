@@ -41,7 +41,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 	let previousOption: string | undefined = undefined;
 	let nextIsOptionValue = false;
 	let nextValueType: string | undefined = undefined;
-	let nextValueAccepts: string[] | undefined = undefined;
+	let nextValueAccepts: string[] | number[] | undefined = undefined;
 	let reachedData = false;
 	let reachedPassThrough = false;
 
@@ -77,15 +77,6 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 			let value: string | number = argument;
 
 			// Validate value, if necessary
-			if (Array.isArray(nextValueAccepts)) {
-				const accepts: string[] = nextValueAccepts;
-				if (accepts.includes(value) === false) {
-					throw new PrintableError(
-						`Unrecognized value for ${String(previousOption)}: ${value}\nAccepts: ${accepts.join(', ')}`
-					);
-				}
-			}
-
 			if (nextValueType) {
 				if (nextValueType === 'integer') {
 					if (/^[0-9]+$/.test(value)) {
@@ -101,6 +92,17 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 					}
 				} else {
 					throw new PrintableError(`Unrecognized "type": ${nextValueType}`);
+				}
+			}
+
+			if (Array.isArray(nextValueAccepts)) {
+				const accepts = nextValueAccepts;
+
+				// @ts-expect-error: TypeScript is confused here...
+				if (accepts.includes(value) === false) {
+					throw new PrintableError(
+						`Unrecognized value for ${String(previousOption)}: ${value}\nAccepts: ${accepts.join(', ')}`
+					);
 				}
 			}
 
@@ -281,6 +283,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 		// Validate data, if necessary
 		if (mergedSpec.data.accepts) {
+			// @ts-expect-error: TypeScript is confused here...
 			if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
 				throw new PrintableError(
 					`Unrecognized data for "${organizedArguments.command.trim()}": ${

@@ -4,6 +4,7 @@ import path from 'path';
 import chalk from './chalk.js';
 import { PrintableError } from './errors.js';
 import { ExcludeMe, OmitExcludeMeProperties } from '../types/exclude-matching-properties.js';
+import getContext from './get-context.js';
 
 // Define what command input looks like
 export interface CommandInput {
@@ -170,8 +171,12 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		);
 	}
 
-	// Get the file path
+	// Get the context
+	const context = await getContext();
+
+	// Get the file paths
 	const specFilePath = specFiles[0];
+	const truncatedPath = specFilePath.replace(`${path.dirname(context.entryFile)}/`, '');
 
 	// Return
 	try {
@@ -179,7 +184,7 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		return 'default' in spec ? spec.default : spec;
 	} catch (error) {
 		throw new PrintableError(
-			`This spec file contains invalid JS: ${specFilePath}\n${chalk.bold('JS Error: ')}${String(error)}`
+			`${String(error)}\n\nEncountered this error while importing the spec file at: ${chalk.bold(truncatedPath)}`
 		);
 	}
 }

@@ -31,10 +31,8 @@ describe('#constructInputObject()', () => {
 				sort: 'popularity',
 			},
 			flags: {
-				help: false,
 				quiet: true,
 				vegetarian: true,
-				version: false,
 			},
 		});
 	});

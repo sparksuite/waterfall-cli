@@ -28,10 +28,10 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 	/** A description of this command, to be shown on help screens. */
 	description?: string;
 
-	/** Whether to execute this command before executing commands farther down in the file tree. */
+	/** Whether to execute this command before executing commands farther down in the file tree. Defaults to `false`. */
 	executeOnCascade?: true;
 
-	/** Whether this command accepts pass-through arguments (arguments that follow ` -- `). Pass-through arguments are intended to be handed off to another program being executed by this command. */
+	/** Whether this command accepts pass-through arguments (arguments that follow ` -- `). Pass-through arguments are intended to be handed off to another program being executed by this command. Defaults to `false`. */
 	acceptsPassThroughArgs: undefined extends Input['acceptsPassThroughArgs'] ? ExcludeMe : true;
 
 	/** Permitted boolean arguments. */
@@ -43,7 +43,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 						/** A description of this flag, to be shown on help screens. */
 						description?: string;
 
-						/** Whether this flag also applies to commands farther down in the file tree. */
+						/** Whether this flag also applies to commands farther down in the file tree. Defaults to `false`. */
 						cascades?: true;
 
 						/** A single-character that could be used instead of the full flag name. */
@@ -61,13 +61,13 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 						/** A description of this option, to be shown on help screens. */
 						description?: string;
 
-						/** Whether this option also applies to commands farther down in the file tree. */
+						/** Whether this option also applies to commands farther down in the file tree. Defaults to `false`. */
 						cascades?: true;
 
 						/** A single-character that could be used instead of the full option name. */
 						shorthand?: string;
 
-						/** Whether this option must be provided with this command. */
+						/** Whether this option must be provided with this command. Defaults to `false`. */
 						required: undefined extends Input['options'][Option] ? ExcludeMe : true;
 
 						/** What type of value should be provided. Invalid values will be rejected. */

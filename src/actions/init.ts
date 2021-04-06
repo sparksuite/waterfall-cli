@@ -1,7 +1,7 @@
 // Imports
 import helpScreen from '../screens/help.js';
 import versionScreen from '../screens/version.js';
-import { PrintableError } from '../utils/errors.js';
+import { HandledError, PrintableError } from '../utils/errors.js';
 import getConfig, { Config } from '../utils/get-config.js';
 import getContext from '../utils/get-context.js';
 import getOrganizedArguments from '../utils/get-organized-arguments.js';
@@ -130,11 +130,16 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			try {
 				await command(inputObject);
 			} catch (error: unknown) {
-				// Let outer try/catch handle printable errors
+				// Let outer try/catch handle handled/printable errors
+				if (error instanceof HandledError) {
+					throw error;
+				}
+
 				if (error instanceof PrintableError) {
 					throw error;
 				}
 
+				// Handle unknown errors
 				throw new PrintableError(
 					`${String(error)}\n\nEncountered this error while running the command at: ${chalk.bold(truncatedPath)}`
 				);
@@ -146,9 +151,11 @@ export default async function init(customConfig: Partial<Config>): Promise<void>
 			console.log();
 		}
 	} catch (error: unknown) {
-		if (error instanceof PrintableError) {
-			// Print the error
-			printPrettyError(error.message);
+		if (error instanceof HandledError || error instanceof PrintableError) {
+			// Print the error, if needed
+			if (error instanceof PrintableError) {
+				printPrettyError(error.message);
+			}
 
 			// Get the config
 			const config = await getConfig(customConfig);

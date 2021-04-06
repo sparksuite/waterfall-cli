@@ -1,17 +1,18 @@
 // Export directly
 export { default as init } from './actions/init.js';
 export { default as printError } from './utils/print-pretty-error.js';
-export { PrintableError } from './utils/errors.js';
+export { PrintableError, HandledError } from './utils/errors.js';
 
 // Export as default
 import init from './actions/init.js';
 import printError from './utils/print-pretty-error.js';
-import { PrintableError } from './utils/errors.js';
+import { PrintableError, HandledError } from './utils/errors.js';
 
 export default {
 	init,
 	printError,
 	PrintableError,
+	HandledError,
 };
 
 // Expose some types to consumers

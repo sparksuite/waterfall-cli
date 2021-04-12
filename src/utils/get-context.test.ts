@@ -51,7 +51,7 @@ describe('#getContext()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-missing-version', 'entry.js');
 
 		expect((await getContext()).packageFile).toStrictEqual({
-			name: 'test',
+			name: 'package-missing-version',
 		});
 	});
 
@@ -59,7 +59,7 @@ describe('#getContext()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-with-custom-key', 'entry.js');
 
 		expect((await getContext()).packageFile).toStrictEqual({
-			name: 'test',
+			name: 'package-with-custom-key',
 		});
 	});
 

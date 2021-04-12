@@ -1,4 +1,4 @@
 {
-	"name": "test",
+	"name": "package-with-custom-key",
 	"custom": true
 }

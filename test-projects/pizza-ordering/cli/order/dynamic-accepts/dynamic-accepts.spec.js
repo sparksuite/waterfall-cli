@@ -18,5 +18,5 @@ module.exports = {
 			accepts: testAllows,
 		},
 	},
-	acceptsPassThroughArgs: true,
+	acceptsPassThroughArgs: false,
 };

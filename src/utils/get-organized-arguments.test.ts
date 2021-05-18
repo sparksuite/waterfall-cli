@@ -656,4 +656,38 @@ describe('#getOrganizedArguments()', () => {
 				values: [],
 			});
 	});
+
+	it('Handles having dynamic option accept values', async () => {
+		(process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-accepts',
+			'--test',
+			'a1',
+		]),
+			expect(await getOrganizedArguments()).toStrictEqual({
+				command: 'order dynamic-accepts',
+				flags: [],
+				options: ['test'],
+				values: ['a1'],
+			});
+	});
+
+	it('Handles having dynamic data accept values', async () => {
+		(process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-accepts',
+			'b',
+		]),
+			expect(await getOrganizedArguments()).toStrictEqual({
+				command: 'order dynamic-accepts',
+				flags: [],
+				options: [],
+				values: [],
+				data: 'b',
+			});
+	});
 });

@@ -77,7 +77,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 								: ExcludeMe
 							: ExcludeMe;
 
-						/** A finite array of acceptable option values. Invalid values will be rejected. */
+						/** A finite array of acceptable option values or callback providing same. Invalid values will be rejected. */
 						accepts: NonNullable<Input['options'][Option]> extends
 							| Array<string | number>
 							| (() => Promise<Array<string | number>>)
@@ -105,7 +105,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 							: ExcludeMe
 						: ExcludeMe;
 
-					/** A finite array of acceptable data values. Invalid data will be rejected. */
+					/** A finite array of acceptable data values or callback providing same. Invalid data will be rejected. */
 					accepts: NonNullable<Input['data']> extends Array<string | number> | (() => Promise<Array<string | number>>)
 						? Input['data'] | (() => Promise<Input['data']>)
 						: ExcludeMe;

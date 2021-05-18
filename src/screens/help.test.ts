@@ -169,4 +169,19 @@ describe('#helpScreen()', () => {
 			'What you want to list (required) (accepts: toppings, crusts, two words)'
 		);
 	});
+
+	it('Emits help with dynamic accepts properties', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-allows',
+			'--help',
+		];
+
+		const result = removeFormatting(await helpScreen());
+
+		expect(result).toContain('What type of pizza to order (accepts: a, b, c, d)');
+		expect(result).toContain('Just used for testing (accepts: a1, b2, c3, d4)');
+	});
 });

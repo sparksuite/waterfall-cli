@@ -115,7 +115,7 @@ export default async function helpScreen(): Promise<string> {
 		table.push(['\nOPTIONS:']);
 
 		// List options
-		Object.entries(mergedSpec.options ?? {}).forEach(([option, details]) => {
+		for (const [option, details] of Object.entries(mergedSpec.options ?? {})) {
 			// Form full description
 			let fullDescription = '';
 
@@ -132,12 +132,13 @@ export default async function helpScreen(): Promise<string> {
 			}
 
 			if (details.accepts) {
-				fullDescription += chalk.gray.italic(` (accepts: ${details.accepts.join(', ')})`);
+				const accepts = typeof details.accepts === 'function' ? await details.accepts() : details.accepts;
+				fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 			}
 
 			// Add to table
 			table.push([`  --${option}${details.shorthand ? `, -${details.shorthand}` : ''}`, fullDescription]);
-		});
+		}
 	}
 
 	// Add line for commands
@@ -178,7 +179,9 @@ export default async function helpScreen(): Promise<string> {
 		}
 
 		if (mergedSpec.data.accepts) {
-			fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
+			const accepts =
+				typeof mergedSpec.data.accepts === 'function' ? await mergedSpec.data.accepts() : mergedSpec.data.accepts;
+			fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 		}
 
 		// Print

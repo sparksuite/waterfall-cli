@@ -175,7 +175,7 @@ describe('#helpScreen()', () => {
 			'/path/to/node',
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
-			'dynamic-allows',
+			'dynamic-accepts',
 			'--help',
 		];
 

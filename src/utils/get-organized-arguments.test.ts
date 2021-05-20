@@ -657,33 +657,67 @@ describe('#getOrganizedArguments()', () => {
 			});
 	});
 
-	it('Handles having dynamic option accept values', async () => {
+	it('Handles having dynamic async option accept values', async () => {
 		(process.argv = [
 			'/path/to/node',
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
-			'dynamic-accepts',
+			'dynamic-async-accepts',
 			'--test',
 			'a1',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
-				command: 'order dynamic-accepts',
+				command: 'order dynamic-async-accepts',
 				flags: [],
 				options: ['test'],
 				values: ['a1'],
 			});
 	});
 
-	it('Handles having dynamic data accept values', async () => {
+	it('Handles having dynamic sync option accept values', async () => {
 		(process.argv = [
 			'/path/to/node',
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
-			'dynamic-accepts',
+			'dynamic-sync-accepts',
+			'--test',
+			'a1',
+		]),
+			expect(await getOrganizedArguments()).toStrictEqual({
+				command: 'order dynamic-sync-accepts',
+				flags: [],
+				options: ['test'],
+				values: ['a1'],
+			});
+	});
+
+	it('Handles having dynamic async data accept values', async () => {
+		(process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-async-accepts',
 			'b',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
-				command: 'order dynamic-accepts',
+				command: 'order dynamic-async-accepts',
+				flags: [],
+				options: [],
+				values: [],
+				data: 'b',
+			});
+	});
+
+	it('Handles having dynamic sync data accept values', async () => {
+		(process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-sync-accepts',
+			'b',
+		]),
+			expect(await getOrganizedArguments()).toStrictEqual({
+				command: 'order dynamic-sync-accepts',
 				flags: [],
 				options: [],
 				values: [],

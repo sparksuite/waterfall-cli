@@ -79,8 +79,10 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 
 						/** A finite array of acceptable option values or callback providing same. Invalid values will be rejected. */
 						accepts: NonNullable<Input['options'][Option]> extends
-							| Array<string | number>
-							| (() => Promise<Array<string | number>>)
+							| string[]
+							| number[]
+							| (() => string[] | number[])
+							| (() => Promise<string[] | number[]>)
 							? Input['options'][Option] | (() => Promise<Input['options'][Option]>)
 							: ExcludeMe;
 					}>;
@@ -106,7 +108,11 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 						: ExcludeMe;
 
 					/** A finite array of acceptable data values or callback providing same. Invalid data will be rejected. */
-					accepts: NonNullable<Input['data']> extends Array<string | number> | (() => Promise<Array<string | number>>)
+					accepts: NonNullable<Input['data']> extends
+						| string[]
+						| number[]
+						| (() => string[] | number[])
+						| (() => Promise<string[] | number[]>)
 						? Input['data'] | (() => Promise<Input['data']>)
 						: ExcludeMe;
 
@@ -135,14 +141,14 @@ export interface GenericCommandSpec {
 			shorthand?: string;
 			required?: true;
 			type?: 'integer' | 'float';
-			accepts?: string[] | number[] | (() => Promise<string[] | number[]>);
+			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		};
 	};
 	data?: {
 		description?: string;
 		required?: true;
 		type?: 'integer' | 'float';
-		accepts?: string[] | number[] | (() => Promise<string[] | number[]>);
+		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
 	};
 }
@@ -189,7 +195,10 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		spec = 'default' in spec ? spec.default : spec;
 
 		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
-			spec.data.accepts = await spec.data.accepts();
+			spec.data.accepts =
+				spec.data.accepts.constructor.name === 'AsyncFunction'
+					? await spec.data.accepts()
+					: (spec.data.accepts() as string[] | number[]);
 		}
 
 		return spec;

@@ -170,12 +170,27 @@ describe('#helpScreen()', () => {
 		);
 	});
 
-	it('Emits help with dynamic accepts properties', async () => {
+	it('Emits help with dynamic async accepts properties', async () => {
 		process.argv = [
 			'/path/to/node',
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
-			'dynamic-accepts',
+			'dynamic-async-accepts',
+			'--help',
+		];
+
+		const result = removeFormatting(await helpScreen());
+
+		expect(result).toContain('What type of pizza to order (accepts: a, b, c, d)');
+		expect(result).toContain('Just used for testing (accepts: a1, b2, c3, d4)');
+	});
+
+	it('Emits help with dynamic sync accepts properties', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-sync-accepts',
 			'--help',
 		];
 

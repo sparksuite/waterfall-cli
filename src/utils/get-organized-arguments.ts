@@ -161,7 +161,11 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						previousOption = argument;
 						nextIsOptionValue = true;
 						nextValueAccepts =
-							(typeof details.accepts === 'function' ? await details.accepts() : details.accepts) || undefined;
+							(typeof details.accepts !== 'function'
+								? details.accepts
+								: details.accepts.constructor.name === 'AsyncFunction'
+								? await details.accepts()
+								: (details.accepts() as string[] | number[])) || undefined;
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
 					}

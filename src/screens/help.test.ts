@@ -181,8 +181,8 @@ describe('#helpScreen()', () => {
 
 		const result = removeFormatting(await helpScreen());
 
-		expect(result).toContain('What type of pizza to order (accepts: a, b, c, d)');
-		expect(result).toContain('Just used for testing (accepts: a1, b2, c3, d4)');
+		expect(result).toContain('What type of pizza to order (accepts: a1, b1, c1, d1)');
+		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
 	});
 
 	it('Emits help with dynamic sync accepts properties', async () => {
@@ -196,7 +196,7 @@ describe('#helpScreen()', () => {
 
 		const result = removeFormatting(await helpScreen());
 
-		expect(result).toContain('What type of pizza to order (accepts: a, b, c, d)');
-		expect(result).toContain('Just used for testing (accepts: a1, b2, c3, d4)');
+		expect(result).toContain('What type of pizza to order (accepts: a1, b1, c1, d1)');
+		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
 	});
 });

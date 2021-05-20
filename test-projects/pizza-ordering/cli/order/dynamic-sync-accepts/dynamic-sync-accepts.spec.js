@@ -1,9 +1,9 @@
 function dataAllows() {
-	return ['a', 'b', 'c', 'd'];
+	return ['a1', 'b1', 'c1', 'd1'];
 }
 
 function testAllows() {
-	return ['a1', 'b2', 'c3', 'd4'];
+	return ['a2', 'b2', 'c2', 'd2'];
 }
 
 

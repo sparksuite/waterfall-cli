@@ -289,7 +289,12 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 		// Validate data, if necessary
 		if (mergedSpec.data.accepts) {
 			const accepts =
-				typeof mergedSpec.data.accepts === 'function' ? await mergedSpec.data.accepts() : mergedSpec.data.accepts;
+				mergedSpec.data.accepts instanceof Array
+					? mergedSpec.data.accepts
+					: mergedSpec.data.accepts instanceof Promise
+					? await mergedSpec.data.accepts()
+					: (mergedSpec.data.accepts() as string[] | number[]);
+
 			// @ts-expect-error: TypeScript is confused here...
 			if (!accepts.includes(organizedArguments.data)) {
 				throw new PrintableError(

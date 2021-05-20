@@ -133,11 +133,12 @@ export default async function helpScreen(): Promise<string> {
 
 			if (details.accepts) {
 				const accepts =
-					typeof details.accepts !== 'function'
+					details.accepts instanceof Array
 						? details.accepts
-						: details.accepts.constructor.name === 'AsyncFunction'
+						: details.accepts instanceof Promise
 						? await details.accepts()
 						: (details.accepts() as string[] | number[]);
+
 				fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 			}
 

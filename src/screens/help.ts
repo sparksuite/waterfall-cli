@@ -193,9 +193,7 @@ export default async function helpScreen(): Promise<string> {
 			if (typeof mergedSpec.data.accepts === 'function') {
 				if (mergedSpec.data.accepts.constructor.name === 'AsyncFunction') {
 					accepts = await mergedSpec.data.accepts();
-				}
-
-				if (mergedSpec.data.accepts.constructor.name !== 'AsyncFunction') {
+				} else {
 					accepts = mergedSpec.data.accepts() as string[] | number[];
 				}
 			}

@@ -184,12 +184,22 @@ export default async function helpScreen(): Promise<string> {
 		}
 
 		if (mergedSpec.data.accepts) {
-			const accepts =
-				typeof mergedSpec.data.accepts !== 'function'
-					? mergedSpec.data.accepts
-					: mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
-					? await mergedSpec.data.accepts()
-					: (mergedSpec.data.accepts() as string[] | number[]);
+			let accepts: string[] | number[] = [];
+
+			if (typeof mergedSpec.data.accepts !== 'function') {
+				accepts = mergedSpec.data.accepts;
+			}
+
+			if (typeof mergedSpec.data.accepts === 'function') {
+				if (mergedSpec.data.accepts.constructor.name === 'AsyncFunction') {
+					accepts = await mergedSpec.data.accepts();
+				}
+
+				if (mergedSpec.data.accepts.constructor.name !== 'AsyncFunction') {
+					accepts = mergedSpec.data.accepts() as string[] | number[];
+				}
+			}
+
 			fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 		}
 

@@ -81,8 +81,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 						accepts: NonNullable<Input['options'][Option]> extends
 							| string[]
 							| number[]
-							| (() => string[] | number[])
-							| (() => Promise<string[] | number[]>)
+							| (() => string[] | number[] | Promise<string[] | number[]>)
 							? Input['options'][Option] | (() => Promise<Input['options'][Option]>)
 							: ExcludeMe;
 					}>;
@@ -111,8 +110,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 					accepts: NonNullable<Input['data']> extends
 						| string[]
 						| number[]
-						| (() => string[] | number[])
-						| (() => Promise<string[] | number[]>)
+						| (() => string[] | number[] | Promise<string[] | number[]>)
 						? Input['data'] | (() => Promise<Input['data']>)
 						: ExcludeMe;
 
@@ -141,14 +139,14 @@ export interface GenericCommandSpec {
 			shorthand?: string;
 			required?: true;
 			type?: 'integer' | 'float';
-			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+			accepts?: string[] | number[] | (() => string[] | number[] | Promise<string[] | number[]>);
 		};
 	};
 	data?: {
 		description?: string;
 		required?: true;
 		type?: 'integer' | 'float';
-		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+		accepts?: string[] | number[] | (() => string[] | number[] | Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
 	};
 }
@@ -196,9 +194,7 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 
 		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
 			spec.data.accepts =
-				spec.data.accepts.constructor.name === 'AsyncFunction'
-					? await spec.data.accepts()
-					: (spec.data.accepts() as string[] | number[]);
+				spec.data.accepts instanceof Promise ? await spec.data.accepts() : (spec.data.accepts() as string[] | number[]);
 		}
 
 		return spec;

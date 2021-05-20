@@ -176,6 +176,7 @@ describe('#helpScreen()', () => {
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
 			'dynamic-async-accepts',
+			'a',
 			'--help',
 		];
 
@@ -191,6 +192,7 @@ describe('#helpScreen()', () => {
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
 			'dynamic-sync-accepts',
+			'a',
 			'--help',
 		];
 

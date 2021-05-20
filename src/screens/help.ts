@@ -188,9 +188,7 @@ export default async function helpScreen(): Promise<string> {
 
 			if (typeof mergedSpec.data.accepts !== 'function') {
 				accepts = mergedSpec.data.accepts;
-			}
-
-			if (typeof mergedSpec.data.accepts === 'function') {
+			} else {
 				if (mergedSpec.data.accepts.constructor.name === 'AsyncFunction') {
 					accepts = await mergedSpec.data.accepts();
 				} else {

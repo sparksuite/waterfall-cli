@@ -664,13 +664,13 @@ describe('#getOrganizedArguments()', () => {
 			'order',
 			'dynamic-async-accepts',
 			'--test',
-			'a1',
+			'a2',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
 				command: 'order dynamic-async-accepts',
 				flags: [],
 				options: ['test'],
-				values: ['a1'],
+				values: ['a2'],
 			});
 	});
 
@@ -681,13 +681,13 @@ describe('#getOrganizedArguments()', () => {
 			'order',
 			'dynamic-sync-accepts',
 			'--test',
-			'a1',
+			'a2',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
 				command: 'order dynamic-sync-accepts',
 				flags: [],
 				options: ['test'],
-				values: ['a1'],
+				values: ['a2'],
 			});
 	});
 
@@ -697,14 +697,14 @@ describe('#getOrganizedArguments()', () => {
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
 			'dynamic-async-accepts',
-			'b',
+			'b1',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
 				command: 'order dynamic-async-accepts',
 				flags: [],
 				options: [],
 				values: [],
-				data: 'b',
+				data: 'b1',
 			});
 	});
 
@@ -714,14 +714,14 @@ describe('#getOrganizedArguments()', () => {
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
 			'dynamic-sync-accepts',
-			'b',
+			'b1',
 		]),
 			expect(await getOrganizedArguments()).toStrictEqual({
 				command: 'order dynamic-sync-accepts',
 				flags: [],
 				options: [],
 				values: [],
-				data: 'b',
+				data: 'b1',
 			});
 	});
 });

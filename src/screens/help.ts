@@ -184,27 +184,11 @@ export default async function helpScreen(): Promise<string> {
 		}
 
 		if (mergedSpec.data.accepts) {
-			// const accepts =
-			// 	typeof mergedSpec.data.accepts !== 'function'
-			// 		? mergedSpec.data.accepts
-			// 		: mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
-			// 			? await mergedSpec.data.accepts()
-			// 			: (mergedSpec.data.accepts() as string[] | number[]);
-
-			let accepts: string[] | number[];
-
-			if (typeof mergedSpec.data.accepts !== 'function') {
-				accepts = mergedSpec.data.accepts;
-			} else {
-				const d = await mergedSpec.data.accepts();
-
-				accepts = d;
-
-				// : mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
-				// 	? await mergedSpec.data.accepts()
-				// 	: (mergedSpec.data.accepts() as string[] | number[]);
+			if (typeof mergedSpec.data.accepts === 'function') {
+				throw new Error('Unexpected error.  Callback derived data should already have been resolved.');
 			}
-			fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
+
+			fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
 		}
 
 		// Print

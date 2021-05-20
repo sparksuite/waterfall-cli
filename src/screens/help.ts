@@ -135,10 +135,9 @@ export default async function helpScreen(): Promise<string> {
 				const accepts =
 					typeof details.accepts !== 'function'
 						? details.accepts
-						: //details.accepts.constructor.name === 'AsyncFunction'
-						  //?
-						  await details.accepts();
-				//: (details.accepts() as string[] | number[])
+						: details.accepts.constructor.name === 'AsyncFunction'
+						? await details.accepts()
+						: (details.accepts() as string[] | number[]);
 				fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 			}
 
@@ -185,13 +184,26 @@ export default async function helpScreen(): Promise<string> {
 		}
 
 		if (mergedSpec.data.accepts) {
-			const accepts =
-				typeof mergedSpec.data.accepts !== 'function'
-					? mergedSpec.data.accepts
-					: mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
-					? await mergedSpec.data.accepts()
-					: (mergedSpec.data.accepts() as string[] | number[]);
+			// const accepts =
+			// 	typeof mergedSpec.data.accepts !== 'function'
+			// 		? mergedSpec.data.accepts
+			// 		: mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
+			// 			? await mergedSpec.data.accepts()
+			// 			: (mergedSpec.data.accepts() as string[] | number[]);
 
+			let accepts: string[] | number[];
+
+			if (typeof mergedSpec.data.accepts !== 'function') {
+				accepts = mergedSpec.data.accepts;
+			} else {
+				const d = await mergedSpec.data.accepts();
+
+				accepts = d;
+
+				// : mergedSpec.data.accepts.constructor.name === 'AsyncFunction'
+				// 	? await mergedSpec.data.accepts()
+				// 	: (mergedSpec.data.accepts() as string[] | number[]);
+			}
 			fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 		}
 

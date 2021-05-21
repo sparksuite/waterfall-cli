@@ -9,7 +9,6 @@ import getMergedSpec from './get-merged-spec.js';
 import chalk from './chalk.js';
 import getAllProgramCommands from './get-all-program-commands.js';
 import Fuse from 'fuse.js';
-import { isPromiseCallback } from './get-command-spec.js';
 
 // Define what organized arguments look like
 interface OrganizedArguments {
@@ -161,12 +160,10 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						// Store details
 						previousOption = argument;
 						nextIsOptionValue = true;
-						nextValueAccepts =
-							(typeof details.accepts !== 'function'
-								? details.accepts
-								: isPromiseCallback(details.accepts)
-								? await details.accepts()
-								: details.accepts()) || undefined;
+
+						const accepts = typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
+						nextValueAccepts = accepts instanceof Promise ? await accepts : accepts;
+
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
 					}

@@ -6,7 +6,6 @@ import getMergedSpec from '../utils/get-merged-spec.js';
 import getOrganizedArguments from '../utils/get-organized-arguments.js';
 import verboseLog from '../utils/verbose-log.js';
 import Table from 'cli-table3';
-import { isPromiseCallback } from '../utils/get-command-spec.js';
 
 /** Return the content of the help screen */
 export default async function helpScreen(): Promise<string> {
@@ -133,12 +132,8 @@ export default async function helpScreen(): Promise<string> {
 			}
 
 			if (details.accepts) {
-				const accepts =
-					details.accepts instanceof Array
-						? details.accepts
-						: isPromiseCallback(details.accepts)
-						? await details.accepts()
-						: details.accepts();
+				const arrayOrPromise = typeof details.accepts === 'function' ? details.accepts() : details.accepts;
+				const accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 
 				fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 			}

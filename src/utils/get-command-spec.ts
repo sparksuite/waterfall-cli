@@ -195,8 +195,8 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		spec = 'default' in spec ? spec.default : spec;
 
 		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
-			const accepts = spec.data.accepts();
-			spec.data.accepts = accepts instanceof Promise ? await accepts : accepts;
+			const arrayOrPromise = spec.data.accepts();
+			spec.data.accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 		}
 
 		return spec;

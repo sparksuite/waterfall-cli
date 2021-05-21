@@ -161,8 +161,9 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						previousOption = argument;
 						nextIsOptionValue = true;
 
-						const accepts = typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
-						nextValueAccepts = accepts instanceof Promise ? await accepts : accepts;
+						const arrayOrPromise =
+							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
+						nextValueAccepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);

@@ -160,7 +160,11 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						// Store details
 						previousOption = argument;
 						nextIsOptionValue = true;
-						nextValueAccepts = details.accepts || undefined;
+
+						const arrayOrPromise =
+							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
+						nextValueAccepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
+
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
 					}
@@ -282,7 +286,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 		}
 
 		// Validate data, if necessary
-		if (mergedSpec.data.accepts) {
+		if (mergedSpec.data.accepts && mergedSpec.data.accepts instanceof Array) {
 			// @ts-expect-error: TypeScript is confused here...
 			if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
 				throw new PrintableError(

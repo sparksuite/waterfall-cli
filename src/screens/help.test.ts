@@ -169,4 +169,34 @@ describe('#helpScreen()', () => {
 			'What you want to list (required) (accepts: toppings, crusts, two words)'
 		);
 	});
+
+	it('Emits help with dynamic async accepts properties', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-async-accepts',
+			'--help',
+		];
+
+		const result = removeFormatting(await helpScreen());
+
+		expect(result).toContain('What type of pizza to order (accepts: a1, b1, c1, d1)');
+		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
+	});
+
+	it('Emits help with dynamic sync accepts properties', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'dynamic-sync-accepts',
+			'--help',
+		];
+
+		const result = removeFormatting(await helpScreen());
+
+		expect(result).toContain('What type of pizza to order (accepts: a1, b1, c1, d1)');
+		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
+	});
 });

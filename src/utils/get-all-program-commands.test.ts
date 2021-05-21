@@ -15,6 +15,8 @@ describe('#getAllProgramCommands()', () => {
 			'order',
 			'order descriptionless-data',
 			'order dine-in',
+			'order dynamic-async-accepts',
+			'order dynamic-sync-accepts',
 			'order float-data',
 			'order integer-data',
 			'order to-go',

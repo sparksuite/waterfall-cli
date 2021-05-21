@@ -77,9 +77,13 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 								: ExcludeMe
 							: ExcludeMe;
 
-						/** A finite array of acceptable option values. Invalid values will be rejected. */
-						accepts: NonNullable<Input['options'][Option]> extends Array<string | number>
-							? Input['options'][Option]
+						/** A finite array of acceptable option values or callback providing same. Invalid values will be rejected. */
+						accepts: NonNullable<Input['options'][Option]> extends
+							| string[]
+							| number[]
+							| (() => string[] | number[])
+							| (() => Promise<string[] | number[]>)
+							? Input['options'][Option] | (() => Promise<Input['options'][Option]>)
 							: ExcludeMe;
 					}>;
 			  }
@@ -103,8 +107,14 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 							: ExcludeMe
 						: ExcludeMe;
 
-					/** A finite array of acceptable data values. Invalid data will be rejected. */
-					accepts: NonNullable<Input['data']> extends Array<string | number> ? Input['data'] : ExcludeMe;
+					/** A finite array of acceptable data values or callback providing same. Invalid data will be rejected. */
+					accepts: NonNullable<Input['data']> extends
+						| string[]
+						| number[]
+						| (() => string[] | number[])
+						| (() => Promise<string[] | number[]>)
+						? Input['data'] | (() => Promise<Input['data']>)
+						: ExcludeMe;
 
 					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 					ignoreFlagsAndOptions?: true;
@@ -131,14 +141,14 @@ export interface GenericCommandSpec {
 			shorthand?: string;
 			required?: true;
 			type?: 'integer' | 'float';
-			accepts?: string[] | number[];
+			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		};
 	};
 	data?: {
 		description?: string;
 		required?: true;
 		type?: 'integer' | 'float';
-		accepts?: string[] | number[];
+		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
 	};
 }
@@ -180,8 +190,16 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 
 	// Return
 	try {
-		const spec = (await import(specFilePath)) as { default: GenericCommandSpec } | GenericCommandSpec;
-		return 'default' in spec ? spec.default : spec;
+		let spec = (await import(specFilePath)) as { default: GenericCommandSpec } | GenericCommandSpec;
+
+		spec = 'default' in spec ? spec.default : spec;
+
+		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
+			const arrayOrPromise = spec.data.accepts();
+			spec.data.accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
+		}
+
+		return spec;
 	} catch (error) {
 		throw new PrintableError(
 			`${String(error)}\n\nEncountered this error while importing the spec file at: ${chalk.bold(truncatedPath)}`

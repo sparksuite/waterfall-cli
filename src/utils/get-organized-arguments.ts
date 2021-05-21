@@ -288,20 +288,13 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 		}
 
 		// Validate data, if necessary
-		if (mergedSpec.data.accepts) {
-			const accepts =
-				mergedSpec.data.accepts instanceof Array
-					? mergedSpec.data.accepts
-					: isPromiseCallback(mergedSpec.data.accepts)
-					? await mergedSpec.data.accepts()
-					: mergedSpec.data.accepts();
-
+		if (mergedSpec.data.accepts && mergedSpec.data.accepts instanceof Array) {
 			// @ts-expect-error: TypeScript is confused here...
-			if (!accepts.includes(organizedArguments.data)) {
+			if (!mergedSpec.data.accepts.includes(organizedArguments.data)) {
 				throw new PrintableError(
 					`Unrecognized data for "${organizedArguments.command.trim()}": ${
 						organizedArguments.data
-					}\nAccepts: ${accepts.join(', ')}`
+					}\nAccepts: ${mergedSpec.data.accepts.join(', ')}`
 				);
 			}
 		}

@@ -186,11 +186,9 @@ export default async function helpScreen(): Promise<string> {
 		}
 
 		if (mergedSpec.data.accepts) {
-			if (typeof mergedSpec.data.accepts === 'function') {
-				throw new Error('Unexpected error.  Callback derived data should already have been resolved.');
+			if (typeof mergedSpec.data.accepts !== 'function') {
+				fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
 			}
-
-			fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
 		}
 
 		// Print

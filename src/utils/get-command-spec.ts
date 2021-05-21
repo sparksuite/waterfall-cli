@@ -139,16 +139,23 @@ export interface GenericCommandSpec {
 			shorthand?: string;
 			required?: true;
 			type?: 'integer' | 'float';
-			accepts?: string[] | number[] | (() => string[] | number[] | Promise<string[] | number[]>);
+			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		};
 	};
 	data?: {
 		description?: string;
 		required?: true;
 		type?: 'integer' | 'float';
-		accepts?: string[] | number[] | (() => string[] | number[] | Promise<string[] | number[]>);
+		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
 	};
+}
+
+/** Type guard function to identify Promise callback function */
+export function isPromiseCallback(
+	callback: (() => string[] | number[]) | (() => Promise<string[] | number[]>)
+): callback is () => Promise<string[] | number[]> {
+	return callback.constructor.name === 'AsyncFunction';
 }
 
 /** Get the parsed command spec from a particular directory */
@@ -193,8 +200,7 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		spec = 'default' in spec ? spec.default : spec;
 
 		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
-			spec.data.accepts =
-				spec.data.accepts instanceof Promise ? await spec.data.accepts() : (spec.data.accepts() as string[] | number[]);
+			spec.data.accepts = isPromiseCallback(spec.data.accepts) ? await spec.data.accepts() : spec.data.accepts();
 		}
 
 		return spec;

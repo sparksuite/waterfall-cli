@@ -81,7 +81,8 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 						accepts: NonNullable<Input['options'][Option]> extends
 							| string[]
 							| number[]
-							| (() => string[] | number[] | Promise<string[] | number[]>)
+							| (() => string[] | number[])
+							| (() => Promise<string[] | number[]>)
 							? Input['options'][Option] | (() => Promise<Input['options'][Option]>)
 							: ExcludeMe;
 					}>;
@@ -110,7 +111,8 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 					accepts: NonNullable<Input['data']> extends
 						| string[]
 						| number[]
-						| (() => string[] | number[] | Promise<string[] | number[]>)
+						| (() => string[] | number[])
+						| (() => Promise<string[] | number[]>)
 						? Input['data'] | (() => Promise<Input['data']>)
 						: ExcludeMe;
 

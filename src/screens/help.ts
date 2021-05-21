@@ -180,10 +180,8 @@ export default async function helpScreen(): Promise<string> {
 			fullDescription += chalk.gray.italic(` (${mergedSpec.data.type})`);
 		}
 
-		if (mergedSpec.data.accepts) {
-			if (typeof mergedSpec.data.accepts !== 'function') {
-				fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
-			}
+		if (mergedSpec.data.accepts && typeof mergedSpec.data.accepts !== 'function') {
+			fullDescription += chalk.gray.italic(` (accepts: ${mergedSpec.data.accepts.join(', ')})`);
 		}
 
 		// Print

@@ -1,8 +1,10 @@
 async function dataAllows() {
+	await new Promise((resolve) => setTimeout(resolve, 10));
 	return ['a1', 'b1', 'c1', 'd1'];
 }
 
 async function testAllows() {
+	await new Promise((resolve) => setTimeout(resolve, 10));
 	return ['a2', 'b2', 'c2', 'd2'];
 }
 

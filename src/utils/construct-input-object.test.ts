@@ -25,9 +25,9 @@ describe('#constructInputObject()', () => {
 			command: 'list',
 			data: 'toppings',
 			options: {
-				deliveryZipCode: '55555',
+				'delivery-zip-code': '55555',
 				limit: undefined,
-				maxPrice: undefined,
+				'max-price': undefined,
 				sort: 'popularity',
 			},
 			flags: {

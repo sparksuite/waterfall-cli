@@ -10,14 +10,14 @@ export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
 	/** The final command being run. */
 	command: string;
 
-	/** For each available flag (converted to camel case), a boolean value indicating whether it was provided. */
+	/** For each available flag, a boolean value indicating whether it was provided. */
 	flags: undefined extends Input['flags']
 		? ExcludeMe
 		: {
 				[Flag in keyof Input['flags']]: boolean;
 		  };
 
-	/** For each available option (converted to camel case), the value that was provided (or `undefined` if not provided). */
+	/** For each available option, the value that was provided (or `undefined` if not provided). */
 	options: undefined extends Input['options']
 		? ExcludeMe
 		: {
@@ -65,35 +65,27 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 		inputObject.options = {};
 	}
 
-	// Convert a string from aaa-aaa-aaa to aaaAaaAaa
-	const convertDashesToCamelCase = (string: string): string => {
-		return string.replace(/-(.)/g, (g) => g[1].toUpperCase());
-	};
-
 	// Loop over each component and store
 	Object.entries(mergedSpec.flags ?? {}).forEach(([flag]) => {
 		if (['help', 'version'].includes(flag)) {
 			return;
 		}
 
-		const camelCaseKey = convertDashesToCamelCase(flag);
-
 		if (!inputObject.flags) {
 			inputObject.flags = {};
 		}
 
-		inputObject.flags[camelCaseKey] = organizedArguments.flags.includes(flag);
+		inputObject.flags[flag] = organizedArguments.flags.includes(flag);
 	});
 
 	Object.entries(mergedSpec.options ?? {}).forEach(([option, details]) => {
-		const camelCaseKey = convertDashesToCamelCase(option);
 		const optionIndex = organizedArguments.options.indexOf(option);
 
 		if (!inputObject.options) {
 			inputObject.options = {};
 		}
 
-		inputObject.options[camelCaseKey] = organizedArguments.values[optionIndex];
+		inputObject.options[option] = organizedArguments.values[optionIndex];
 
 		if (details.required && !organizedArguments.options.includes(option)) {
 			throw new PrintableError(`The --${option} option is required`);

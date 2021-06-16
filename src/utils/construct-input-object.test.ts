@@ -59,11 +59,7 @@ describe('#constructInputObject()', () => {
 			flags: {
 				quiet: false,
 			},
-			passThroughArgs: [
-				'--pass-through-flag',
-				'pass-through-option=value',
-				'pass-through-data',
-			]
+			passThroughArgs: ['--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		});
 	});
 

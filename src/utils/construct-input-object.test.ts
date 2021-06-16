@@ -37,6 +37,36 @@ describe('#constructInputObject()', () => {
 		});
 	});
 
+	it('Handles passthrough inputs too', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'to-go',
+			'--',
+			'--pass-through-flag',
+			'pass-through-option=value',
+			'pass-through-data',
+		];
+
+		expect(await constructInputObject()).toStrictEqual({
+			command: 'order to-go',
+			data: undefined,
+			options: {
+				'delivery-zip-code': undefined,
+				test: undefined,
+			},
+			flags: {
+				quiet: false,
+			},
+			passThroughArgs: [
+				'--pass-through-flag',
+				'pass-through-option=value',
+				'pass-through-data',
+			]
+		});
+	});
+
 	it('Complains about missing required option', async () => {
 		process.argv = [
 			'/path/to/node',

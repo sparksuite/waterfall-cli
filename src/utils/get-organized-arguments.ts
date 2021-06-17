@@ -291,12 +291,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 			let remnants = ` ${organizedArguments.data} `;
 
 			for (const current of mergedSpec.data.accepts) {
-				const find = ` ${current} `;
-				const foundAt = remnants.indexOf(find);
-
-				if (foundAt >= 0) {
-					remnants = remnants.substr(0, foundAt) + remnants.substr(foundAt + find.length - 1);
-				}
+				remnants = remnants.replace(` ${current} `, ' ');
 			}
 
 			remnants = remnants.trim();

@@ -64,6 +64,25 @@ describe('#getOrganizedArguments()', () => {
 		});
 	});
 
+	it('Handles multiple data', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'list',
+			'two',
+			'words',
+			'crusts',
+		];
+
+		expect(await getOrganizedArguments()).toStrictEqual({
+			flags: [],
+			options: [],
+			values: [],
+			data: 'two words crusts',
+			command: 'list',
+		});
+	});
+
 	it('Handles simple command with flag after data', async () => {
 		(process.argv = [
 			'/path/to/node',

@@ -25,15 +25,41 @@ describe('#constructInputObject()', () => {
 			command: 'list',
 			data: 'toppings',
 			options: {
-				deliveryZipCode: '55555',
+				'delivery-zip-code': '55555',
 				limit: undefined,
-				maxPrice: undefined,
+				'max-price': undefined,
 				sort: 'popularity',
 			},
 			flags: {
 				quiet: true,
 				vegetarian: true,
 			},
+		});
+	});
+
+	it('Handles passthrough inputs too', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'to-go',
+			'--',
+			'--pass-through-flag',
+			'pass-through-option=value',
+			'pass-through-data',
+		];
+
+		expect(await constructInputObject()).toStrictEqual({
+			command: 'order to-go',
+			data: undefined,
+			options: {
+				'delivery-zip-code': undefined,
+				test: undefined,
+			},
+			flags: {
+				quiet: false,
+			},
+			passThroughArgs: ['--pass-through-flag', 'pass-through-option=value', 'pass-through-data'],
 		});
 	});
 

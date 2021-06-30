@@ -118,6 +118,9 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 
 					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 					ignoreFlagsAndOptions?: true;
+
+					/** Whether to accept single or multiple accepts */
+					acceptsMultiple?: true;
 			  }>
 		: ExcludeMe;
 }>;
@@ -150,6 +153,7 @@ export interface GenericCommandSpec {
 		type?: 'integer' | 'float';
 		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
+		acceptsMultiple?: true;
 	};
 }
 

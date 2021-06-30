@@ -341,10 +341,8 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 					}
 				} else if (mergedSpec.data.type === 'float') {
 					if (/^[0-9]*[.]*[0-9]*$/.test(dataItem) && dataItem !== '.' && dataItem !== '') {
-						console.error('it is a floatable item');
 						acceptables.push(parseFloat(dataItem));
 					} else {
-						console.error('not a floatable item');
 						throw new PrintableError(
 							`The command "${organizedArguments.command.trim()}" expects float data\nProvided: ${dataItem}`
 						);

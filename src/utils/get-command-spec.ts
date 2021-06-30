@@ -119,7 +119,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 					ignoreFlagsAndOptions?: true;
 
-					/** Whether to accept single or multiple accepts */
+					/** Whether multiple items from the `accepts` array can be provided. */
 					acceptsMultiple?: true;
 			  }>
 		: ExcludeMe;

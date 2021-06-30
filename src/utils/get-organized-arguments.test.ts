@@ -610,7 +610,7 @@ describe('#getOrganizedArguments()', () => {
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
 			'order',
 			'float-data',
-			'abcdefg',
+			'abc',
 		]),
 			await expect(getOrganizedArguments()).rejects.toThrow('The command "order float-data" expects float data');
 

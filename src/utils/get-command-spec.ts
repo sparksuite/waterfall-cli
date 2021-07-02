@@ -16,6 +16,7 @@ export interface CommandInput {
 	};
 	data?: string | string[] | number | number[];
 	acceptsPassThroughArgs?: true;
+	acceptsMultipleData?: true;
 }
 
 // Helper types
@@ -119,8 +120,8 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 					ignoreFlagsAndOptions?: true;
 
-					/** Whether multiple items from the `accepts` array can be provided. */
-					acceptsMultiple?: true;
+					// ** Whether the accepts is singular or a list of acceptable values. */
+					acceptsMultiple: undefined extends Input['acceptsMultipleData'] ? ExcludeMe : true;
 			  }>
 		: ExcludeMe;
 }>;

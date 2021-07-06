@@ -204,6 +204,10 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 			spec.data.accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 		}
 
+		if (spec.data?.accepts && !(spec.data?.accepts instanceof Array)) {
+			throw new Error('data.accepts must resolve to an Array');
+		}
+
 		return spec;
 	} catch (error) {
 		throw new PrintableError(

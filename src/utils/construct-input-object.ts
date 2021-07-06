@@ -29,14 +29,14 @@ export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
 		? NonNullable<Input['data']> extends never
 			? ExcludeMe
 			: NonNullable<Input['data']> extends Array<string | number>
-				? Input extends { acceptsMultipleData: true }
-					? Input['data'] extends undefined
-						? NonNullable<Input['data']> | undefined
-						: NonNullable<Input['data']>
-					: Input['data'] extends undefined
-						? NonNullable<Input['data']>[number] | undefined
-						: NonNullable<Input['data']>[number]
-				: Input['data']
+			? Input extends { acceptsMultipleData: true }
+				? Input['data'] extends undefined
+					? NonNullable<Input['data']> | undefined
+					: NonNullable<Input['data']>
+				: Input['data'] extends undefined
+				? NonNullable<Input['data']>[number] | undefined
+				: NonNullable<Input['data']>[number]
+			: Input['data']
 		: ExcludeMe;
 
 	/** If provided, an array of pass-through arguments. */

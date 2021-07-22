@@ -70,7 +70,7 @@ type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
 type SingleAcceptTypeOrNever<T, U> = DetectMultipleTypes<T> extends true
 	? never
 	: {
-			acceptsMultiple: T extends Array<unknown> ? true : never;
+			acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
 			accepts: AcceptTypes<ArrayItemType<T>> | (undefined extends U ? undefined : never);
 	  };
 

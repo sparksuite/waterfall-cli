@@ -61,7 +61,7 @@ type DetectMultipleTypes<T> = IsUnion<UnionTypes<T>>;
 // Decide what the accepts type will expand to
 type AcceptTypes<T> = IsLiteral<T> extends true
 	? AlwaysArray<T>
-	: (() => AlwaysArray<T>) | (() => Promise<AlwaysArray<T>>);
+	: AlwaysArray<T> | (() => AlwaysArray<T>) | (() => Promise<AlwaysArray<T>>);
 
 // Get type of array elements
 type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;

@@ -69,31 +69,31 @@ type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
 // Decide whether accepts should be optional or not
 type IsAcceptsOptional<T> = IsLiteral<T> extends true ? false : true;
 
-// Guard against multiple types being combined; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
-type SingleAcceptTypeOrNever<T, U> = DetectMultipleTypes<T> extends true
-	? never
+// Decide whether numeric type identifier is needed; decide whether to flag as required; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
+type DataTypeAddons<T, U> = {
+	/** What type of data should be provided. Invalid data will be rejected. */
+	type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
+
+	/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
+	required: undefined extends U ? ExcludeMe : true;
+
+	/** Required when multiple values are accepted. */
+	acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
+} & (IsAcceptsOptional<U> extends true
+	? {
+			/** If provided defines acceptable values otherwise any input will be accepted. */
+			accepts?: AcceptTypes<ArrayItemType<T>>;
+	  }
 	: {
-			/** What type of data should be provided. Invalid data will be rejected. */
-			type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
+			/** Required array of acceptable values. */
+			accepts: AcceptTypes<ArrayItemType<T>>;
+	  });
 
-			/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
-			required: undefined extends U ? ExcludeMe : true;
-
-			/** Required when multiple values are accepted. */
-			acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
-	  } & (IsAcceptsOptional<U> extends true
-			? {
-					/** If provided defines acceptable values otherwise any input will be accepted. */
-					accepts?: AcceptTypes<ArrayItemType<T>>;
-			  }
-			: {
-					/** Required array of acceptable values. */
-					accepts: AcceptTypes<ArrayItemType<T>>;
-			  });
-
-// List of acceptable values, either by callback function or literal values
-type Acceptables<T> = NonNullable<T> extends string | number | string[] | number[]
-	? SingleAcceptTypeOrNever<NonNullable<T>, T>
+// Generate data type elements only if data type is acceptable
+type CommonDataElements<T> = NonNullable<T> extends string | number | string[] | number[]
+	? DetectMultipleTypes<NonNullable<T>> extends true
+		? never
+		: DataTypeAddons<NonNullable<T>, T>
 	: never;
 
 /** Describes a command's specifications */
@@ -140,7 +140,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 
 							/** A single-character that could be used instead of the full option name. */
 							shorthand?: string;
-						} & Acceptables<Input['options'][Option]>
+						} & CommonDataElements<Input['options'][Option]>
 					>;
 			  }
 		: ExcludeMe;
@@ -156,7 +156,7 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 
 						/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 						ignoreFlagsAndOptions?: true;
-					} & Acceptables<Input['data']>
+					} & CommonDataElements<Input['data']>
 			  >
 		: ExcludeMe;
 }>;

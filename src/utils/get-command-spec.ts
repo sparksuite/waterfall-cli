@@ -66,7 +66,7 @@ type AcceptTypes<T> = IsLiteral<T> extends true
 // Get type of array elements
 type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
 
-// Guard against multiple types being combined. Decide whether multiple responses are accepted. Decide whether accepts is optional or not, and determine type for accepts
+// Guard against multiple types being combined; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
 type SingleAcceptTypeOrNever<T, U> = DetectMultipleTypes<T> extends true
 	? never
 	: { acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe } & (undefined extends U

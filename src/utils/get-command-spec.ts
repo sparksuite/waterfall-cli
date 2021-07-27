@@ -77,7 +77,7 @@ type DataTypeAddons<T, U> = {
 	/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
 	required: undefined extends U ? ExcludeMe : true;
 
-	/** Required when multiple values are accepted. */
+	/** Must be defined as true when multiple elements are accepted, otherwise must be omitted. */
 	acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
 } & (IsAcceptsOptional<U> extends true
 	? {

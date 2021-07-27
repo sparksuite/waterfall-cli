@@ -71,7 +71,7 @@ type IsAcceptsOptional<T> = IsLiteral<T> extends true ? false : true;
 
 // Decide whether numeric type identifier is needed; decide whether to flag as required; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
 type DataTypeAddons<T, U> = {
-	/** What type of data should be provided. Invalid data will be rejected. */
+	/** What type of numeric data should be provided. Invalid data will be rejected. */
 	type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
 
 	/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */

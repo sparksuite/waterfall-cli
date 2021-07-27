@@ -61,18 +61,24 @@ type DetectMultipleTypes<T> = IsUnion<UnionTypes<T>>;
 // Decide what the accepts type will expand to
 type AcceptTypes<T> = IsLiteral<T> extends true
 	? AlwaysArray<T>
-	: AlwaysArray<T> | (() => AlwaysArray<T>) | (() => Promise<AlwaysArray<T>>);
+	: AlwaysArray<T> | (() => AlwaysArray<T> | Promise<AlwaysArray<T>>);
 
 // Get type of array elements
 type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
 
 // Decide whether accepts should be optional or not
-type IsAcceptsOptional<T> = undefined extends T ? true : IsLiteral<T> extends true ? false : true;
+type IsAcceptsOptional<T> = IsLiteral<T> extends true ? false : true;
 
 // Guard against multiple types being combined; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
 type SingleAcceptTypeOrNever<T, U> = DetectMultipleTypes<T> extends true
 	? never
 	: {
+			/** What type of data should be provided. Invalid data will be rejected. */
+			type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
+
+			/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
+			required: undefined extends U ? ExcludeMe : true;
+
 			/** Required when multiple values are accepted. */
 			acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
 	  } & (IsAcceptsOptional<U> extends true
@@ -134,16 +140,6 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 
 							/** A single-character that could be used instead of the full option name. */
 							shorthand?: string;
-
-							/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
-							required: undefined extends Input['options'][Option] ? ExcludeMe : true;
-
-							/** What type of value should be provided. Invalid values will be rejected. */
-							type: number extends Input['options'][Option]
-								? Input['options'][Option] extends number
-									? 'integer' | 'float'
-									: ExcludeMe
-								: ExcludeMe;
 						} & Acceptables<Input['options'][Option]>
 					>;
 			  }
@@ -157,16 +153,6 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 					{
 						/** A description of what kind of data should be provided, to be shown on help screens. */
 						description?: string;
-
-						/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
-						required: undefined extends Input['data'] ? ExcludeMe : true;
-
-						/** What type of data should be provided. Invalid data will be rejected. */
-						type: number extends Input['data']
-							? Input['data'] extends number
-								? 'integer' | 'float'
-								: ExcludeMe
-							: ExcludeMe;
 
 						/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
 						ignoreFlagsAndOptions?: true;

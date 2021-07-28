@@ -74,7 +74,7 @@ type DataTypeAddons<T, U> = {
 	/** What type of numeric data should be provided. Invalid data will be rejected. */
 	type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
 
-	/** Must be defined as true when data must be provided to this command, otherwise must be omitted. */
+	/** Must be defined as `true` when data must be provided to this command, otherwise must be omitted. */
 	required: undefined extends U ? ExcludeMe : true;
 
 	/** Must be defined as true when multiple elements are accepted, otherwise must be omitted. */

@@ -23,6 +23,79 @@ export type EmptyCommandInput = {
 	[Key in keyof Required<CommandInput>]: undefined;
 };
 
+// Determine whether type is a literal or not
+type IsLiteral<T> = T extends Array<infer Item>
+	? IsLiteral<Item>
+	: string extends T
+	? false
+	: number extends T
+	? false
+	: true;
+
+// Hand back array of provided type, whether it was an array or not
+type AlwaysArray<T> = NonNullable<T> extends Array<unknown> ? T : NonNullable<T>[];
+
+// Create union of all basic types present in the type
+type UnionTypes<T> = T extends Array<infer Item>
+	? `arrayOf${UnionTypes<Item>}`
+	: T extends string
+	? IsLiteral<T> extends true
+		? 'strvalue'
+		: 'string'
+	: T extends number
+	? IsLiteral<T> extends true
+		? 'numvalue'
+		: 'number'
+	: T extends boolean
+	? 'boolean'
+	: T extends Function // eslint-disable-line
+	? 'function'
+	: 'object';
+
+// Determine whether it's a union or not
+type IsUnion<T, U extends T = T> = T extends unknown ? ([U] extends [T] ? false : true) : false;
+
+// Decide whether the type contains multiple base types
+type DetectMultipleTypes<T> = IsUnion<UnionTypes<T>>;
+
+// Decide what the accepts type will expand to
+type AcceptTypes<T> = IsLiteral<T> extends true
+	? AlwaysArray<T>
+	: AlwaysArray<T> | (() => AlwaysArray<T> | Promise<AlwaysArray<T>>);
+
+// Get type of array elements
+type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
+
+// Decide whether accepts should be optional or not
+type IsAcceptsOptional<T> = IsLiteral<T> extends true ? false : true;
+
+// Decide whether numeric type identifier is needed; decide whether to flag as required; decide whether multiple responses are accepted; decide whether accepts is optional or not, and determine type for accepts
+type DataTypeAddons<T, U> = {
+	/** What type of numeric data should be provided. Invalid data will be rejected. */
+	type: number extends U ? (U extends number ? 'integer' | 'float' : ExcludeMe) : ExcludeMe;
+
+	/** Must be defined as `true` when data must be provided to this command, otherwise must be omitted. */
+	required: undefined extends U ? ExcludeMe : true;
+
+	/** Must be defined as `true` when multiple elements are accepted, otherwise must be omitted. */
+	acceptsMultiple: T extends Array<unknown> ? true : ExcludeMe;
+} & (IsAcceptsOptional<U> extends true
+	? {
+			/** If provided defines acceptable values otherwise any input will be accepted. */
+			accepts?: AcceptTypes<ArrayItemType<T>>;
+	  }
+	: {
+			/** Required array of acceptable values. */
+			accepts: AcceptTypes<ArrayItemType<T>>;
+	  });
+
+// Generate data type elements only if data type is acceptable
+type CommonDataElements<T> = NonNullable<T> extends string | number | string[] | number[]
+	? DetectMultipleTypes<NonNullable<T>> extends true
+		? never
+		: DataTypeAddons<NonNullable<T>, T>
+	: never;
+
 /** Describes a command's specifications */
 export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitExcludeMeProperties<{
 	/** A description of this command, to be shown on help screens. */
@@ -57,35 +130,18 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 		? NonNullable<Input['options']> extends never
 			? ExcludeMe
 			: {
-					[Option in keyof Input['options']]: OmitExcludeMeProperties<{
-						/** A description of this option, to be shown on help screens. */
-						description?: string;
+					[Option in keyof Input['options']]: OmitExcludeMeProperties<
+						{
+							/** A description of this option, to be shown on help screens. */
+							description?: string;
 
-						/** Whether this option also applies to commands farther down in the file tree. Defaults to `false`. */
-						cascades?: true;
+							/** Whether this option also applies to commands farther down in the file tree. Defaults to `false`. */
+							cascades?: true;
 
-						/** A single-character that could be used instead of the full option name. */
-						shorthand?: string;
-
-						/** Whether this option must be provided with this command. Defaults to `false`. */
-						required: undefined extends Input['options'][Option] ? ExcludeMe : true;
-
-						/** What type of value should be provided. Invalid values will be rejected. */
-						type: number extends Input['options'][Option]
-							? Input['options'][Option] extends number
-								? 'integer' | 'float'
-								: ExcludeMe
-							: ExcludeMe;
-
-						/** A finite array of acceptable option values or callback providing same. Invalid values will be rejected. */
-						accepts: NonNullable<Input['options'][Option]> extends
-							| string[]
-							| number[]
-							| (() => string[] | number[])
-							| (() => Promise<string[] | number[]>)
-							? Input['options'][Option] | (() => Promise<Input['options'][Option]>)
-							: ExcludeMe;
-					}>;
+							/** A single-character that could be used instead of the full option name. */
+							shorthand?: string;
+						} & CommonDataElements<Input['options'][Option]>
+					>;
 			  }
 		: ExcludeMe;
 
@@ -93,32 +149,15 @@ export type CommandSpec<Input extends CommandInput = EmptyCommandInput> = OmitEx
 	data: 'data' extends keyof Input
 		? NonNullable<Input['data']> extends never
 			? ExcludeMe
-			: OmitExcludeMeProperties<{
-					/** A description of what kind of data should be provided, to be shown on help screens. */
-					description?: string;
+			: OmitExcludeMeProperties<
+					{
+						/** A description of what kind of data should be provided, to be shown on help screens. */
+						description?: string;
 
-					/** Whether data must be provided to this command. */
-					required: undefined extends Input['data'] ? ExcludeMe : true;
-
-					/** What type of data should be provided. Invalid data will be rejected. */
-					type: number extends Input['data']
-						? Input['data'] extends number
-							? 'integer' | 'float'
-							: ExcludeMe
-						: ExcludeMe;
-
-					/** A finite array of acceptable data values or callback providing same. Invalid data will be rejected. */
-					accepts: NonNullable<Input['data']> extends
-						| string[]
-						| number[]
-						| (() => string[] | number[])
-						| (() => Promise<string[] | number[]>)
-						? Input['data'] | (() => Promise<Input['data']>)
-						: ExcludeMe;
-
-					/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
-					ignoreFlagsAndOptions?: true;
-			  }>
+						/** Whether to ignore anything that looks like flags/options once data is reached. Useful if you expect your data to contain things that would otherwise appear to be flags/options. */
+						ignoreFlagsAndOptions?: true;
+					} & CommonDataElements<Input['data']>
+			  >
 		: ExcludeMe;
 }>;
 

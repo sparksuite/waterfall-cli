@@ -28,11 +28,7 @@ export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
 	data: 'data' extends keyof Input
 		? NonNullable<Input['data']> extends never
 			? ExcludeMe
-			: NonNullable<Input['data']> extends Array<string | number>
-			? undefined extends Input['data']
-				? NonNullable<Input['data']>[number] | undefined
-				: NonNullable<Input['data']>[number]
-			: Input['data']
+			: Input['data'] | (undefined extends Input['data'] ? undefined : never)
 		: ExcludeMe;
 
 	/** If provided, an array of pass-through arguments. */

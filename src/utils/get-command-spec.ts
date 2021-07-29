@@ -181,6 +181,7 @@ export interface GenericCommandSpec {
 			required?: true;
 			type?: 'integer' | 'float';
 			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+			acceptsMultiple?: true;
 		};
 	};
 	data?: {

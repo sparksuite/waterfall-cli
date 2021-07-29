@@ -4,6 +4,7 @@ module.exports = {
 		description: 'What type of pizza to order',
 		type: 'fake',
 		acceptsMultiple: true,
+		accepts: 'hello',
 	},
 	options: {
 		test: {

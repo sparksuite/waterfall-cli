@@ -160,8 +160,9 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						// Store details
 						previousOption = argument;
 						nextIsOptionValue = true;
+						nextValueType = details.type || undefined;
+						organizedArguments.options.push(option);
 
-						// Resolve accepts callbacks if required
 						const arrayOrPromise =
 							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
 						nextValueAccepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
@@ -170,10 +171,6 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						if ((details?.acceptsMultiple || nextValueAccepts) && !(nextValueAccepts instanceof Array)) {
 							throw new Error(`option['${option}'].accepts must resolve to an Array`);
 						}
-
-						// Store details
-						nextValueType = details.type || undefined;
-						organizedArguments.options.push(option);
 					}
 				}
 			}

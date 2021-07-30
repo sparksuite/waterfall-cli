@@ -767,7 +767,7 @@ describe('#getOrganizedArguments()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-data-js',
+			'invalid-data-accepts',
 			'--test',
 			'hello',
 		];
@@ -784,7 +784,7 @@ describe('#getOrganizedArguments()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-option-js',
+			'invalid-option-accepts',
 			'--test',
 			'hello',
 		];

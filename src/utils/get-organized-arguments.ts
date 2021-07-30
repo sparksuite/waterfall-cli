@@ -321,7 +321,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 			// Error if we have multiple when single is expected
 			if (!mergedSpec.data.acceptsMultiple && acceptables.length > 1) {
 				throw new PrintableError(
-					`Only 1 of the acceptable data items are allowed.\nAccepts one of: ${mergedSpec.data.accepts.join(', ')}`
+					`Only a single data item is allowed from one of: ${mergedSpec.data.accepts.join(', ')}`
 				);
 			}
 

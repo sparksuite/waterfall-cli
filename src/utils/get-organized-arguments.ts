@@ -309,7 +309,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 			remnants = remnants.trim();
 
-			// Error if remnants remain
+			// Error if unknown remnants remain
 			if (remnants.length > 0) {
 				throw new PrintableError(
 					`Unrecognized data for "${organizedArguments.command.trim()}": ${remnants}\nAccepts: ${mergedSpec.data.accepts.join(

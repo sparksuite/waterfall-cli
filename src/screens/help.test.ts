@@ -200,7 +200,7 @@ describe('#helpScreen()', () => {
 		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
 	});
 
-	it('Errors when accepts does not resolve to array', async () => {
+	it('Errors when option accepts does not resolve to array', async () => {
 		process.argv = [
 			'/path/to/node',
 			path.join(
@@ -209,10 +209,10 @@ describe('#helpScreen()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-data-js',
+			'invalid-option-js',
 			'--help',
 		];
 
-		await expect(helpScreen()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+		await expect(helpScreen()).rejects.toThrow("option['test'].accepts must resolve to an Array");
 	});
 });

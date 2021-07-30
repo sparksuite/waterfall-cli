@@ -757,4 +757,20 @@ describe('#getOrganizedArguments()', () => {
 				data: 'b1',
 			});
 	});
+
+	it('Complains when data accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'invalid-data-js',
+			'--help',
+		];
+
+		await expect(getOrganizedArguments()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+	});
 });

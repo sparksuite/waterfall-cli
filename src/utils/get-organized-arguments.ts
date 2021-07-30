@@ -169,7 +169,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 						// Error if accepts is not an array or absent and required
 						if ((details?.acceptsMultiple || nextValueAccepts) && !(nextValueAccepts instanceof Array)) {
-							throw new Error(`option['${option}'].accepts must resolve to an Array`);
+							throw new Error(`option['${option}'].accepts must resolve to an array`);
 						}
 					}
 				}

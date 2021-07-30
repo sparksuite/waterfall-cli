@@ -666,7 +666,7 @@ describe('#getOrganizedArguments()', () => {
 			'pineapple',
 		]),
 			await expect(getOrganizedArguments()).rejects.toThrow(
-				'Only 1 of the acceptable data items are allowed.\nAccepts one of: pineapple, ham, chicken, cheese'
+				'Only a single data item is allowed from one of: pineapple, ham, chicken, cheese'
 			);
 	});
 
@@ -772,7 +772,7 @@ describe('#getOrganizedArguments()', () => {
 			'hello',
 		];
 
-		await expect(getOrganizedArguments()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+		await expect(getOrganizedArguments()).rejects.toThrow('Error: data.accepts must resolve to an array');
 	});
 
 	it('Complains when option accepts does not resolve to array', async () => {
@@ -789,6 +789,6 @@ describe('#getOrganizedArguments()', () => {
 			'hello',
 		];
 
-		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an Array");
+		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an array");
 	});
 });

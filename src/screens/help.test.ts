@@ -213,7 +213,7 @@ describe('#helpScreen()', () => {
 			'--help',
 		];
 
-		await expect(helpScreen()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+		await expect(helpScreen()).rejects.toThrow('Error: data.accepts must resolve to an array');
 	});
 
 	it('Errors when option accepts does not resolve to array', async () => {
@@ -229,6 +229,6 @@ describe('#helpScreen()', () => {
 			'--help',
 		];
 
-		await expect(helpScreen()).rejects.toThrow("option['test'].accepts must resolve to an Array");
+		await expect(helpScreen()).rejects.toThrow("option['test'].accepts must resolve to an array");
 	});
 });

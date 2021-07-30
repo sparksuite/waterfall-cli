@@ -165,6 +165,10 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
 						nextValueAccepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 
+						if (nextValueAccepts && !(nextValueAccepts instanceof Array)) {
+							throw new Error(`option[${option}].accepts did not resolve to an Array`);
+						}
+
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
 					}
@@ -305,7 +309,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 			remnants = remnants.trim();
 
-			// Error if unacceptable remnants remain
+			// Error if remnants remain
 			if (remnants.length > 0) {
 				throw new PrintableError(
 					`Unrecognized data for "${organizedArguments.command.trim()}": ${remnants}\nAccepts: ${mergedSpec.data.accepts.join(

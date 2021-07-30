@@ -165,7 +165,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;
 						nextValueAccepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 
-						if (nextValueAccepts && !(nextValueAccepts instanceof Array)) {
+						if ((details?.acceptsMultiple || nextValueAccepts) && !(nextValueAccepts instanceof Array)) {
 							throw new Error(`option['${option}'].accepts must resolve to an Array`);
 						}
 

@@ -200,6 +200,22 @@ describe('#helpScreen()', () => {
 		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
 	});
 
+	it('Errors when data accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'invalid-data-js',
+			'--help',
+		];
+
+		await expect(helpScreen()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+	});
+
 	it('Errors when option accepts does not resolve to array', async () => {
 		process.argv = [
 			'/path/to/node',

@@ -768,9 +768,27 @@ describe('#getOrganizedArguments()', () => {
 				'entry.js'
 			),
 			'invalid-data-js',
-			'--help',
+			'--test',
+			'hello',
 		];
 
 		await expect(getOrganizedArguments()).rejects.toThrow('Error: data.accepts must resolve to an Array');
+	});
+
+	it('Complains when option accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'invalid-option-js',
+			'--test',
+			'hello',
+		];
+
+		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an Array");
 	});
 });

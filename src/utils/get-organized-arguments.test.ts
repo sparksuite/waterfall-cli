@@ -789,6 +789,6 @@ describe('#getOrganizedArguments()', () => {
 			'hello',
 		];
 
-		await expect(getOrganizedArguments()).rejects.toThrow("Error: option['test'].accepts must resolve to an array");
+		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an array");
 	});
 });

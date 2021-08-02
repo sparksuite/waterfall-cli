@@ -209,7 +209,7 @@ describe('#helpScreen()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-data-accepts',
+			'data-accepts-not-array',
 			'--help',
 		];
 
@@ -225,7 +225,7 @@ describe('#helpScreen()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-option-accepts',
+			'option-accepts-not-array',
 			'--help',
 		];
 

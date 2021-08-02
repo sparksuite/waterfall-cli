@@ -767,7 +767,7 @@ describe('#getOrganizedArguments()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-data-accepts',
+			'data-accepts-not-array',
 			'--test',
 			'hello',
 		];
@@ -784,11 +784,11 @@ describe('#getOrganizedArguments()', () => {
 				'cli',
 				'entry.js'
 			),
-			'invalid-option-accepts',
+			'option-accepts-not-array',
 			'--test',
 			'hello',
 		];
 
-		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an array");
+		await expect(getOrganizedArguments()).rejects.toThrow("Error: option['test'].accepts must resolve to an array");
 	});
 });

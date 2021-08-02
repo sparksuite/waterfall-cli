@@ -19,14 +19,14 @@ describe('#getCommandSpec()', () => {
 
 	it('Complains about invalid spec JS', async () => {
 		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-spec-js'))).rejects.toThrow(
-			'Encountered this error while importing the spec file at'
+			'ReferenceError: bad is not defined'
 		);
 	});
 
 	it('Complains about invalid data accepts spec JS', async () => {
 		await expect(
-			getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-data-accepts'))
-		).rejects.toThrow('Encountered this error while importing the spec file at');
+			getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'data-accepts-not-array'))
+		).rejects.toThrow('Error: data.accepts must resolve to an array');
 	});
 
 	it('Returns the spec file', async () => {

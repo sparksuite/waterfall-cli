@@ -19,7 +19,7 @@ describe('#getCommandSpec()', () => {
 
 	it('Complains about invalid spec JS', async () => {
 		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-spec-js'))).rejects.toThrow(
-			'ReferenceError: bad is not defined'
+			'Encountered this error while importing the spec file at'
 		);
 	});
 

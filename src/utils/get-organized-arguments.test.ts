@@ -41,7 +41,7 @@ describe('#getOrganizedArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: 'toppings',
+			data: ['toppings'],
 			command: 'list',
 		});
 	});
@@ -59,7 +59,7 @@ describe('#getOrganizedArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: 'two words',
+			data: ['two words'],
 			command: 'list',
 		});
 	});
@@ -78,7 +78,7 @@ describe('#getOrganizedArguments()', () => {
 			flags: [],
 			options: [],
 			values: [],
-			data: 'two words crusts',
+			data: ['crusts', 'two words'],
 			command: 'list',
 		});
 	});
@@ -95,7 +95,7 @@ describe('#getOrganizedArguments()', () => {
 				flags: ['help'],
 				options: [],
 				values: [],
-				data: 'toppings',
+				data: ['toppings'],
 				command: 'list',
 			});
 	});
@@ -656,6 +656,20 @@ describe('#getOrganizedArguments()', () => {
 			await expect(getOrganizedArguments()).rejects.toThrow('This command does not support pass-through arguments');
 	});
 
+	it('Complains about unexpected multiple data not in "values"', async () => {
+		(process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'single-topping',
+			'cheese',
+			'pineapple',
+		]),
+			await expect(getOrganizedArguments()).rejects.toThrow(
+				'Only a single data item is allowed from one of: pineapple, ham, chicken, cheese'
+			);
+	});
+
 	it('Handles having pass-through arguments', async () => {
 		(process.argv = [
 			'/path/to/node',
@@ -742,5 +756,39 @@ describe('#getOrganizedArguments()', () => {
 				values: [],
 				data: 'b1',
 			});
+	});
+
+	it('Complains when data accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'data-accepts-not-array',
+			'--test',
+			'hello',
+		];
+
+		await expect(getOrganizedArguments()).rejects.toThrow('Error: data.accepts must resolve to an array');
+	});
+
+	it('Complains when option accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'option-accepts-not-array',
+			'--test',
+			'hello',
+		];
+
+		await expect(getOrganizedArguments()).rejects.toThrow("option['test'].accepts must resolve to an array");
 	});
 });

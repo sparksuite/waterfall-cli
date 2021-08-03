@@ -23,6 +23,12 @@ describe('#getCommandSpec()', () => {
 		);
 	});
 
+	it('Complains about invalid data accepts spec JS', async () => {
+		await expect(
+			getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'data-accepts-not-array'))
+		).rejects.toThrow('Error: data.accepts must resolve to an array');
+	});
+
 	it('Returns the spec file', async () => {
 		expect(await getCommandSpec(path.join(testFileTrees, 'primary'))).toStrictEqual({
 			flags: {

@@ -181,6 +181,7 @@ export interface GenericCommandSpec {
 			required?: true;
 			type?: 'integer' | 'float';
 			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+			acceptsMultiple?: true;
 		};
 	};
 	data?: {
@@ -189,6 +190,7 @@ export interface GenericCommandSpec {
 		type?: 'integer' | 'float';
 		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
 		ignoreFlagsAndOptions?: true;
+		acceptsMultiple?: true;
 	};
 }
 
@@ -236,6 +238,10 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 		if (spec.data?.accepts && typeof spec.data.accepts === 'function') {
 			const arrayOrPromise = spec.data.accepts();
 			spec.data.accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
+		}
+
+		if ((spec.data?.acceptsMultiple || spec.data?.accepts) && !(spec.data?.accepts instanceof Array)) {
+			throw new Error('data.accepts must resolve to an array');
 		}
 
 		return spec;

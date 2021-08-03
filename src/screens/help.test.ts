@@ -199,4 +199,36 @@ describe('#helpScreen()', () => {
 		expect(result).toContain('What type of pizza to order (accepts: a1, b1, c1, d1)');
 		expect(result).toContain('Just used for testing (accepts: a2, b2, c2, d2)');
 	});
+
+	it('Errors when data accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'data-accepts-not-array',
+			'--help',
+		];
+
+		await expect(helpScreen()).rejects.toThrow('Error: data.accepts must resolve to an array');
+	});
+
+	it('Errors when option accepts does not resolve to array', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(
+				path.normalize(path.join(__dirname, '..', '..', 'test-file-trees')),
+				'bad-structure',
+				'cli',
+				'entry.js'
+			),
+			'option-accepts-not-array',
+			'--help',
+		];
+
+		await expect(helpScreen()).rejects.toThrow("option['test'].accepts must resolve to an array");
+	});
 });

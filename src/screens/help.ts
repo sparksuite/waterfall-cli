@@ -135,6 +135,10 @@ export default async function helpScreen(): Promise<string> {
 				const arrayOrPromise = typeof details.accepts === 'function' ? details.accepts() : details.accepts;
 				const accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 
+				if (!(accepts instanceof Array)) {
+					throw new Error(`Error: option['${option}'].accepts must resolve to an array`);
+				}
+
 				fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
 			}
 

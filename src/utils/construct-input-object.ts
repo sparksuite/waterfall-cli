@@ -21,7 +21,9 @@ export type InputObject<Input extends CommandInput> = OmitExcludeMeProperties<{
 	options: undefined extends Input['options']
 		? ExcludeMe
 		: {
-				[Option in keyof Input['options']]: string | number;
+				[Option in keyof Input['options']]:
+					| Input['options'][Option]
+					| (undefined extends Input['options'][Option] ? undefined : never);
 		  };
 
 	/** If provided, the data given to this command. */

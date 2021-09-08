@@ -61,7 +61,7 @@ type DetectMultipleTypes<T> = IsUnion<UnionTypes<T>>;
 // Decide what the accepts type will expand to
 type AcceptTypes<T> = IsLiteral<T> extends true
 	? AlwaysArray<T>
-	: AlwaysArray<T> | (() => AlwaysArray<T> | Promise<AlwaysArray<T>>);
+	: AlwaysArray<T> | (() => AlwaysArray<T> | Promise<AlwaysArray<T> | undefined>);
 
 // Get type of array elements
 type ArrayItemType<T> = T extends Array<infer Item> ? Item : T;
@@ -180,7 +180,7 @@ export interface GenericCommandSpec {
 			shorthand?: string;
 			required?: true;
 			type?: 'integer' | 'float';
-			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+			accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[] | undefined>);
 			acceptsMultiple?: true;
 		};
 	};
@@ -188,7 +188,7 @@ export interface GenericCommandSpec {
 		description?: string;
 		required?: true;
 		type?: 'integer' | 'float';
-		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[]>);
+		accepts?: string[] | number[] | (() => string[] | number[]) | (() => Promise<string[] | number[] | undefined>);
 		ignoreFlagsAndOptions?: true;
 		acceptsMultiple?: true;
 	};
@@ -240,7 +240,7 @@ export default async function getCommandSpec(directory: string): Promise<Generic
 			spec.data.accepts = arrayOrPromise instanceof Promise ? await arrayOrPromise : arrayOrPromise;
 		}
 
-		if ((spec.data?.acceptsMultiple || spec.data?.accepts) && !(spec.data?.accepts instanceof Array)) {
+		if (spec.data?.accepts && !(spec.data?.accepts instanceof Array)) {
 			throw new Error('data.accepts must resolve to an array');
 		}
 

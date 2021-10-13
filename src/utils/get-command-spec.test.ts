@@ -18,9 +18,9 @@ describe('#getCommandSpec()', () => {
 	});
 
 	it('Complains about invalid spec JS', async () => {
-		await expect(getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'invalid-spec-js'))).rejects.toThrow(
-			'Encountered this error while importing the spec file at'
-		);
+		await expect(
+			getCommandSpec(path.join(testFileTrees, 'bad-structure', 'cli', 'spec-contains-syntax-error'))
+		).rejects.toThrow('Encountered this error while importing the spec file at');
 	});
 
 	it('Complains about invalid data accepts spec JS', async () => {

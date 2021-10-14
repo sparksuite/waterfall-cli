@@ -1,6 +1,7 @@
 // Import type
 import { CommandSpec } from 'waterfall-cli';
 
+// Define and export shape of input
 export interface Input {
 	flags: {
 		['verbose']: boolean;

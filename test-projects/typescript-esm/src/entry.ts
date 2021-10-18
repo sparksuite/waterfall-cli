@@ -4,7 +4,6 @@ import { Input } from './entry.spec';
 
 await waterfall.init<Input>({
 	verbose: true,
-
 	onStart: async (input) => {
 		console.log(`Input object: ${JSON.stringify(input)}`);
 

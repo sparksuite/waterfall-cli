@@ -52,7 +52,7 @@ function Feature({ imageUrl, title, description }: FeatureProps) {
 const Home: React.FC = () => {
 	// Get the site config
 	const context = useDocusaurusContext();
-	const { siteConfig = {} } = context;
+	const { siteConfig } = context;
 
 	// Return JSX
 	return (

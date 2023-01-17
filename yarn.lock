@@ -3823,10 +3823,10 @@ rsvp@^4.8.4:
   resolved "https://registry.yarnpkg.com/rsvp/-/rsvp-4.8.5.tgz#c8f155311d167f68f21e168df71ec5b083113734"
   integrity sha512-nfMOlASu9OnRJo1mbEk2cz0D56a1MBNrJ7orjRZQG10XDyuvwksKbuXNp6qa+kbn839HwjwhBzhFmdsaEAfauA==
 
-rugged@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/rugged/-/rugged-1.0.0.tgz#0198a6ccce43035329aa54be292b34905ccd73f7"
-  integrity sha512-x9p1JolKyMW1hYw/Bvte5DgdJdqADcFA6fHCUj0GzEw++P1C/7xytSSErON1MeH3Wkvk+/6s4bzLxXX2zZaj1w==
+rugged@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/rugged/-/rugged-1.0.1.tgz#351f4ab3c9dc7f68fa2d9bf92fbebd0cc54f28e1"
+  integrity sha512-gSX/pmevynndhypupRgNhMCi4t+O7SDUYQPVEFlta2FnqnyZA3ZkO78f3EIBCWsTJlibdrPcJswIoOGaoXxb2Q==
   dependencies:
     chalk "^4.1.0"
     execa "^5.0.0"

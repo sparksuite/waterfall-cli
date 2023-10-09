@@ -4701,6 +4701,6 @@ yn@3.1.1:
   integrity sha512-Ux4ygGWsu2c7isFWe8Yu1YluJmqVhxqK2cLXNQA5AcC3QfbGNpM7fu0Y8b/z16pXLnFxZYvWhd3fhBY9DLmC6Q==
 
 zod@^3.0.0-alpha.31:
-  version "3.0.0-alpha.31"
-  resolved "https://registry.yarnpkg.com/zod/-/zod-3.0.0-alpha.31.tgz#2df4c9154ac6fd7df6d1f2753362fab43849eb79"
-  integrity sha512-2wKr3+G7hgeKrdggvVJ1X4YsM4sW3OKWUmU3F5AqSShnEUTXXFD4Mv5V02q2eWZeQoJWFDlCnX8/Bbk5pINcSg==
+  version "3.22.3"
+  resolved "https://registry.yarnpkg.com/zod/-/zod-3.22.3.tgz#2fbc96118b174290d94e8896371c95629e87a060"
+  integrity sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==

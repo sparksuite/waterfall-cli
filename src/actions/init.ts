@@ -167,8 +167,11 @@ export default async function init<Input extends CommandInput = EmptyCommandInpu
 				console.log();
 			}
 
-			// Exit with error code
-			process.exit(1);
+			// Set exit code to indicate error
+			process.exitCode = 1;
+
+			// Go no further
+			return;
 		}
 
 		throw error;

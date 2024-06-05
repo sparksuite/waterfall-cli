@@ -8,15 +8,13 @@ import getOrganizedArguments from '../utils/get-organized-arguments.js';
 import printPrettyError from '../utils/print-pretty-error.js';
 import verboseLog from '../utils/verbose-log.js';
 import path from 'path';
-import getCommandSpec, { CommandInput, EmptyCommandInput } from '../utils/get-command-spec.js';
+import getCommandSpec, { EmptyCommandInput } from '../utils/get-command-spec.js';
 import constructInputObject from '../utils/construct-input-object.js';
 import chalk from '../utils/chalk.js';
 import CommandFunction from '../types/command-function.js';
 
 /** The initialization point, which should be called at the root of your CLI app */
-export default async function init<Input extends CommandInput = EmptyCommandInput>(
-	customConfig: Partial<Config<Input>>
-): Promise<void> {
+export default async function init(customConfig: Partial<Config>): Promise<void> {
 	// Wrap in a try/catch
 	try {
 		// Get the context/config

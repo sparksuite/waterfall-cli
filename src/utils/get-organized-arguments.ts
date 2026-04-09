@@ -42,6 +42,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 	let nextIsOptionValue = false;
 	let nextValueType: string | undefined = undefined;
 	let nextValueAccepts: string[] | number[] | undefined = undefined;
+	let nextValueAcceptsMultiple: boolean | undefined = undefined;
 	let reachedData = false;
 	let reachedPassThrough = false;
 
@@ -99,10 +100,25 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 				const accepts = nextValueAccepts;
 
 				// @ts-expect-error: TypeScript is confused here...
-				if (accepts.includes(value) === false) {
+				if (!nextValueAcceptsMultiple && accepts.includes(value) === false) {
 					throw new PrintableError(
 						`Unrecognized value for ${String(previousOption)}: ${value}\nAccepts: ${accepts.join(', ')}`
 					);
+				}
+
+				if (nextValueAcceptsMultiple && typeof value === 'string') {
+					// Split value into individual elements
+					const valueItems = value.split(',').map((v) => v.trim());
+
+					// Check that each element is acceptable
+					for (const valueItem of valueItems) {
+						// @ts-expect-error: TypeScript is confused here...
+						if (!accepts.includes(valueItem)) {
+							throw new PrintableError(
+								`Unrecognized value for ${String(previousOption)}: ${valueItem}\nAccepts: ${accepts.join(', ')}`
+							);
+						}
+					}
 				}
 			}
 
@@ -162,6 +178,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						nextIsOptionValue = true;
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
+						nextValueAcceptsMultiple = details.acceptsMultiple;
 
 						const arrayOrPromise =
 							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;

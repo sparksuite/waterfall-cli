@@ -36,8 +36,8 @@ describe('#constructInputObject()', () => {
 			},
 		});
 	});
-	
-	it('Handles combination of input', async () => {
+
+	it('Handles multiple option strings', async () => {
 		process.argv = [
 			'/path/to/node',
 			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
@@ -55,7 +55,33 @@ describe('#constructInputObject()', () => {
 			},
 			options: {
 				'delivery-zip-code': undefined,
-				'hold': ['onions', 'peppers'],
+				hold: ['onions', 'peppers'],
+				size: undefined,
+				test: undefined,
+			},
+		});
+	});
+
+	it('Handles multiple option integers', async () => {
+		process.argv = [
+			'/path/to/node',
+			path.join(testProjectsPath, 'pizza-ordering', 'cli', 'entry.js'),
+			'order',
+			'to-go-without',
+			'--size',
+			'6,10,12',
+		];
+
+		expect(await constructInputObject()).toStrictEqual({
+			command: 'order to-go-without',
+			data: undefined,
+			flags: {
+				quiet: false,
+			},
+			options: {
+				'delivery-zip-code': undefined,
+				hold: undefined,
+				size: [6, 10, 12],
 				test: undefined,
 			},
 		});

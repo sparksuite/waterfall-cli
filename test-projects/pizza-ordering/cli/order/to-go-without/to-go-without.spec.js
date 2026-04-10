@@ -14,6 +14,12 @@ module.exports = {
 			acceptsMultiple: true,
 			accepts: ['olives', 'onions', 'peppers', 'sauce'],
 		},
+		size: {
+			description: 'What size pizza to order',
+			acceptsMultiple: true,
+			type: 'integer',
+			accepts: [6, 10, 12],
+		}
 	},
 	acceptsPassThroughArgs: true,
 };

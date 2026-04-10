@@ -16,7 +16,7 @@ interface OrganizedArguments {
 	data?: string | number | string[] | number[];
 	flags: string[];
 	options: string[];
-	values: (string | number)[];
+	values: (string | number | string[] | number[])[];
 	passThrough?: string[];
 }
 
@@ -40,9 +40,9 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 	let previousOption: string | undefined = undefined;
 	let nextIsOptionValue = false;
+	let nextOptionAcceptsMultiple = false;
 	let nextValueType: string | undefined = undefined;
 	let nextValueAccepts: string[] | number[] | undefined = undefined;
-	let nextValueAcceptsMultiple: boolean | undefined = undefined;
 	let reachedData = false;
 	let reachedPassThrough = false;
 
@@ -74,57 +74,68 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 			// Verbose output
 			await verboseLog(`...Is value for previous option (${String(previousOption)})`);
 
-			// Initialize
-			let value: string | number = argument;
-
-			// Validate value, if necessary
-			if (nextValueType) {
-				if (nextValueType === 'integer') {
-					if (/^[0-9]+$/.test(value)) {
-						value = parseInt(value, 10);
-					} else {
-						throw new PrintableError(`The option ${String(previousOption)} expects an integer\nProvided: ${value}`);
-					}
-				} else if (nextValueType === 'float') {
-					if (/^[0-9]*[.]*[0-9]*$/.test(value) && value !== '.' && value !== '') {
-						value = parseFloat(value);
-					} else {
-						throw new PrintableError(`The option ${String(previousOption)} expects a float\nProvided: ${value}`);
-					}
-				} else {
-					throw new PrintableError(`Unrecognized "type": ${nextValueType}`);
-				}
-			}
-
-			if (Array.isArray(nextValueAccepts)) {
-				const accepts = nextValueAccepts;
-
-				// @ts-expect-error: TypeScript is confused here...
-				if (!nextValueAcceptsMultiple && accepts.includes(value) === false) {
-					throw new PrintableError(
-						`Unrecognized value for ${String(previousOption)}: ${value}\nAccepts: ${accepts.join(', ')}`
-					);
-				}
-
-				if (nextValueAcceptsMultiple && typeof value === 'string') {
-					// Split value into individual elements
-					const valueItems = value.split(',').map((item) => item.trim());
-
-					// Check that each element is acceptable
-					for (const valueItem of valueItems) {
-						// @ts-expect-error: TypeScript is confused here...
-						if (!accepts.includes(valueItem)) {
-							throw new PrintableError(
-								`Unrecognized value for ${String(previousOption)}: ${valueItem}\nAccepts: ${accepts.join(', ')}`
-							);
+			// Helper that returns a valid value or throws
+			const validValue = (value: string): string | number => {
+				if (nextValueType) {
+					if (nextValueType === 'integer') {
+						if (/^[0-9]+$/.test(value)) {
+							return parseInt(value, 10);
+						} else {
+							throw new PrintableError(`The option ${String(previousOption)} expects an integer\nProvided: ${value}`);
 						}
+					} else if (nextValueType === 'float') {
+						if (/^[0-9]*[.]*[0-9]*$/.test(value) && value !== '.' && value !== '') {
+							return parseFloat(value);
+						} else {
+							throw new PrintableError(`The option ${String(previousOption)} expects a float\nProvided: ${value}`);
+						}
+					} else {
+						throw new PrintableError(`Unrecognized "type": ${nextValueType}`);
 					}
 				}
+
+				if (Array.isArray(nextValueAccepts)) {
+					const accepts = nextValueAccepts;
+
+					// @ts-expect-error: TypeScript is confused here...
+					if (accepts.includes(value) === false) {
+						throw new PrintableError(
+							`Unrecognized value for ${String(previousOption)}: ${value}\nAccepts: ${accepts.join(', ')}`
+						);
+					}
+				}
+
+				return value;
+			};
+
+			// Handle comma-separated values for acceptsMultiple options
+			if (nextOptionAcceptsMultiple) {
+				const parts = argument.split(',');
+				const processed = {
+					strings: [] as string[],
+					numbers: [] as number[],
+				};
+
+				for (const part of parts) {
+					const valid = validValue(part);
+
+					if (typeof valid === 'string') {
+						processed.strings.push(valid);
+					} else if (typeof valid === 'number') {
+						processed.numbers.push(valid);
+					}
+				}
+
+				// Store and continue
+				nextIsOptionValue = false;
+				nextOptionAcceptsMultiple = false;
+				organizedArguments.values.push(processed.strings.length > 0 ? processed.strings : processed.numbers);
+				continue;
 			}
 
 			// Store and continue
 			nextIsOptionValue = false;
-			organizedArguments.values.push(value);
+			organizedArguments.values.push(validValue(argument));
 			continue;
 		}
 
@@ -176,9 +187,9 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 						// Store details
 						previousOption = argument;
 						nextIsOptionValue = true;
+						nextOptionAcceptsMultiple = details.acceptsMultiple === true;
 						nextValueType = details.type || undefined;
 						organizedArguments.options.push(option);
-						nextValueAcceptsMultiple = details.acceptsMultiple;
 
 						const arrayOrPromise =
 							typeof details.accepts === 'function' ? details.accepts() : details.accepts || undefined;

@@ -83,10 +83,7 @@ export default async function constructInputObject(): Promise<ConstructedInputOb
 			inputObject.options = {};
 		}
 
-		const optionValue = organizedArguments.values[optionIndex];
-
-		inputObject.options[option] =
-			details.acceptsMultiple && typeof optionValue === 'string' ? optionValue.split(',') : optionValue;
+		inputObject.options[option] = organizedArguments.values[optionIndex];
 
 		if (details.required && !organizedArguments.options.includes(option)) {
 			throw new PrintableError(`The --${option} option is required`);

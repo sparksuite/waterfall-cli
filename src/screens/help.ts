@@ -140,7 +140,7 @@ export default async function helpScreen(): Promise<string> {
 						throw new Error(`Error: option['${option}'].accepts must resolve to an array`);
 					}
 
-					fullDescription += chalk.gray.italic(` (accepts: ${accepts.join(', ')})`);
+					fullDescription += chalk.gray.italic(` (accepts${details.acceptsMultiple ? ' comma separated' : ''}: ${accepts.join(', ')})`);
 				}
 			}
 

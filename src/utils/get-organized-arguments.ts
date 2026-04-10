@@ -108,7 +108,7 @@ export default async function getOrganizedArguments(): Promise<OrganizedArgument
 
 				if (nextValueAcceptsMultiple && typeof value === 'string') {
 					// Split value into individual elements
-					const valueItems = value.split(',').map((v) => v.trim());
+					const valueItems = value.split(',').map((item) => item.trim());
 
 					// Check that each element is acceptable
 					for (const valueItem of valueItems) {

@@ -22,6 +22,7 @@ describe('#getAllProgramCommands()', () => {
 			'order integer-data',
 			'order single-topping',
 			'order to-go',
+			'order to-go-without',
 		]);
 	});
 });

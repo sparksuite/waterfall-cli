@@ -73,18 +73,18 @@ export default async function getConfig(customConfig?: unknown): Promise<Config>
 				.string()
 				.nonempty()
 				.default(`node ${path.basename(context.entryFile)}`),
-			onStart: z.function(z.tuple([z.any()]), z.promise(z.void())).optional(),
+			onStart: z.function({ input: [z.any()], output: z.promise(z.void()) }).optional(),
 			spacing: z
 				.object({
 					before: z.number().int().min(0).default(1),
 					after: z.number().int().min(0).default(1),
 				})
 				.strict()
-				.default({}),
+				.prefault({}),
 			verbose: z.boolean().default(false),
 		})
 		.strict()
-		.default({});
+		.prefault({});
 
 	// Validate and store the config
 	try {
@@ -93,7 +93,7 @@ export default async function getConfig(customConfig?: unknown): Promise<Config>
 		if (error instanceof z.ZodError) {
 			let errorMessage = 'Found issues with config:\n';
 
-			for (const suberror of error.errors) {
+			for (const suberror of error.issues) {
 				let prefix = '';
 				const pathToKey = suberror.path.join('.');
 

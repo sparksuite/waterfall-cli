@@ -53,14 +53,22 @@ export default async function getConfig(customConfig?: unknown): Promise<Config>
 	// Create config schema
 	const schema = z
 		.object({
-			displayName: z.string().nonempty().optional().default(context.packageFile?.name),
+			displayName: z
+				.string()
+				.nonempty()
+				.optional()
+				.transform((value) => value ?? context.packageFile?.name),
 			packageName: z
 				.string()
 				.nonempty()
-				.refine((value) => validatePackageName(value).validForOldPackages)
+				.refine((value) => validatePackageName(value).validForOldPackages, 'Invalid value.')
 				.optional()
-				.default(context.packageFile?.name),
-			version: z.string().nonempty().optional().default(context.packageFile?.version),
+				.transform((value) => value ?? context.packageFile?.name),
+			version: z
+				.string()
+				.nonempty()
+				.optional()
+				.transform((value) => value ?? context.packageFile?.version),
 			usageCommand: z
 				.string()
 				.nonempty()

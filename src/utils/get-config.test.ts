@@ -114,7 +114,7 @@ describe('#getConfig()', () => {
 
 		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('version')}: Expected string, received object`)
+			expect.stringContaining(`${chalk.bold('version')}: Invalid input: expected string, received object`)
 		);
 	});
 
@@ -127,7 +127,7 @@ describe('#getConfig()', () => {
 
 		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('usageCommand')}: Expected string, received boolean`)
+			expect.stringContaining(`${chalk.bold('usageCommand')}: Invalid input: expected string, received boolean`)
 		);
 	});
 
@@ -142,7 +142,7 @@ describe('#getConfig()', () => {
 
 		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('spacing.before')}: Expected number, received boolean`)
+			expect.stringContaining(`${chalk.bold('spacing.before')}: Invalid input: expected number, received boolean`)
 		);
 	});
 
@@ -155,7 +155,7 @@ describe('#getConfig()', () => {
 		};
 
 		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
-		expect(printPrettyError).toHaveBeenLastCalledWith(expect.stringContaining(`Unrecognized key(s) in object: 'fake'`));
+		expect(printPrettyError).toHaveBeenLastCalledWith(expect.stringContaining(`Unrecognized key: "fake"`));
 
 		invalidConfig = {
 			spacing: {
@@ -166,7 +166,7 @@ describe('#getConfig()', () => {
 
 		await expect(() => getConfig(invalidConfig)).rejects.toThrow(z.ZodError);
 		expect(printPrettyError).toHaveBeenLastCalledWith(
-			expect.stringContaining(`${chalk.bold('spacing')}: Unrecognized key(s) in object: 'fake'`)
+			expect.stringContaining(`${chalk.bold('spacing')}: Unrecognized key: "fake"`)
 		);
 	});
 });

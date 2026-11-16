@@ -74,6 +74,6 @@ describe('#getContext()', () => {
 		process.argv[1] = path.join(testFileTreesPath, 'package-with-invalid-version', 'entry.js');
 
 		await expect(() => getContext()).rejects.toThrow(z.ZodError);
-		await expect(() => getContext()).rejects.toThrowError('Expected string, received object');
+		await expect(() => getContext()).rejects.toThrowError('Invalid input: expected string, received object');
 	});
 });

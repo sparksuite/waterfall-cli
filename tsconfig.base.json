@@ -2,6 +2,7 @@
 	"compilerOptions": {
 		"declaration": true,
 		"esModuleInterop": true,
+		"ignoreDeprecations": "6.0",
 		"moduleResolution": "node",
 		"noImplicitAny": true,
 		"noUnusedLocals": true,
@@ -9,7 +10,8 @@
 		"resolveJsonModule": true,
 		"rootDir": "src",
 		"strict": true,
-		"strictNullChecks": true
+		"strictNullChecks": true,
+		"types": ["jest", "node"]
 	},
 	"include": ["src/**/*"],
 	"exclude": ["node_modules"]
